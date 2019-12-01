@@ -9,12 +9,15 @@ Last year I tried to be fancy and the driver turned out to be
 painful to read and way too complicated. This year I am keeping it simple.
 
 Compile:
+    
     $ make
 
 Change directory to given day:
+    
     $ cd DayXX
 
 Run the executable:
+    
     $ ./DayXX
 
 **Timings**
