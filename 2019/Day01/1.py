@@ -1,7 +1,7 @@
-import sys
+f = open("1.in", 'r')
 
 s1 = s2 = 0
-for line in sys.stdin:
+for line in f:
     m = int(line)
     
     s1 += int(m / 3) - 2
@@ -11,5 +11,6 @@ for line in sys.stdin:
             s2 += k
         m = k
 
-print(s1)
-print(s2)
+print("Part 1: %d" % s1)
+print("Part 2: %d" % s2)
+

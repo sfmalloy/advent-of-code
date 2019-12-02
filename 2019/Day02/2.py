@@ -1,4 +1,4 @@
-p = list(map(int, input().split(',')))                
+p = list(map(int, open("2.in", 'r').read().split(',')))                
 q = p.copy()
 
 i = 0
@@ -45,4 +45,3 @@ for j in range(0, 100):
 
     if (found):
         break
- 

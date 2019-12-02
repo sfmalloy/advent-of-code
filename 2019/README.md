@@ -12,6 +12,6 @@ because everything is in Python!
 To run:
 
     $ cd DayXX
-    $ python <num>.py < <num>.in
+    $ python <num>.py
 
 I'll do runtimes later if I get the time.
