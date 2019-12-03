@@ -1,5 +1,3 @@
-# use open("3.in", 'r').read() for file i/o
-
 def get_path(dirs):
     p = []
     curr = [0,0]
@@ -36,17 +34,17 @@ min_d = float("inf")
 ints = []
 for c in search_a:
     if (c in search_b):
-        if (abs(c[0]) + abs(c[1]) < min_d):
-            min_d = abs(c[0]) + abs(c[1])
+        dist = abs(c[0]) + abs(c[1])
+        if (dist < min_d):
+            min_d = dist
         ints.append(list(c))
 
-print(min_d)
+print("Part 1: %d" % min_d)
 
 mindex = float("inf")
-print(ints)
 for c in ints:
     steps = 2 + a.index(c) + b.index(c)
     if (steps < mindex):
         mindex = steps
 
-print(mindex)
+print("Part 2: %d" % mindex)
