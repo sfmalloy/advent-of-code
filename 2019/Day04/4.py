@@ -28,6 +28,8 @@ def check_new_double(n):
         if (str_n.count(c) == 2):
             return True
 
+    return False
+
 count1 = 0
 count2 = 0
 for i in range(begin, end):
