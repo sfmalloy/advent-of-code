@@ -27,7 +27,6 @@ def check_new_double(n):
     for c in str_n:
         if (str_n.count(c) == 2):
             return True
-
     return False
 
 count1 = 0
