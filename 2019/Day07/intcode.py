@@ -12,6 +12,7 @@ def run(p, user_input):
     i = 0
     opcode = 0
     output = 0
+    in_count = 0
     while (opcode != halt):
         instr = p[i]
         opcode = p[i] % 100

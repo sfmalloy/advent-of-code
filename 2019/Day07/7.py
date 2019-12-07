@@ -1,6 +1,6 @@
 from intcode import run
 
-p = list(map(int, open("7.test", 'r').read().strip().split(',')))
+p = list(map(int, open("7.in", 'r').read().strip().split(',')))
 
 def next_perm(lst):
     perm = lst.copy()
@@ -27,25 +27,12 @@ def next_perm(lst):
     
     return begin_list + end_list
 
-#perm = [0,1,2,3,4]
-#max_out = float("-inf")
-#for i in range(120):
-#    signal = 0
-#    for phase in perm:
-#        signal = run(p, [phase, signal])
-#    max_out = max(max_out, signal)
-#    perm = next_perm(perm)
-
-#print(max_out)
-
-perm = [5,6,7,8,9]
+perm = [0,1,2,3,4]
 max_out = float("-inf")
 for i in range(120):
-    
-    print(perm)
     signal = 0
     for phase in perm:
-        signal = run(p, perm + [signal])
+        signal = run(p.copy(), [phase, signal])
     max_out = max(max_out, signal)
     perm = next_perm(perm)
 
