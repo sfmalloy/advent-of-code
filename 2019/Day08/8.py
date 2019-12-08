@@ -30,13 +30,8 @@ for i in range(layer_size):
         if ((p[index] != '2') and image[i] == ' '):
             image[i] = p[index]
 
-
+print_chr = {'0' : ' ', '1' : '#'}
 for i in range(layer_size):
     end_chr = '' if i % 25 != 24 else '\n'
-    print_chr = ''
-    if (image[i] == '0'):
-        print_chr = ' '
-    else:
-        print_chr = '#'
-    print(print_chr, end=end_chr)
+    print(print_chr[image[i]], end=end_chr)
             
