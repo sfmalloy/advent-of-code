@@ -3,10 +3,8 @@ layer_size = 25 * 6
 
 fewest_zero_start = 0
 min_zeros = float("inf")
-num_layers = 0
 for i in range(0, len(p), layer_size):
     zeros = 0
-    num_layers += 1
     for j in range(i, i + layer_size):
         if (p[j] == '0'):
             zeros += 1
