@@ -32,4 +32,3 @@ print_chr = {'0' : ' ', '1' : chr(9608)}
 for i in range(layer_size):
     end_chr = '' if i % 25 != 24 else '\n'
     print(print_chr[image[i]], end=end_chr)
-            

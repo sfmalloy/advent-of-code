@@ -57,39 +57,42 @@ while (opcode != halt):
     
     while (len(param_modes) < 3):
         param_modes.append(0)
-    
+
     if (opcode != halt):
-        if (opcode == add or opcode == mult):
-            a = p[i + 1] if param_modes[0] == 1 else p[p[i + 1]]
+        a = p[i + 1] if param_modes[0] == 1 else p[p[i + 1]]
+        b = pos = 0
+        
+        if (opcode in [add, mult, less_than, equals, jump_if_true, jump_if_false]):
             b = p[i + 2] if param_modes[1] == 1 else p[p[i + 2]]
-            pos = p[i + 3] 
-            
-            p[pos] = a + b if opcode == add else a * b
+        if (opcode in [add, mult, less_than, equals]):
+            pos = p[i + 3]
+
+        if (opcode == add or opcode == mult):
+            if (opcode == add):
+                p[pos] = a + b
+            else:
+                p[pos] = a * b
             i += 4
         elif (opcode == readin):
-            p[i + 1 if param_modes[0] == 1 else p[i + 1]] = user_input
+            if (param_modes[0] == 1):
+                pos = i + 1
+            else:
+                pos = p[i + 1]
+            p[pos] = user_input
             i += 2
         elif (opcode == out):
-            output = p[i + 1] if param_modes[0] == 1 else p[p[i + 1]]
+            output = a
             i += 2
         elif (opcode == jump_if_true or opcode == jump_if_false):
-            test = p[i + 1] if param_modes[0] == 1 else p[p[i + 1]]
-            pos = p[i + 2] if param_modes[1] == 1 else p[p[i + 2]]
-
-            if ((opcode == jump_if_true and test != 0) or (opcode == jump_if_false and test == 0)):
-                i = pos
+            if ((opcode == jump_if_true and a != 0) or (opcode == jump_if_false and a == 0)):
+                i = b
             else:
                 i += 3
         elif (opcode == less_than or opcode == equals):
-            a = p[i + 1] if param_modes[0] == 1 else p[p[i + 1]]
-            b = p[i + 2] if param_modes[1] == 1 else p[p[i + 2]]
-            pos = p[i + 3]
-
             if ((opcode == less_than and a < b) or (opcode == equals and a == b)):
                 p[pos] = 1
             else:
                 p[pos] = 0
-            
             i += 4
 
-print("Part 1: %d" % output)
+print("Part 2: %d" % output)
