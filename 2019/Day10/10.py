@@ -1,6 +1,4 @@
-from collections import defaultdict
-
-space = [line.strip() for line in open("10.in", 'r').readlines()]
+space = [line.strip() for line in open("10.test", 'r').readlines()]
 
 class slope_attr:
     def __init__(self, slope):
@@ -9,6 +7,7 @@ class slope_attr:
 
     def __hash__(self):
         return hash((self.slope, self.left, self.right))
+    
     def __eq__(self, other):
         return (self.slope, self.left, self.right) == (other.slope, other.left, other.right)
 
@@ -21,12 +20,12 @@ for y in range(len(space)):
         if (space[y][x] != '.'):
             asteroids.add((x, y))
 
-# Check both directions with slopes :P
-# Non blocked asteroids getting borked because of same slope blocked thing
 best = 0
-l = list()
+coord = (0, 0)
+discovered = []
 for a in asteroids:
     slopes = set()
+    found = []
     for b in asteroids:
         dy = a[1] - b[1]
         dx = a[0] - b[0]
@@ -37,14 +36,21 @@ for a in asteroids:
             else:
                 s.left = True
             slopes.add(s)
+            found.add(b)
         elif (dy < 0):
             s = slope_attr(float("inf"))
             slopes.add(s)
+            found.add(b)
         elif (dy > 0):
             s = slope_attr(-float("inf"))
             slopes.add(s)
+            found.add(b)
+    if (len(slopes) > best):
+        best = len(slopes)
+        coord = a
+print(best, coord)
+
+laser = [0,0]
+boomed = []
+while (len(asteroids) > 1):
     
-    l.append((a,len(slopes)))
-    best = max(best, len(slopes))
-    
-print(best)
