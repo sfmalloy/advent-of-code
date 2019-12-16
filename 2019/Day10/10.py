@@ -56,11 +56,6 @@ print("Part 1: %d" % best)
 def distance(a, b):
     return sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2)
 
-t = list(slopes.keys())
-t.sort()
-found_asteroid = True
-bopped = []
-
 def get_closest(coord):
     closest = coord
     dist = float("inf")
@@ -71,6 +66,10 @@ def get_closest(coord):
             dist = curr_dist
     return closest
 
+t = list(slopes.keys())
+t.sort()
+bopped = []
+found_asteroid = True
 while (found_asteroid):
     found_asteroid = False
 
