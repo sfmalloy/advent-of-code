@@ -13,5 +13,3 @@ To run:
 
     $ cd DayXX
     $ python <num>.py
-
-I'll do runtimes later if I get the time.
