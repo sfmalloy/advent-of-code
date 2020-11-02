@@ -1,0 +1,4 @@
+generate_day.py
+__pycache__/
+*.pyc
+
