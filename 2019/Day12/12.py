@@ -74,6 +74,7 @@ def gcd(a, b):
 def lcm(a, b):
   return a * b // gcd(a, b)
 
+# Each cycle is independent
 x_cycle = find_cycle(moonsx, X)
 y_cycle = find_cycle(moonsy, Y)
 z_cycle = find_cycle(moonsz, Z)
