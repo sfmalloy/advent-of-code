@@ -10,5 +10,7 @@ painful to read and way too complicated. This year I am keeping it simple,
 because everything is in Python!
 
 To run:
+
     $ cd DayXX
+    
     $ python <num>.py
