@@ -47,8 +47,6 @@ with open('12.in', 'r') as readfile:
     moonsy.append(moon(x, y, z))
     moonsz.append(moon(x, y, z))
 
-f = open('plots.csv', 'w')
-
 STEPS = 1000
 for i in range(STEPS):
   do_step(moons)
