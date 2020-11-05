@@ -65,7 +65,7 @@ print(get_ore(1))
 # slightly faster brute forcing
 fuel = 1
 while total_ore - get_ore(fuel) > 0:
-  fuel += 1000
+  fuel += 1024
 
 while total_ore - get_ore(fuel) < 0:
   fuel -= 1
