@@ -9,5 +9,4 @@ If you want to download for yourself, have Python 3 installed. I am running Pyth
 To run:
 
     $ cd DayXX
-    
     $ python <num>.py
