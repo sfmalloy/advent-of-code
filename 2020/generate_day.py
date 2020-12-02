@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-YEAR = '2019'
+YEAR = '2020'
 LANG = 'py'
 
 if LANG == '':
