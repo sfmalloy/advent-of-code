@@ -47,7 +47,7 @@ if 'AOC_SESSION' in os.environ:
 	# This creates file that you put your code in. Does not overwrite code if file exists.
 	with open(os.path.join(os.getcwd(), dir_name, f'{day_num}.{LANG}'), 'a') as prog_file:
 		os.utime(os.path.join(os.getcwd(), dir_name, f'{day_num}.{LANG}'), None)
-	with open(os.path.join(os.getcwd(), dir_name, f'{day_num}test.in'), 'a') as test_file:
+	with open(os.path.join(os.getcwd(), dir_name, f'test{day_num}.in'), 'a') as test_file:
 		os.utime(os.path.join(os.getcwd(), dir_name, f'{day_num}.{LANG}'), None)
 
 	#####
