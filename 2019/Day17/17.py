@@ -1,5 +1,4 @@
 from intcode import Intcode
-from collections import namedtuple
 
 with open('17.in') as f:
   prog = list(map(int, f.readline().split(',')))
