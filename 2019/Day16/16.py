@@ -37,5 +37,5 @@ for k in range(phases):
     new_real.append(s % 10)
     s -= real_digits[i]
   real_digits = new_real
-  print(k)
-print(real_digits[:8])
+[print(d, end='') for d in real_digits[:8]]
+print()
