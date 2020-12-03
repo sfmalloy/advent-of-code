@@ -25,62 +25,138 @@ for i in range(1, len(screen)-1):
     
 print(p1)
 
-tile_count = 0
-for i in range(len(screen)):
-  for j in range(len(screen[i])):
-    tile_count += screen[i][j] == '#'
-    if screen[i][j] == '^':
-      bot_x = j
-      bot_y = i
+class bot:
+  def __init__(self, screen):
+    self.N = 0
+    self.E = 1
+    self.S = 2
+    self.W = 3
+
+    self.chr_to_num = dict(zip('^>v<', [0,1,2,3]))
+    self.num_to_chr = '^>v<'
+
+    self.screen = [[c for c in l] for l in screen]
+
+    self.x = 0
+    self.y = 0
+
+    found = False
+    for i in range(self.rows()):
+      for j in range(self.cols()):
+        if self.screen[i][j] == '^':
+          self.x = j
+          self.y = i
+          found = True
+          break
+      if found:
+        break
+    self.chr = screen[self.y][self.x]
+    self.dir = self.chr_to_num[self.chr]
+    self.facing = self.num_to_chr[self.dir]
+  def rows(self):
+    return len(self.screen)
+  def cols(self):
+    return len(self.screen[0])
+  def turn(self, direction):
+    if direction == 'R':
+      self.update(self.num_to_chr[(self.dir+1) % 4])
+    else:
+      self.update(self.num_to_chr[(self.dir+3) % 4])
+  def step(self, do_move=True):
+    new_x = self.x
+    new_y = self.y
+    if self.dir == self.N:
+      new_y -= 1
+    elif self.dir == self.S:
+      new_y += 1
+    elif self.dir == self.E:
+      new_x += 1
+    elif self.dir == self.W:
+      new_x -= 1
+    if 0 <= new_x < self.cols() and 0 <= new_y < self.rows() and screen[new_y][new_x] != '.':
+      if do_move:
+        self.screen[self.y][self.x] = 'O'
+        self.x = new_x
+        self.y = new_y
+        self.update(self.chr)
+      return True
+    return False
+  def update(self, new_chr):
+    self.screen[self.y][self.x] = new_chr
+    self.chr = self.screen[self.y][self.x]
+    self.dir = self.chr_to_num[self.chr]
+  def find_open(self):
+    self.turn('R')
+    if self.step(False):
+      self.turn('L')
+      return 'R'
+    self.turn('R')
+    self.turn('R')
+    if self.step(False):
+      self.turn('R')
+      return 'L'
+    return None
+  def __repr__(self):
+    rep = ''
+    for i in range(self.rows()):
+      for j in range(self.cols()):
+        rep += self.screen[i][j]
+      rep += '\n'
+    return rep
+
+b = bot(screen)
+cmd = []
+while b.find_open() is not None:
+  turn_dir = b.find_open()
+  cmd.append(turn_dir)
+  b.turn(turn_dir)
+
+  step_count = 0
+  while b.step():
+    step_count += 1
+  cmd.append(step_count)
+
+cmd_str = ''
+for i in range(len(cmd)):
+  cmd_str += str(cmd[i])
+  if i < len(cmd)-1:
+    cmd_str += ','
+
+def find_pattern(s, start):
+  end = 3
+  while s.count(s[start:end]) > 2 and ('A' not in s[start:end] and 'B' not in s[start:end]):
+    end = s.find(',', end+1)
+  while s[end] in 'AB,LR':
+    end -= 1
+  return s[start:end+1]
+
+start = 0
+patterns = {}
+letter = 'A'
+for i in range(3):
+  patt = find_pattern(cmd_str, start)
+  patterns[letter] = patt
+  a = 0
+  b = cmd_str.find(patt)
+  while cmd_str.count(patt) > 0 and cmd_str.find(patt) != -1:
+    cmd_str = cmd_str[a:b] + letter + cmd_str[b+len(patt):]
+    b = cmd_str.find(patt)
+  letter = chr(ord(letter)+1)
+  if i < 2:
+    while cmd_str[start] in 'ABC':
+      start = cmd_str.find(',', start+1)+1
 
 prog[0] = 2
 comp = Intcode(prog)
-
-N = 0
-E = 1
-S = 2
-W = 3
-bot_dirs = dict(zip('^>v<', [N,E,S,W]))
-
-def turn(curr, d):
-  if d == 'R':
-    return (curr+1) % (W+1)
-  return (curr-1) % (W+1)
-
-def step(screen, x, y, do_move=True):
-  old_x = x
-  old_y = y
-  bot = screen[y][x]
-  d = bot_dirs[bot]
-  if d == N:
-    y -= 1
-  elif d == E:
-    x += 1
-  elif d == S:
-    y += 1
-  else:
-    x -= 1
-  if 0 <= y < len(screen) and 0 <= x < len(screen[0]) and screen[y][x] != '.':
-    if do_move:
-      screen[old_y][old_x] = 'O'
-      screen[y][x] = bot
-    return True
-  return False
-
-def can_move(screen, x, y):
-  bots = '^>v<'
-  bot = screen[y][x]
-  valid = [False for _ in range(4)]
-  valid_count = 0
-  for _ in range(4):
-    screen[y][x] = bots[turn(bot_dirs[bot], 'R')]
-    bot = screen[y][x]
-    valid[bot_dirs[bot]] = step(screen, x, y, False)
-    valid_count += valid[bot_dirs[bot]]
-  if valid[bot_dirs[bot]]:
-    return True
-  elif valid_count == 1:
-    return valid[(bot_dirs[bot]+1)%4] or valid[(bot_dirs[bot]+3)%4]
-
-test_screen = [[c for c in line] for line in screen]
-# find the path while you are able to move
+ascii_code = []
+for c in cmd_str:
+  ascii_code.append(ord(c))
+ascii_code.append(10)
+for func in patterns:
+  for c in patterns[func]:
+    ascii_code.append(ord(c))
+  ascii_code.append(10)
+ascii_code.append(ord('n'))
+ascii_code.append(10)
+output = comp.run(readin=ascii_code)
+print(output[-1])
