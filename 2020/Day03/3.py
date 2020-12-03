@@ -1,5 +1,5 @@
 with open('3.in') as f:
-  lines = [[c for c in line.strip()] for line in f.readlines()]
+  lines = [line.strip() for line in f.readlines()]
 
 def count_trees(dx, dy):
   x = 0
