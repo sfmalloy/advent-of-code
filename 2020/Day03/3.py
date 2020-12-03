@@ -5,9 +5,7 @@ def count_trees(dx, dy):
   x = 0
   count = 0
   for y in range(0, len(lines), dy):
-    if x >= len(lines[0]):
-      x %= len(lines[0])
-    if lines[y][x] == '#':
+    if lines[y][x%len(lines[0])] == '#':
       count += 1
     x += dx
   return count
