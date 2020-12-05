@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import datetime
 
 YEAR = '2020'
 LANG = 'py'
@@ -39,17 +40,28 @@ if 'AOC_SESSION' in os.environ:
 	URL = f'https://adventofcode.com/{YEAR}/day/{day_num}/input'
 
 	# Downloads this day's input file as <day_num>.in
-	print(f'Downloading Day {day_num}, Year {YEAR}')
-	subprocess.run(['curl', '-o', os.path.join(file_path, f'{day_num}.in'), URL, 
-		'--cookie', f'session={AOC_SESSION}'], capture_output=True)
-	print(f'Finished downloading')
+	if datetime.date.today() >= datetime.date(int(YEAR), 12, int(day_num)):
+		print(f'Downloading Day {day_num}, Year {YEAR}')
+		subprocess.run(['curl', '-o', os.path.join(file_path, f'{day_num}.in'), URL, 
+			'--cookie', f'session={AOC_SESSION}'], capture_output=True)
+		print(f'Finished downloading')
+	else:
+		print(f'Too early to get input for day {day_num}')
 
 	### Optional extra files
-	code_file = open(os.path.join(file_path, f'{day_num}.{LANG}'), 'x')
-	code_file.close()
+	code_file_path = os.path.join(file_path, f'{day_num}.{LANG}')
+	if not os.path.exists(code_file_path):
+		code_file = open(code_file_path, 'x')
+		code_file.close()
+	else:
+		print('Code file exists, skipping')
 
-	test_input_file = open(os.path.join(file_path, f'test{day_num}.in'), 'x')
-	test_input_file.close()
+	test_input_file_path = os.path.join(file_path, f'test{day_num}.in')
+	if not os.path.exists(test_input_file_path):
+		test_input_file = open(test_input_file_path, 'x')
+		test_input_file.close()
+	else:
+		print('Test input file exists, skipping')
 	#####
 else:
 	print('AOC_SESSION not found. Please add session cookie as environment variable named AOC_SESSION.')
