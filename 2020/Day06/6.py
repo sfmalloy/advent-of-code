@@ -1,3 +1,5 @@
+from functools import reduce
+
 with open('6.in') as f:
   groups = [g.rstrip().split('\n') for g in f.read().split('\n\n')]
 
@@ -13,8 +15,8 @@ for g in groups:
       line.add(q)
     lines.append(line)
   total += len(unique)
-  for l in lines:
-    unique &= l
-  yes += len(unique)    
+  unique = reduce(lambda x,y: x&y, lines)
+  yes += len(unique)
+
 print(total)
 print(yes)
