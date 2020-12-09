@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 color_map = {}
 count_map = {}
 
@@ -11,15 +13,7 @@ with open('7.in') as f:
     else:
       color_map[colors[0]] = None
 
-def memoize(f):
-  memo = {}
-  def helper(outer, goal):
-    if (outer, goal) not in memo:
-      memo[(outer, goal)] = f(outer, goal)
-    return memo[(outer, goal)]
-  return helper
-
-@memoize
+@lru_cache(maxsize=None)
 def count_outer(outer, goal):
   colors = {outer}
   if outer != goal and color_map[outer] is not None:
