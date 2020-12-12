@@ -1,5 +1,6 @@
-with open('12.in') as f:
-  actions = f.readlines()
+import fileinput
+
+actions = fileinput.input()
 
 # Constants
 dx = [0,1,0,-1]

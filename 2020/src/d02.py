@@ -1,5 +1,6 @@
-with open('2.in') as f:
-  lines = [l.split() for l in f.readlines()]
+import fileinput
+
+lines = [l.split() for l in fileinput.input()]
 
 valid1 = 0
 valid2 = 0

@@ -1,7 +1,7 @@
+import fileinput
 from functools import reduce
 
-with open('6.in') as f:
-  groups = [g.rstrip().split('\n') for g in f.read().split('\n\n')]
+groups = [g.rstrip().split('\n') for g in ''.join(fileinput.input()).split('\n\n')]
 
 total = 0
 yes = 0

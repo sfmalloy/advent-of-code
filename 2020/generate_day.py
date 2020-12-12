@@ -20,7 +20,7 @@ else:
 	print('Please include day number. Exiting.')
 	exit()
 
-dir_name = 'Day' + ('0' if int(day_num) < 10 else '') + day_num
+dir_name = 'inputs'
 file_path = os.path.join(os.getcwd(), dir_name)
 
 # Does this as safety not to override anything or spam requests to the site
@@ -30,7 +30,7 @@ if not dir_check:
 	subprocess.run(['mkdir', dir_name])
 	need_file_check = False
 if need_file_check:
-	file_check = os.path.isfile(os.path.join(file_path, f'{day_num}.in'))
+	file_check = os.path.isfile(os.path.join(file_path, f'd{day_num}.in'))
 	if file_check:
 		print('Input already exists. Exiting.')
 		exit()
@@ -42,26 +42,10 @@ if 'AOC_SESSION' in os.environ:
 	# Downloads this day's input file as <day_num>.in
 	if datetime.date.today() >= datetime.date(int(YEAR), 12, int(day_num)):
 		print(f'Downloading Day {day_num}, Year {YEAR}')
-		subprocess.run(['curl', '-o', os.path.join(file_path, f'{day_num}.in'), URL, 
+		subprocess.run(['curl', '-o', os.path.join(file_path, f'd{day_num}.in'), URL, 
 			'--cookie', f'session={AOC_SESSION}'], capture_output=True)
 		print(f'Finished downloading')
 	else:
 		print(f'Too early to get input for day {day_num}')
-
-	### Optional extra files
-	code_file_path = os.path.join(file_path, f'{day_num}.{LANG}')
-	if not os.path.exists(code_file_path):
-		code_file = open(code_file_path, 'x')
-		code_file.close()
-	else:
-		print('Code file exists, skipping')
-
-	test_input_file_path = os.path.join(file_path, f'test{day_num}.in')
-	if not os.path.exists(test_input_file_path):
-		test_input_file = open(test_input_file_path, 'x')
-		test_input_file.close()
-	else:
-		print('Test input file exists, skipping')
-	#####
 else:
 	print('AOC_SESSION not found. Please add session cookie as environment variable named AOC_SESSION.')

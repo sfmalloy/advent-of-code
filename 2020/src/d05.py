@@ -1,5 +1,6 @@
-with open('5.in') as f:
-  lines = f.readlines()
+import fileinput
+
+lines = fileinput.input()
 
 mseat = -float('inf')
 ids = []

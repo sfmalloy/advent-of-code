@@ -1,5 +1,6 @@
-with open('1.in') as f:
-  l = sorted(map(int, f.readlines()))
+import fileinput
+
+l = sorted(map(int, fileinput.input()))
 
 def find_sum(l, n, d, p=0, s=0):
   if s > n:

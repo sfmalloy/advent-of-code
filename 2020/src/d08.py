@@ -1,5 +1,6 @@
-with open('8.in') as f:
-  lines = [l.strip().split() for l in f.readlines()]
+import fileinput
+
+lines = [l.strip().split() for l in fileinput.input()]
 
 def run(replace=None, indices=[0]):
   other = 'jmp' if replace == 'nop' else 'nop'

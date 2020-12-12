@@ -1,5 +1,6 @@
-with open('9.in') as f:
-  lines = [int(x) for x in f.readlines()]
+import fileinput
+
+lines = [int(x) for x in fileinput.input()]
 
 N = 25
 invalid = 0

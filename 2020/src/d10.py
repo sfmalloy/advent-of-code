@@ -1,8 +1,8 @@
+import fileinput
 from functools import lru_cache
 
-with open('10.in') as f:
-  adapters = [0] + sorted(int(a) for a in f.readlines())
-  adapters.append(adapters[-1]+3)
+adapters = [0] + sorted(int(a) for a in fileinput.input())
+adapters.append(adapters[-1]+3)
 
 # Part 1
 diffs = [0,0,0,0]

@@ -1,5 +1,6 @@
-with open('4.in') as f:
-  lines = f.readlines()
+import fileinput
+
+lines = list(fileinput.input())
 
 def is_valid2_entry(k,v):
   if k == 'byr':
