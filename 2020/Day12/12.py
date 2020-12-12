@@ -13,7 +13,7 @@ def move(x, y, direction, dist):
   y += dist * dy[direction]
   return x, y
 
-def rotate(curr_dir, direction, angle):
+def rotate_ship(curr_dir, direction, angle):
   if direction == 'L':
     angle *= -1
   curr_dir += angle // 90
@@ -30,7 +30,7 @@ for a in actions:
   elif cmd == 'F':
     x, y = move(x, y, curr_dir, dist)
   elif cmd in 'LR':
-    curr_dir = rotate(curr_dir, cmd, dist)
+    curr_dir = rotate_ship(curr_dir, cmd, dist)
 
 print(abs(x)+abs(y))
 
