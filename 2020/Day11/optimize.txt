@@ -1,0 +1,4 @@
+Notes for optimization:
+0. Use bools or ints instead of strings
+1. Pre-calculate the indices for adjacent seats for each seat
+2. More threads!!! (concurrent.futures in ThreadPoolExecutor)

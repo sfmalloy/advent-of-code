@@ -11,7 +11,7 @@ for i in range(1, len(adapters)):
 print(diffs[1] * diffs[3])
 
 # Part 2
-@lru_cache
+@lru_cache(maxsize=None)
 def count_valid(start):
   if start == 0:
     return 1
