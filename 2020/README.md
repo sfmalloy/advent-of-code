@@ -9,6 +9,6 @@ If you want to download for yourself, have Python 3 installed. I am running Pyth
 To run:
 
     $ cd src/
-    $ python run.py -d <day_number>             # Runs a single day
+    $ python run.py -d <day_number>         # Runs a single day
     OR
-    $ python run.py -a                          # Runs all available days
+    $ python run.py -a                      # Runs all available days
