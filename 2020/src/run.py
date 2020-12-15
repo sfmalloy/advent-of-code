@@ -1,6 +1,7 @@
 import timeit
 import os
 import sys
+import subprocess
 from optparse import OptionParser
 
 def num_file(num):
@@ -10,11 +11,14 @@ def num_file(num):
 
 def run(day):
   d = num_file(day)
-  sys.argv[1] = f'../inputs/d{d}.in'
+  path = f'../inputs/d{d}.in'
+  if not os.path.exists(path):
+    print(f'File d{d}.in not found.')
+    exit()
   if len(sys.argv) > 2:
     sys.argv.pop()
   t1 = timeit.default_timer()  
-  __import__(f'd{d}')
+  subprocess.run(['python' , f'd{d}.py', path])
   t2 = timeit.default_timer()
   print(f'Time: {round(1000*(t2-t1),3)}ms')
 
