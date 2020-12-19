@@ -1,7 +1,6 @@
 import timeit
 import os
 import sys
-import subprocess
 from optparse import OptionParser
 
 def num_file(num):
@@ -9,35 +8,39 @@ def num_file(num):
     return f'0{num}'
   return num
 
-def run(day):
-  d = num_file(day)
-  path = f'../inputs/d{d}.in'
-  if not os.path.exists(path):
-    print(f'File d{d}.in not found.')
+def run_single(file, day):
+  if not os.path.exists(file):
+    print(f'File {file} not found.')
     exit()
-  if len(sys.argv) > 2:
+  while len(sys.argv) > 2:
     sys.argv.pop()
-  t1 = timeit.default_timer()  
-  subprocess.run(['python' , f'd{d}.py', path])
-  t2 = timeit.default_timer()
-  print(f'Time: {round(1000*(t2-t1),3)}ms')
+  args = ['python', f'd{num_file(day)}.py', file]
+  time = timeit.timeit(stmt=f'subprocess.run({args})', setup='import subprocess', number=1)
+  print(f'Time: {round(1000*(time),3)}ms')
 
 def run_all():
   num = 1
-  while os.path.exists(f'd{num_file(num)}.py'):
+  fnum =  num_file(num)
+  while os.path.exists(f'd{fnum}.py'):
     print(f'Day {num}:')
-    run(str(num))
+    run_single(f'../input/d{fnum}', num)
     num += 1
+    fnum = num_file(num)
     print()
 
 parser = OptionParser()
-parser.add_option('-d', '--day', dest='day', help='Run day <d>')
+parser.add_option('-d', '--day', dest='day', help='Runs day <d>. If -f is not specified, '\
+  'default uses input from inputs sibling directory.')
 parser.add_option('-a', '--all', action='store_true', dest='run_all', 
   default=False, help='Run all days')
+parser.add_option('-f', '--file', dest='file', help='')
 
 options, _ = parser.parse_args()
 
 if options.run_all:
   run_all()
 elif options.day is not None:
-  run(options.day)
+  if options.file is not None:
+    run_single(options.file, int(options.day))  
+  else:
+    run_single(f'../inputs/d{num_file(options.day)}.in', int(options.day))
