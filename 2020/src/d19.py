@@ -54,7 +54,6 @@ ans = 0
 for case in cases:
   g_idx = 0
   while check_str(case, 8):
-    temp_idx = g_idx
     if check_str(case, 11) and g_idx == len(case):
       ans += 1
       break
