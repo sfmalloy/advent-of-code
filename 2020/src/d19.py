@@ -46,6 +46,7 @@ for case in cases:
   ans += check_str(case) and g_idx == len(case)
 print(ans)
 
+# Part 2
 rules[8] = [[42],[42,8]]
 rules[11] = [[42,31],[42,11,31]]
 
