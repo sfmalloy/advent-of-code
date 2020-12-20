@@ -1,4 +1,5 @@
 import fileinput
+from collections import deque
 
 # eval -> int: Evaluates a op b. Only '+' and '*' are supported.
 # a: first number
@@ -15,27 +16,27 @@ def eval(a, b, op):
 #   for when converting. Needed here because part 1 and 2 have different precedences
 #   for + and *.
 def to_postfix(exp, prec):
-  ops = []
-  postfix = []
+  ops = deque()
+  postfix = deque()
   token_idx = 0
   while token_idx < len(exp):
     token = exp[token_idx]
     if token == '(':
-      ops.insert(0, token)
+      ops.appendleft(token)
     elif token in '*+':
       while len(ops) > 0 and ops[0] != '(' and prec[ops[0]] >= prec[token]:
-        postfix.append(ops.pop(0))
-      ops.insert(0, token)
+        postfix.append(ops.popleft())
+      ops.appendleft(token)
     elif token == ')':
       while len(ops) > 0 and ops[0] != '(':
-        postfix.append(ops.pop(0))
+        postfix.append(ops.popleft())
       if ops[0] == '(':
-        ops.pop(0)
+        ops.popleft()
     else:
       postfix.append(int(token))
     token_idx += 1
   while len(ops) > 0:
-    op = ops.pop(0)
+    op = ops.popleft()
     if op != '(':
       postfix.append(op)
   return postfix
@@ -45,14 +46,14 @@ def to_postfix(exp, prec):
 # prec: operator precedence dictionary
 def eval_exp(exp, prec):
   postfix = to_postfix(exp, prec)
-  res = []
+  res = deque()
   while len(postfix) > 0:
     while len(postfix) > 0 and isinstance(postfix[0], int):
-      res.insert(0, postfix.pop(0))
-    op = postfix.pop(0)
-    a = res.pop(0)
-    b = res.pop(0)
-    res.insert(0, eval(a,b,op))
+      res.appendleft(postfix.popleft())
+    op = postfix.popleft()
+    a = res.popleft()
+    b = res.popleft()
+    res.appendleft(eval(a,b,op))
   return res[0]
 
 # Sum up results of eval_exp calls for both parts 1 and 2.
