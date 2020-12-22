@@ -6,9 +6,18 @@ If you want to download for yourself, have Python 3 installed. I am running Pyth
 
 **Running**
 ----------------------------------
-To run:
+To run first move to the `src` directory by doing `cd src/`. Then do invoke one of three commands.
 
-    $ cd src/
-    $ python run.py -d <day_number>         # Runs a single day
-    OR
-    $ python run.py -a                      # Runs all available days
+This runs a single day with default input file `(../inputs/dXY.in)`
+
+    $ python run.py -d <day_number>
+
+You can also add the `-f` flag followed by a file name/path to instead run with custom input.
+
+	$ python run.py -d <day_number> -f <file>
+
+Finally, you can run all days with their default inputs with the `-a` flag.
+
+	$ python run.py -a
+
+Each run prints the results for parts 1 and 2 respectively followed by the total runtime of both parts.
