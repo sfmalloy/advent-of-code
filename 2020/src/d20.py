@@ -99,5 +99,13 @@ while True:
   else:
     solved = front.grid
     break
+# Part 1 answer
 prod = solved[0][0].id * solved[0][-1].id * solved[-1][0].id * solved[-1][-1].id
 print(prod)
+
+#####################################################################################
+# Start of part 2
+
+# Combine the tiles into a mega-tile aka image because you'll need to reorient it most likely
+image_array = [[] for _ in range(col_size)]
+
