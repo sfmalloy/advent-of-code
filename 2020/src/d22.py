@@ -35,7 +35,7 @@ def rec_crab(p1, p2):
     card2 = p2.popleft()
 
     if card1 <= len(p1) and card2 <= len(p2):
-      sub_winner = rec_crab(deque(islice(p1.copy(), 0, card1)), deque(islice(p2.copy(), 0, card2)))
+      sub_winner = rec_crab(deque(islice(p1, 0, card1)), deque(islice(p2, 0, card2)))
     elif card1 > card2:
       sub_winner = 1
     else:

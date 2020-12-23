@@ -42,6 +42,19 @@ class Tile:
         s += c
       s += '\n'
     return s
+  def combine_rows(self, other):
+    new_tile = []
+    for rs,ro in zip(self.tile, other.tile):
+      new_tile.append(rs+ro)
+    self.tile = new_tile
+  def combine_cols(self, other):
+    new_tile = self.tile + other.tile
+    self.tile = new_tile
+  def trim_borders(self):
+    new_tile = []
+    for r in self.tile[1:-1]:
+      new_tile.append(r[1:-1])
+    self.tile = new_tile
 
 tiles = deque()
 curr_id = 0
@@ -107,5 +120,17 @@ print(prod)
 # Start of part 2
 
 # Combine the tiles into a mega-tile aka image because you'll need to reorient it most likely
-image_array = [[] for _ in range(col_size)]
+for i in range(len(solved)):
+  for j in range(len(solved)):
+    solved[i][j].trim_borders()
 
+trimmed = Tile(0, [])
+for i in range(len(solved)):
+  for j in range(1, len(solved)):
+    solved[i][0].combine_rows(solved[i][j])
+  trimmed.combine_cols(solved[i][0])
+
+trimmed.rotate_cw()
+trimmed.rotate_cw()
+trimmed.rotate_cw()
+print(trimmed)
