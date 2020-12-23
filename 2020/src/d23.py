@@ -42,12 +42,34 @@ class DoublyLinkedList:
     if node.prev == self.head:
       return self.head.prev
     return node.prev
+  def get_slice(self, begin, size):
+    nodes = []
+    values = []
+    for _ in range(size):
+      t = self.get_next(begin)
+      nodes.append(self.remove(begin))
+      begin = t
+      values.append(nodes[-1].data)
+    for i in range(size):
+      if i > 0:
+        nodes[i].set_prev(nodes[i-1])
+      if i < size-1:
+        nodes[i].set_next(nodes[i+1])
+    return nodes[0], values
+  def insert_slice(self, dest_node, sliced_node):
+    sliced_node.set_prev(dest_node)
+    dest_old_next = dest_node.next
+    dest_node.set_next(sliced_node)
+    while sliced_node.next is not None:
+      sliced_node = sliced_node.next
+    dest_old_next.set_prev(sliced_node)
+    sliced_node.set_next(dest_old_next)
   def remove(self, node):
     node.prev.set_next(node.next)
     node.next.set_prev(node.prev)
     node.set_next(None)
     node.set_prev(None)
-    return node.data
+    return node
   def walk(self):
     curr = self.head.next
     while curr != self.head:
@@ -72,18 +94,14 @@ for d in data:
   number_to_node[d] = cups.head.prev
 
 def play(cups, curr):
-  removed = []
-  for _ in range(3):
-    removed.append(cups.remove(cups.get_next(curr)))
+  sliced, removed = cups.get_slice(cups.get_next(curr), 3)
   dest_val = curr.data-1
   while dest_val < 1 or dest_val in set(removed):
     dest_val -= 1
     if dest_val < 1:
       dest_val = mx
-  dest_node = cups.get_next(number_to_node[dest_val])
-  for r in removed:
-    cups.insert_before(dest_node, r)
-    number_to_node[r] = dest_node.prev
+  dest_node = number_to_node[dest_val]
+  cups.insert_slice(dest_node, sliced)
 
 curr = cups.get_next(cups.head)
 for _ in range(100):
