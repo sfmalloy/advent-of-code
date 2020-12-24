@@ -2,30 +2,52 @@ import fileinput
 from collections import defaultdict
 from copy import deepcopy
 
-lines = [l.strip() for l in fileinput.input()]
-
+# defaultdict for the win, automatically sets new tiles to white.
 tiles = defaultdict(bool)
 WHITE = False
 BLACK = True
 
+# All the possible directions with changes in x and y for each. assuming.
+# 
+# Each hexagon has radius 2 rather than 1 to avoid use of floating point numbers.
+# 
+# Using zip with the different arrays came in handy and allowed me to more quickly
+#   change values of DX and DY.
 dirs = ['e','se','sw','w','nw','ne']
 DX = {d:n for d,n in zip(dirs, [2,1,-1,-2,-1,1])}
 DY = {d:n for d,n in zip(dirs, [0,-1,-1,0,1,1])}
 
-first = True
-for l in lines:
+for line in fileinput.input():
+  line = line.strip()
+
+  # While loop easier to use here than for loop with range because I can easily
+  #   increase the index and add on to the direction without worry. Using a for
+  #   loop with range makes this difficult.
   i = 0
   x = y = 0
-  while i < len(l):
-    d = l[i]
+  while i < len(line):
+    d = line[i]
     if d in 'ns':
       i += 1
-      d += l[i]
+      d += line[i]
     x += DX[d]
     y += DY[d]
     i += 1
   tiles[(x,y)] = not tiles[(x,y)]
 
+def tile_count(tiles):
+  count = 0
+  for color in tiles.values():
+    if color == BLACK:
+      count += 1
+  return count
+
+# Part 1 output
+print(tile_count(tiles))
+
+# Fill initial set of tiles with all neighbors of given tiles to ensure every tile
+#   is in the initial state. Without this some tiles are missing making the final
+#   count low.
 filled = deepcopy(tiles)
 for point,color in tiles.items():
   x,y = point
@@ -35,15 +57,8 @@ for point,color in tiles.items():
         filled[(x+dx,y+dy)]
 tiles = filled
 
-def tile_count(day):
-  count = 0
-  for color in day.values():
-    if color == BLACK:
-      count += 1
-  return count
-
-print(tile_count(tiles))
-
+# Simple cellular automata stuff, but this time no bounds checking because we have
+#   a theoretically infinite hexagonal grid.
 def do_day(curr_day):
   next_day = deepcopy(curr_day)
   for point,color in curr_day.items():
@@ -61,7 +76,7 @@ def do_day(curr_day):
       next_day[point] = BLACK
   return next_day
 
-
+# Part 2 output
 for i in range(100):
   tiles = do_day(tiles)
 print(tile_count(tiles))
