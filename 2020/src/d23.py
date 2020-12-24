@@ -1,5 +1,4 @@
 import fileinput
-from copy import deepcopy
 
 class Node:
   def __init__(self, data=None, _prev=None, _next=None):
@@ -88,7 +87,7 @@ data = [int(cup) for cup in fileinput.input().readline().strip()]
 mx = max(data)
 
 cups = DoublyLinkedList()
-number_to_node = {}
+number_to_node = [None for _ in range(1000001)]
 for d in data:
   cups.insert_end(d)
   number_to_node[d] = cups.head.prev
@@ -96,7 +95,7 @@ for d in data:
 def play(cups, curr):
   sliced, removed = cups.get_slice(cups.get_next(curr), 3)
   dest_val = curr.data-1
-  while dest_val < 1 or dest_val in set(removed):
+  while dest_val < 1 or dest_val in removed:
     dest_val -= 1
     if dest_val < 1:
       dest_val = mx
@@ -115,7 +114,6 @@ while one.data != 1:
 print()
 
 cups = DoublyLinkedList()
-number_to_node = {}
 
 for d in data:
   cups.insert_end(d)
