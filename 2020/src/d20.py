@@ -130,7 +130,58 @@ for i in range(len(solved)):
     solved[i][0].combine_rows(solved[i][j])
   trimmed.combine_cols(solved[i][0])
 
-trimmed.rotate_cw()
-trimmed.rotate_cw()
-trimmed.rotate_cw()
-print(trimmed)
+monster_mid = '#    ##    ##    ###'
+orientations = []
+mx = 0
+for o in range(8):
+  good_count = 0
+  good_coords = []
+  for r in range(1, len(trimmed.tile)-1):
+    i = 0
+    while i < len(trimmed.tile)-len(monster_mid):
+      sub_row = trimmed[r][i:i+len(monster_mid)]
+      sadge = False
+      for c,s,m in zip(range(len(monster_mid)), sub_row, monster_mid):
+        if m != ' ' and s != m:
+          sadge = True
+          break
+      if not sadge:
+        good_count += 1
+        good_coords.append((r,i))
+        i += 20
+      else:
+        i += 1
+  if good_count > 0:
+    orientations.append((o, good_count, good_coords, deepcopy(trimmed)))
+    mx = max(mx, good_count)
+  trimmed.next_orient()
+trimmed.next_orient()
+
+monster_counts = []
+for o in orientations:
+  monster_count = 0
+  if o[1] == mx:
+    for r,c in o[2]:
+      valid = True
+      top = o[3][r-1][c+18]
+      if top == '#':
+        bot = o[3][r+1][c:c+20]
+        for check_char in [1,4,7,10,13,16]:
+          if bot[check_char] != '#':
+            valid = False
+            break
+      else:
+        valid = False
+      if valid:
+        monster_count += 1
+  monster_counts.append(monster_count)
+print(monster_counts)
+
+count = max(monster_counts)
+
+tile_count = 0
+for r in trimmed:
+  for c in r:
+    tile_count += c == '#'
+
+print(tile_count - (count * 15))
