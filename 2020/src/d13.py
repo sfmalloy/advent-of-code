@@ -19,14 +19,8 @@ for b in buses:
   idx += 1
 print(earliest_bus[1]*(earliest_bus[0]-earliest))
 
-def mod_inv(a, n):
-  p = 0
-  while (p*a) % n != 1:
-    p += 1
-  return p
-
 t = 0
 for bus in running:
-  t += ((bus-running[bus])*(prod//bus)*mod_inv(prod/bus, bus))
+  t += ((bus-running[bus])*(prod//bus)*pow(prod//bus, -1, bus))
 t %= prod
 print(t)
