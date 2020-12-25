@@ -158,14 +158,14 @@ for o in range(8):
 trimmed.next_orient()
 
 monster_counts = []
-for o in orientations:
+for orient in orientations:
   monster_count = 0
-  if o[1] == mx:
-    for r,c in o[2]:
+  if orient[1] == mx:
+    for r,c in orient[2]:
       valid = True
-      top = o[3][r-1][c+18]
+      top = orient[3][r-1][c+18]
       if top == '#':
-        bot = o[3][r+1][c:c+20]
+        bot = orient[3][r+1][c:c+20]
         for check_char in [1,4,7,10,13,16]:
           if bot[check_char] != '#':
             valid = False
