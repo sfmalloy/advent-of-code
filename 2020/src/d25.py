@@ -20,5 +20,4 @@ def get_key(subject, loop_size):
   return val
 
 door_loop = get_loop_size(7, door_public)
-
 print(get_key(card_public, door_loop))
