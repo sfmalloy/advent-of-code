@@ -5,9 +5,7 @@ from optparse import OptionParser
 
 # Generate number with leading zero if less than 10
 def num_file(num):
-  if int(num) < 10:
-    return f'0{num}'
-  return num
+  return num if int(num) > 9 else f'0{num}'
 
 # Run a single day given some file for input
 def run_single(file, day):
@@ -37,7 +35,7 @@ parser.add_option('-d', '--day', dest='day', help='Runs day <d>. If -f is not sp
   'default uses input from inputs sibling directory.')
 parser.add_option('-a', '--all', action='store_true', dest='run_all', 
   default=False, help='Run all days')
-parser.add_option('-f', '--file', dest='file', help='')
+parser.add_option('-f', '--file', dest='file', help='Specify different input file from default')
 
 options, _ = parser.parse_args()
 
