@@ -13,7 +13,6 @@ class Node:
 # Singly, circular linked list with a single reference to a Node.
 class LinkedList:
   def __init__(self, data):
-    self.size = 0
     self.head = Node(data[0])
     last = Node(data[-1], self.head)
     for i in range(1, len(data)-1):
