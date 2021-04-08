@@ -140,12 +140,12 @@ for o in range(8):
     i = 0
     while i < len(trimmed.tile)-len(monster_mid):
       sub_row = trimmed[r][i:i+len(monster_mid)]
-      sadge = False
+      sad = False
       for c,s,m in zip(range(len(monster_mid)), sub_row, monster_mid):
         if m != ' ' and s != m:
-          sadge = True
+          sad = True
           break
-      if not sadge:
+      if not sad:
         good_count += 1
         good_coords.append((r,i))
         i += 20
@@ -175,7 +175,6 @@ for orient in orientations:
       if valid:
         monster_count += 1
   monster_counts.append(monster_count)
-print(monster_counts)
 
 count = max(monster_counts)
 
