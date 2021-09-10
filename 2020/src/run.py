@@ -1,6 +1,7 @@
 import timeit
 import os
 import sys
+import platform
 from optparse import OptionParser
 
 # Generate number with leading zero if less than 10
@@ -15,19 +16,22 @@ def run_single(file, day):
   while len(sys.argv) > 2:
     sys.argv.pop()
   args = ['python', f'd{num_file(day)}.py', file]
-  time = timeit.timeit(stmt=f'subprocess.run({args})', setup='import subprocess', number=1)
-  print(f'Time: {round(1000*(time),3)}ms')
+  time = 1000 * timeit.timeit(stmt=f'subprocess.run({args})', setup='import subprocess', number=1)
+  print(f'Time: {time:.3f}ms')
+  return time
 
 # Run every day with input file specified as ../inputs/d<day_number>.in
 def run_all():
   num = 1
-  fnum =  num_file(num)
+  fnum = num_file(num)
+  total_time = 0
   while os.path.exists(f'd{fnum}.py'):
     print(f'Day {num}:')
-    run_single(f'../inputs/d{fnum}.in', num)
+    total_time += run_single(f'../inputs/d{fnum}.in', num)
     num += 1
     fnum = num_file(num)
     print()
+  print(f'Total time: {total_time:.3f}ms')
 
 # Add command line options
 parser = OptionParser()
@@ -40,6 +44,7 @@ parser.add_option('-f', '--file', dest='file', help='Specify different input fil
 options, _ = parser.parse_args()
 
 if options.run_all:
+  os.system('cls' if platform.system() == 'Windows' else 'clear')
   run_all()
 elif options.day is not None:
   if options.file is not None:
