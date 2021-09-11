@@ -13,7 +13,7 @@ def main(in_file: TextIOWrapper):
     # Part 2
     noun = verb = output = -1
     while noun < 100:
-        while verb < 100 :
+        while verb < 100:
             comp.reset()
             comp.program[1] = noun
             comp.program[2] = verb
