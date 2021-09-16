@@ -11,8 +11,9 @@ def day_num_file(day_num):
 def run_all():
     day_num = 1
     total_time = 0
-    while os.path.exists(os.path.join('solutions', f'd{day_num_file(day_num)}.py')):
-        total_time += run_single(day_num)
+    curr_time = 0
+    while (curr_time := run_single(day_num)) > 0:
+        total_time += curr_time
         day_num += 1
     return total_time
 
@@ -22,24 +23,23 @@ def run_single(day_num, input_file=None):
 
     if input_file is None:
         input_file = os.path.join('inputs', f'd{day_num}.in')
-    try:
-        solution_file = os.path.join('solutions', f'd{day_num}.py')
-        if not os.path.exists(solution_file):
-            e = FileNotFoundError()
-            e.filename = solution_file
-            raise e
-        with open(input_file) as f:
-            solution = import_module(f'.d{day_num}', package='solutions')
-            start = curr_time()
-            solution.main(f)
-            end = curr_time()
-            time = 1000 * (end - start)
-    except FileNotFoundError as e:
-        print(f'File {e.filename} not found')
-    except Exception as e:
-        print(e)
-    finally:
-        return time
+    solution_file = os.path.join('solutions', f'd{day_num}.py')
+
+    if not os.path.exists(solution_file):
+        print(f'Day {day_num} solution file not found')
+        return -1
+    elif not os.path.exists(input_file):
+        print(f'Input file {input_file} not found')
+        return -1
+
+    with open(input_file) as f:
+        solution = import_module(f'.d{day_num}', package='solutions')
+        start = curr_time()
+        solution.main(f)
+        end = curr_time()
+        time = 1000 * (end - start)
+
+    return time
 
 def main():
     parser = OptionParser()
