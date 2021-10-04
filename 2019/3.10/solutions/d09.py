@@ -1,8 +1,15 @@
 from io import TextIOWrapper
-from intcode import Memory
+from intcode import Intcode, Memory
 
 def main(in_file: TextIOWrapper):
-    mem = Memory()
-    mem[10] = 5
-    print(len(mem))
-    print(mem)
+    comp = Intcode(in_file.readline())
+    comp.read_in(1)
+    comp.run()
+
+    print(comp.read_out()[0])
+
+    comp.reset()
+    comp.read_in(2)
+    comp.run()
+
+    print(comp.read_out()[0])

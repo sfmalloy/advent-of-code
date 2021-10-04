@@ -16,18 +16,34 @@ class ReturnCode:
     OUTPUT = 1
     HALT   = 2
 
-class Memory(list):
-    def __getitem__(self, index: int):
-        if index >= len(self):
-            super(Memory, self).extend([0] * (index - len(self) + 1))
-        return super(Memory, self).__getitem__(index)
-    
-    def __setitem__(self, index: int, value: int):
-        if index >= len(self):
-            super(Memory, self).extend([0] * (index - len(self) + 1))
-        super(Memory, self).__setitem__(index, value)
+class Memory:
+    def __init__(self, data):
+        self.data = list(data)
 
-# bool,sum,i,end,temp
+    def check_bounds(self, index):
+        if isinstance(index, slice):
+            if index.start >= len(self):
+                self.data.extend([0] * (index.start - len(self) + 1))
+            if index.stop > len(self):
+                self.data.extend([0] * (index.stop - len(self)))
+        elif isinstance(index, int) and index >= len(self):
+            self.data.extend([0] * (index - len(self) + 1))
+    
+    def __getitem__(self, index):
+        self.check_bounds(index)
+        return self.data[index]
+    
+    def __setitem__(self, index, value: int):
+        self.check_bounds(index)
+        self.data[index] = value
+
+    def __len__(self):
+        return len(self.data)
+
+    def copy(self):
+        new_memory = Memory(self.data.copy())
+        return new_memory
+
 class Intcode:
     # Opcodes
     ADD = Opcode(1, 4)
@@ -52,11 +68,15 @@ class Intcode:
         self.output = []
     def is_finished(self):
         return self.program[self.ip] == Intcode.HLT.code
-    def arg(self, offset: int, mode: int) -> int:
-        if mode == Mode.POSITION:
+    def arg(self, offset: int, mode: int, is_result=False) -> int:
+        if is_result:
+            if mode == Mode.RELATIVE:
+                return self.program[self.ip + offset] + self.rel_base
+            return self.program[self.ip + offset]
+        elif mode == Mode.POSITION:
             return self.program[self.program[self.ip + offset]]
         elif mode == Mode.RELATIVE:
-            return self.program[self.program[self.ip + offset + self.rel_base]]
+            return self.program[self.program[self.ip + offset] + self.rel_base]
         else:
             return self.program[self.ip + offset]
     def reset(self):
@@ -64,6 +84,7 @@ class Intcode:
 
         self.ip = 0
         self.ipt_ptr = 0
+        self.rel_base = 0
 
         self.input.clear()
         self.output.clear()
@@ -89,17 +110,17 @@ class Intcode:
                 case [p3_mode, p2_mode, p1_mode, opcode]:
                     match opcode:
                         case Intcode.ADD.code:
-                            res_pos = self.arg(3, Mode.RESULT)
+                            res_pos = self.arg(3, p3_mode, is_result=True)
                             self.program[res_pos] = self.arg(1, p1_mode) + self.arg(2, p2_mode)
                             self.ip += Intcode.ADD.size
                         case Intcode.MUL.code:
-                            res_pos = self.arg(3, Mode.RESULT)
+                            res_pos = self.arg(3, p3_mode, is_result=True)
                             self.program[res_pos] = self.arg(1, p1_mode) * self.arg(2, p2_mode)
                             self.ip += Intcode.MUL.size
                         case Intcode.IPT.code:
                             if self.ipt_ptr == len(self.input):
                                 return ReturnCode.INPUT
-                            res_pos = self.arg(1, Mode.RESULT)
+                            res_pos = self.arg(1, p1_mode, is_result=True)
                             self.program[res_pos] = self.input[self.ipt_ptr]
                             self.ipt_ptr += 1
                             self.ip += Intcode.IPT.size
@@ -117,13 +138,13 @@ class Intcode:
                             else:
                                 self.ip += Intcode.JIF.size
                         case Intcode.LT.code:
-                            res_pos = self.arg(3, Mode.RESULT)
+                            res_pos = self.arg(3, p3_mode, is_result=True)
                             self.program[res_pos] = int(self.arg(1, p1_mode) < self.arg(2, p2_mode))
                             self.ip += Intcode.LT.size
                         case Intcode.EQ.code:
-                            res_pos = self.arg(3, Mode.RESULT)
+                            res_pos = self.arg(3, p3_mode, is_result=True)
                             self.program[res_pos] = int(self.arg(1, p1_mode) == self.arg(2, p2_mode))
                             self.ip += Intcode.EQ.size
                         case Intcode.REL.code:
-                            self.res_pos += self.arg(1, p1_mode)
+                            self.rel_base += self.arg(1, p1_mode)
                             self.ip += Intcode.REL.size
