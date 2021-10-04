@@ -1,5 +1,5 @@
 from io import TextIOWrapper
-from intcode import Intcode, Memory
+from intcode import Intcode
 
 def main(in_file: TextIOWrapper):
     comp = Intcode(in_file.readline())

@@ -12,5 +12,5 @@ def main(in_file: TextIOWrapper):
             m = curr
             curr = m//3 - 2
         t2 += leftover
-    print(f'Part 1: {t1}')
-    print(f'Part 2: {t2}')
+    print(t1)
+    print(t2)

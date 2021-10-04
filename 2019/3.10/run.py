@@ -12,9 +12,15 @@ def run_all():
     day_num = 1
     total_time = 0
     curr_time = 0
-    while (curr_time := run_single(day_num)) > 0:
-        total_time += curr_time
-        day_num += 1
+    while day_num <= 25:
+        print(f'Day {day_num}:')
+        curr_time = run_single(day_num)
+        if curr_time > 0:
+            total_time += curr_time
+            day_num += 1
+        else:
+            break
+        print()
     return total_time
 
 def run_single(day_num, input_file=None):
@@ -53,7 +59,7 @@ def main():
 
     if options.run_all:
         time = run_all()
-        print(f'Time: {time:.3f}ms')
+        print(f'\nTime: {time:.3f}ms')
     elif options.day is not None:
         time = run_single(options.day, options.file)
         if time > 0:
