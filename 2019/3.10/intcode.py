@@ -1,5 +1,3 @@
-from typing import overload
-
 class Opcode:
     def __init__(self, code: int, size: int):
         self.code: int = code
@@ -14,7 +12,7 @@ class Mode:
 class ReturnCode:
     INPUT  = 0
     OUTPUT = 1
-    HALT   = 2
+    HALT   = 99
 
 class Memory:
     def __init__(self, data):
@@ -90,8 +88,13 @@ class Intcode:
         self.output.clear()
     def read_in(self, *data):
         self.input += list(data)
-    def read_out(self) -> list[int]:
-        return self.output.copy()
+    def read_out(self, flush=True) -> list[int]:
+        out_copy = self.output.copy()
+        if flush:
+            self.output.clear()
+        return out_copy
+    def flush_out(self) -> None:
+        self.output.clear()
     def mode(self, code: int) -> list[int]:
         digits = []
         digits.append(code % 100)
