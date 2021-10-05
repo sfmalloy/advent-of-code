@@ -6,8 +6,18 @@ def get_slope(src_x, src_y, dst_x, dst_y):
         return (dst_y - src_y) * float('inf')
     return (dst_y - src_y) / (dst_x - src_x)
 
-def find_closest(src, points, side):
-    pass
+def get_distance(src_x, src_y, dst_x, dst_y):
+    return ((src_y - dst_y)**2 + (src_x - dst_x)**2) ** 0.5
+
+def find_closest(src, points):
+    min_dist = float('inf')
+    min_point = None
+    for p_x, p_y in points:
+        dist = get_distance(src[0], src[1], p_x, p_y)
+        if dist < min_dist:
+            min_dist = dist
+            min_point = (p_x, p_y)
+    return min_point
 
 def main(in_file: TextIOWrapper):
     grid = []
@@ -44,11 +54,38 @@ def main(in_file: TextIOWrapper):
 
     print(max_count)
 
-    num_bopped = 0
-    stop = 3
-    keys = list(reversed(sorted(final_slopes.keys())))
+    keys = list(sorted(final_slopes.keys()))
+
+    right = defaultdict(list)
+    left = defaultdict(list)
 
     for k in keys:
-        print(max_point, k, find_closest(max_point, final_slopes[k], 'r'), final_slopes[k])
-        print(max_point, k, find_closest(max_point, final_slopes[k], 'l'), final_slopes[k])
-        
+        for p in final_slopes[k]:
+            if p[0] < max_point[0]:
+                left[k].append(p)
+            else:
+                right[k].append(p)
+    
+    num_bopped = 0
+    stop = 200
+    while num_bopped < stop:
+        for slope in right:
+            if len(right[slope]) > 0:
+                closest = find_closest(max_point, right[slope])
+                right[slope].remove(closest)
+                num_bopped += 1
+                if num_bopped == stop:
+                    print(closest[0]*100 + closest[1])
+                    break
+
+        if num_bopped < stop:
+            for slope in left:
+                if (len(left[slope])) > 0:
+                    closest = find_closest(max_point, left[slope])
+                    left[slope].remove(closest)
+                    num_bopped += 1
+                    if num_bopped == stop:
+                        print(closest[0]*100 + closest[1])
+                        break
+
+
