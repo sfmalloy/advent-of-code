@@ -1,6 +1,5 @@
 import os
 import requests
-from run import day_num_file
 from optparse import OptionParser
 
 def print_file(filename):
@@ -10,6 +9,11 @@ def print_file(filename):
 def create_file(filename, data):
     with open(filename, 'w') as f:
         f.write(data)
+
+def day_num_file(day_num):
+    if int(day_num) < 10:
+        return f'0{day_num}'
+    return day_num
 
 def main():
     parser = OptionParser()

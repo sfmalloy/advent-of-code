@@ -37,12 +37,42 @@ class Moon:
     def __eq__(self, other):
         return self.pos == other.pos and self.vel == other.vel
 
-def sign(n):
+def sign(n: int) -> int:
     if n < 0:
         return -1
     elif n > 0:
         return 1
     return 0
+
+def step_axis(pos: list[int], vel: list[int]) -> None:
+    for i in range(len(pos)):
+        for j in range(len(pos)):
+            if i != j:
+                vel[i] += sign(pos[j] - pos[i])
+    for i in range(len(pos)):
+        pos[i] += vel[i]
+
+def find_axis_cycle(pos: list[int], vel: list[int]) -> int:
+    init_pos = pos.copy()
+    init_vel = vel.copy()
+
+    count = 1
+    step_axis(pos, vel)
+    while pos != init_pos or vel != init_vel:
+        step_axis(pos, vel)
+        count += 1
+    return count
+
+def gcd(a, b):
+    while a != b:
+        if a > b:
+            a -= b
+        else:
+            b -= a
+    return a
+
+def lcm(a, b):
+    return a * b // gcd(a, b)
 
 def main(in_file: TextIOWrapper):
     moons_a = []
@@ -61,3 +91,10 @@ def main(in_file: TextIOWrapper):
         for m in moons:
             m.move()
     print(sum([m.get_energy() for m in moons]))
+
+    moons = moons_b
+    cx = find_axis_cycle([m.pos.x for m in moons], [m.vel.x for m in moons])
+    cy = find_axis_cycle([m.pos.y for m in moons], [m.vel.y for m in moons])
+    cz = find_axis_cycle([m.pos.z for m in moons], [m.vel.z for m in moons])
+
+    print(lcm(cx, lcm(cy, cz)))

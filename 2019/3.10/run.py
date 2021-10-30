@@ -1,5 +1,5 @@
 import os
-from importlib import import_module
+import importlib
 from optparse import OptionParser
 from timeit import default_timer as curr_time
 
@@ -39,7 +39,7 @@ def run_single(day_num, input_file=None):
         return -1
 
     with open(input_file) as f:
-        solution = import_module(f'.d{day_num}', package='solutions')
+        solution = importlib.import_module(f'.d{day_num}', package='solutions')
         start = curr_time()
         solution.main(f)
         end = curr_time()
@@ -50,7 +50,7 @@ def run_single(day_num, input_file=None):
 def main():
     parser = OptionParser()
     parser.add_option('-d', '--day', dest='day', help='Runs day <d>. If -f is not specified, '\
-        'default uses input from inputs sibling directory.')
+        'default uses input file from inputs directory.')
     parser.add_option('-a', '--all', action='store_true', dest='run_all', 
         default=False, help='Run all days')
     parser.add_option('-f', '--file', dest='file', help='Specify different input file from default')
@@ -67,4 +67,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
