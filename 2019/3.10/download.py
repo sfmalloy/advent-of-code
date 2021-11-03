@@ -31,7 +31,7 @@ def main():
             cookies = {'session': os.environ['AOC_SESSION']}
             request = requests.get(f'https://adventofcode.com/{year}/day/{day_num}/input', cookies=cookies)
             if request.status_code != 200:
-                print(f'Error in retrieving input: Code {request.status_code}')
+                print(f'Error in retrieving input: Code {request.status_code} (Try resetting your session cookie)')
                 exit(-1)
             create_file(filename, request.text)
             print_file(filename)
