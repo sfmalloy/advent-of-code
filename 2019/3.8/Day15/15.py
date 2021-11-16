@@ -48,7 +48,7 @@ while curr.status != 2:
     elif m == 0:
       known[point(p.x, p.y)] = m
   curr = frontier.pop()
-  # print(curr.path)
+  print(curr.path)
 
 print(len(curr.path))
 min_x = min(known, key=lambda p: p.x).x

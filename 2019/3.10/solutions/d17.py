@@ -1,28 +1,6 @@
+from io import TextIOWrapper
+
 from intcode import Intcode
-
-with open('17.in') as f:
-    prog = list(map(int, f.readline().split(',')))
-comp = Intcode(prog)
-
-screen_ascii = comp.run()
-screen = []
-line = ''
-for s in screen_ascii:
-    if s != 10:
-        line += chr(s)
-    elif len(line) > 0:
-        screen.append(line)
-        line = ''
-
-x = y = 0
-p1 = 0
-for i in range(1, len(screen)-1):
-    for j in range(1, len(screen[i])-1):
-        if screen[i][j] == '#':
-            if screen[i-1][j] == screen[i+1][j] == screen[i][j-1] == screen[i][j+1] == screen[i][j]:
-                p1 += i*j
-        
-print(p1)
 
 class bot:
     def __init__(self, screen):
@@ -72,7 +50,7 @@ class bot:
             new_x += 1
         elif self.dir == self.W:
             new_x -= 1
-        if 0 <= new_x < self.cols() and 0 <= new_y < self.rows() and screen[new_y][new_x] != '.':
+        if 0 <= new_x < self.cols() and 0 <= new_y < self.rows() and self.screen[new_y][new_x] != '.':
             if do_move:
                 self.screen[self.y][self.x] = 'O'
                 self.x = new_x
@@ -103,24 +81,6 @@ class bot:
             rep += '\n'
         return rep
 
-b = bot(screen)
-cmd = []
-while b.find_open() is not None:
-    turn_dir = b.find_open()
-    cmd.append(turn_dir)
-    b.turn(turn_dir)
-
-    step_count = 0
-    while b.step():
-        step_count += 1
-    cmd.append(step_count)
-
-cmd_str = ''
-for i in range(len(cmd)):
-    cmd_str += str(cmd[i])
-    if i < len(cmd)-1:
-        cmd_str += ','
-
 def find_pattern(s, start):
     end = 3
     while s.count(s[start:end]) > 2 and ('A' not in s[start:end] and 'B' not in s[start:end]):
@@ -129,33 +89,78 @@ def find_pattern(s, start):
         end -= 1
     return s[start:end+1]
 
-start = 0
-patterns = {}
-letter = 'A'
-for i in range(3):
-    patt = find_pattern(cmd_str, start)
-    patterns[letter] = patt
-    a = 0
-    b = cmd_str.find(patt)
-    while cmd_str.count(patt) > 0 and cmd_str.find(patt) != -1:
-        cmd_str = cmd_str[a:b] + letter + cmd_str[b+len(patt):]
-        b = cmd_str.find(patt)
-    letter = chr(ord(letter)+1)
-    if i < 2:
-        while cmd_str[start] in 'ABC':
-            start = cmd_str.find(',', start+1)+1
+def main(in_file: TextIOWrapper):
+    raw_prog = in_file.readline()
+    comp = Intcode(raw_prog)
 
-prog[0] = 2
-comp = Intcode(prog)
-ascii_code = []
-for c in cmd_str:
-    ascii_code.append(ord(c))
-ascii_code.append(10)
-for func in patterns:
-    for c in patterns[func]:
+    comp.run()
+    screen_ascii = comp.read_out()
+    screen = []
+    line = ''
+    for s in screen_ascii:
+        if s != 10:
+            line += chr(s)
+        elif len(line) > 0:
+            screen.append(line)
+            line = ''
+
+    x = y = 0
+    p1 = 0
+    for i in range(1, len(screen)-1):
+        for j in range(1, len(screen[i])-1):
+            if screen[i][j] == '#':
+                if screen[i-1][j] == screen[i+1][j] == screen[i][j-1] == screen[i][j+1] == screen[i][j]:
+                    p1 += i*j
+    print(p1)
+
+    b = bot(screen)
+    cmd = []
+    while b.find_open() is not None:
+        turn_dir = b.find_open()
+        cmd.append(turn_dir)
+        b.turn(turn_dir)
+
+        step_count = 0
+        while b.step():
+            step_count += 1
+        cmd.append(step_count)
+
+    cmd_str = ''
+    for i in range(len(cmd)):
+        cmd_str += str(cmd[i])
+        if i < len(cmd)-1:
+            cmd_str += ','
+
+    start = 0
+    patterns = {}
+    letter = 'A'
+    for i in range(3):
+        patt = find_pattern(cmd_str, start)
+        patterns[letter] = patt
+        a = 0
+        b = cmd_str.find(patt)
+        while cmd_str.count(patt) > 0 and cmd_str.find(patt) != -1:
+            cmd_str = cmd_str[a:b] + letter + cmd_str[b+len(patt):]
+            b = cmd_str.find(patt)
+        letter = chr(ord(letter)+1)
+        if i < 2:
+            while cmd_str[start] in 'ABC':
+                start = cmd_str.find(',', start+1)+1
+
+    comp = Intcode(raw_prog)
+    comp.program[0] = 2
+    ascii_code = []
+    for c in cmd_str:
         ascii_code.append(ord(c))
     ascii_code.append(10)
-ascii_code.append(ord('n'))
-ascii_code.append(10)
-output = comp.run(readin=ascii_code)
-print(output[-1])
+    for func in patterns:
+        for c in patterns[func]:
+            ascii_code.append(ord(c))
+        ascii_code.append(10)
+    ascii_code.append(ord('n'))
+    ascii_code.append(10)
+
+    comp.read_in(*ascii_code)
+    comp.run()
+    output = comp.read_out()
+    print(output[-1])
