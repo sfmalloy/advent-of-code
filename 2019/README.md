@@ -1,7 +1,7 @@
 # Advent of Code 2019
 ## Using Python 3.10
 
-Pattern matching is here! So I decided to go back and revisit AoC 2019 to reimplement Intcode using features from Python 3.10. I also resolved other days as well just for fun. At the time of writing, the latest version of Python is Python 3.10rc2. To install it check out https://python.org/
+Pattern matching is here! So I decided to go back and revisit AoC 2019 to reimplement Intcode using features from Python 3.10. I also resolved other days as well just for fun. At the time of writing, the latest version of Python is Python 3.10. To install it check out https://python.org/
 
 To run a specific day:
 ```
