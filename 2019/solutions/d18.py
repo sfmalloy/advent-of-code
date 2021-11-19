@@ -1,11 +1,10 @@
+import collections
 from io import TextIOWrapper
-from dataclasses import dataclass, field
-from collections import defaultdict
-from multiprocessing.process import current_process
-from queue import PriorityQueue, Queue
+from dataclasses import FrozenInstanceError, dataclass, field
+from collections import defaultdict, deque
 from copy import deepcopy
-from pprint import pprint
-from multiprocessing import Process, Value
+import sys
+from types import FrameType, new_class
 
 class Dir:
     N = 0
@@ -13,89 +12,132 @@ class Dir:
     S = 2
     W = 3
 
-    dx = [0,1,0,-1]
-    dy = [-1,0,1,0]
-
-@dataclass(eq=True)
-class KeyDoorPair:
-    door: tuple[int, int] = (-1, -1)
-    key: tuple[int, int] = (-1, -1)
+    dr = [-1,0,1,0]
+    dc = [0,1,0,-1]
 
 @dataclass(frozen=True, eq=True)
 class State:
-    x: int
-    y: int
-    maze: list[list[str]]
-    key_door_pairs: defaultdict[KeyDoorPair]
-    keys: list[str] = field(default_factory=list)
-    priority: int = 0
-    steps: int = 0
-    seen: set[tuple[list[str]]] = field(default_factory=set)
-    path: list[tuple[int, int]] = field(default_factory=list)
+    r: int
+    c: int
+    keys: list[str]
 
-    def __lt__(self, other):
-        return self.priority < other.priority
-    
-    def make_next_states(self):
-        next_states = []
-        for d in range(Dir.N, Dir.W+1):
-            x = self.x + Dir.dx[d]
-            y = self.y + Dir.dy[d]
-            if self.maze[y][x] != '#' and not self.maze[y][x].isupper():
-                maze = deepcopy(self.maze)
-                maze[self.y][self.x] = '.'
-                keys = self.keys.copy()
-                if maze[y][x].islower():
-                    keys.append(maze[y][x])
-                    door_x, door_y = self.key_door_pairs.get(keys[-1]).door
-                    if door_x != -1:
-                        maze[door_x][door_y] = '.'
-                maze[y][x] = '@'
-                steps = self.steps + 1
-                priority = steps
-                seen = self.seen | {State.hashable_maze(maze)}
-                path = self.path.copy() + [(x, y)]
-                if len(seen) - len(self.seen) != 0:
-                    next_states.append(State(x, y, maze, self.key_door_pairs, keys, priority, steps, seen, path))
-        return next_states
-    
-    @staticmethod
-    def hashable_maze(maze):
-        h = ''
-        for r in maze:
-            for c in r:
-                h += c
-        return h
+g_cache = {}
+g_paths = defaultdict(list)
+
+# def get_dist(r, c, goal, maze, visited=set()):
+#     if (r, c, goal) in g_cache:
+#         return g_cache[(r, c, goal)]
+#     if maze[r][c] == goal:
+#         return 1
+#     min_dist = 100000
+#     if (r, c) not in visited:
+#         for d in range(Dir.N, Dir.W+1):
+#             new_r = r + Dir.dr[d]
+#             new_c = c + Dir.dc[d]
+#             if maze[new_r][new_c] != '#' and (new_r, new_c) not in visited:
+#                 curr_dist = 1 + get_dist(new_r, new_c, goal, maze, visited | {(r,c)})
+#                 min_dist = min(curr_dist, min_dist)
+#     if min_dist != 100000:
+#         g_cache[(r, c, goal)] = min_dist
+#     return min_dist
+
+def get_paths(r, c, goal, maze, visited=set()):
+    if (r, c, goal) in g_cache:
+        return g_cache[(r, c, goal)]
+    if maze[r][c] == goal:
+        return goal
+    # min_dist = 100000
+    min_path = ''
+    for d in range(Dir.N, Dir.W+1):
+        new_r = r + Dir.dr[d]
+        new_c = c + Dir.dc[d]
+        if maze[new_r][new_c] != '#' and (new_r, new_c) not in visited:
+            curr = maze[r][c] + get_paths(new_r, new_c, goal, maze, visited | {(r,c)})
+            if curr != maze[r][c] and (len(curr) < len(min_path) or min_path == ''):
+                min_path = curr
+    if min_path != '':
+        g_cache[(r, c, goal)] = min_path
+    return min_path
+
+def get_key_paths(curr_key, key_points, maze):
+    dists = {}
+    r, c = key_points[curr_key]
+    for k in key_points.keys():
+        if k != curr_key:
+            dists[k] = get_paths(r, c, k, maze)
+    return dists
+
+def memoize(f):
+    memo = {}
+    def helper(curr, raw, filtered, key_limit, keys=set(), seen=set(), steps=0):
+        tkeys = tuple(keys)
+        tseen = tuple(seen)
+        if (curr, key_limit, tkeys, tseen, steps) not in memo:
+            memo[(curr, tkeys, tseen, steps)] = f(curr, raw, filtered, key_limit, keys, seen, steps)
+        return memo[(curr, tkeys, tseen, steps)]
+    return helper
+
+@memoize
+def get_min_path(curr, raw, filtered, key_limit, keys=set(), seen=set(), steps=0):
+    if len(keys) == key_limit:
+        return steps
+    starts = []
+    for p in filtered[curr].values():
+        i = 0
+        while i < len(p) and (p[i] in seen or p[i].lower() in keys):
+            i += 1
+        if i < len(p) and p[i].islower():
+            starts.append(p[i])
+    dist = 1000000000000
+    for s in starts:
+        if curr == '@':
+            print(s)
+        if s not in seen:
+            dist = min(dist, get_min_path(s, raw, filtered, key_limit, keys | {s}, seen | {curr}, steps - 1 + len(raw[curr][s])))
+    return dist
 
 def main(in_file: TextIOWrapper):
+    sys.setrecursionlimit(1500)
     maze = [list(map(str, l.strip())) for l in in_file.readlines()]
-    key_door_pairs = defaultdict(KeyDoorPair)
-    x = y = 0
+    keys = 0
+    doors = {}
+    goals = {}
     for r in range(len(maze)):
         for c in range(len(maze[r])):
-            if maze[r][c].isupper():
-                key_door_pairs[maze[r][c].lower()].door = (r, c)
-            elif maze[r][c].islower():
-                key_door_pairs[maze[r][c]].key = (r, c)
-            elif maze[r][c] == '@':
-                y = r
-                x = c
-    
-    curr = State(x, y, maze, key_door_pairs, seen={State.hashable_maze(maze)})
-    q = Queue()
+            if maze[r][c].islower():
+                keys += 1
+            # elif maze[r][c].isupper():
+            #     keys[maze[r][c]] = (r,c)
+            # elif maze[r][c] == '@':
+            #     keys['@'] = (r,c)
+            if maze[r][c] not in '.#':
+                goals[maze[r][c]] = (r,c)
 
-    while len(curr.keys) < len(key_door_pairs):
-        for s in curr.make_next_states():
-            q.put(s)
-        curr = q.get()
-
-    prev_x, prev_y = x, y
-    for px, py in curr.path:
-        maze[py][px] = '@'
-        maze[prev_y][prev_x] = '.'
-        prev_x, prev_y = px, py
-        for r in maze:
-            print(''.join(r))
-        print()
-    print(curr.steps)
+    raw_paths = {}
+    filtered_paths = defaultdict(dict)
+    for k in goals:
+        raw_paths[k] = get_key_paths(k, goals, maze)
+        # print(k, raw_paths[k])
+        for p in raw_paths[k]:
+            path = ''
+            for c in raw_paths[k][p]:
+                if c not in f'.@':
+                    path += c
+            filtered_paths[k][p] = path
     
+    for k in goals:
+        to_remove = []
+        for g1,p1 in filtered_paths[k].items():
+            for g2,p2 in filtered_paths[k].items():
+                if g1 != g2 and p1 in p2:
+                    to_remove.append(g1)
+                    break
+        for t in to_remove:
+            filtered_paths[k].pop(t)
+    # for p in filtered_paths.items():
+        # print(p)
+
+    # # while collected < len(keys) - 1:
+    # for p in filtered_paths[curr_key].values():
+    #     print(p)
+    print(get_min_path('@', raw_paths, filtered_paths, keys))    
