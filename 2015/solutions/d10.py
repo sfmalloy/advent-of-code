@@ -1,10 +1,18 @@
 from io import TextIOWrapper
 
+def count_digit(num, i):
+    digit = num[i]
+    count = 0
+    while i < len(num) and num[i] == digit:
+        count += 1
+        i += 1
+    return count
+
 def look_and_say(num):
     i = 0
     new = ''
     while i < len(num):
-        count = num.count(i)
+        count = count_digit(num, i)
         new += f'{count}{num[i]}'
         i += count
     return new
