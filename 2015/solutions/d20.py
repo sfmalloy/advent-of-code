@@ -1,34 +1,45 @@
 from io import TextIOWrapper
-from math import sqrt
 
-def factor_sum(house, limit):
-    if house == 1:
-        return 1
+def factor_sum(house):
     s = 0
     i = 1
+    limit = int((house+1)**0.5)
     while i <= limit:
         if house % i == 0:
             s += i
+            div = house // i
+            if div != i:
+                s += div
+        i += 1
+    return s
+
+def factor_sum_limit(house):
+    s = 0
+    i = 1
+    c = 0
+    limit = int((house+1)**0.5)
+    while i <= limit and c < 50:
+        if house % i == 0:
+            s += i
+            c += 1
             if house // i != i:
                 s += house // i
+                c += 1
         i += 1
     return s
 
 def main(in_file: TextIOWrapper):
     goal = int(in_file.readline().strip())
-    # goal = 200
-    house = 1
-    count = 10
+    house = 0
+    count = 0
     while count < goal:
-        house += 1
-        count = 10 * factor_sum(house, int((house+1)**0.5))
-        # print(house,count)
+        house += 360
+        count = 10 * factor_sum(house)
     print(house)
 
-    # house = 1
-    # count = 11
-    # while count < goal:
-    #     house += 1
-    #     count = 11 * factor_sum(house, 50)
-    #     print(count)
-    # print(house)
+    house = 0
+    count = 0
+    while count < goal:
+        house += 360
+        count = 11 * factor_sum_limit(house)
+    print(house)
