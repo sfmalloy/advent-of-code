@@ -2,3 +2,6 @@
 .ionide/
 todo/
 test.in
+.fake
+.pls_cache/
+.metals/
