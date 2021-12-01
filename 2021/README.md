@@ -4,7 +4,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 
 | Day | Language | Description |
 ------|----------|-------------|
-|1|
+|1|x86 Assembly|Did it in a higher level language first and then translated by hand into x86. Fun problem and not too bad in assembly!|
 |2|
 |3|
 |4|
