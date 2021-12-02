@@ -40,7 +40,8 @@ int main(int argc, char** argv) {
 
 
         if (clock_gettime(CLOCK_REALTIME, &end) == -1) {
-            perror("end time error");
+            puts("Usage: ./Day01 <num_runs>");
+            return -1;
         }
 
         long double ns = (long double)(end.tv_nsec - begin.tv_nsec) / 1000000000L;

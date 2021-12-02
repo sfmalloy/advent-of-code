@@ -1,0 +1,25 @@
+C
+C++
+C#
+F#
+Java
+JavaScript
+Kotlin
+Common Lisp
+OCaml
+PHP
+(done) x86 Assembly
+Julia
+Rust
+Go
+Python
+Ruby
+Perl
+Bash
+Scala
+Haskell
+Swift
+R
+TypeScript
+APL
+Elixir
