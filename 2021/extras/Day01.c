@@ -9,11 +9,17 @@
 
 void read_input();
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc < 2) {
+        puts("Usage: ./Day01 <num_runs>");
+        return -1;
+    }
     struct timespec begin, end;
-    long double total = 0;
-    for (int i = 0; i < 10000; ++i) {
-        clock_gettime(CLOCK_REALTIME, &begin);
+    long double avg = 0;
+    for (int i = 0; i < strtol(argv[1], NULL, 10); ++i) {
+        if (clock_gettime(CLOCK_REALTIME, &begin) == -1) {
+            perror("start time error");
+        }
 
         const size_t N = 2000;
         int ARRAY[N];
@@ -32,11 +38,18 @@ int main() {
                 ++part2;
         }
 
-        clock_gettime(CLOCK_REALTIME, &end);
-        total += (end.tv_nsec - begin.tv_nsec) * 0.001;
+
+        if (clock_gettime(CLOCK_REALTIME, &end) == -1) {
+            perror("end time error");
+        }
+
+        long double ns = (long double)(end.tv_nsec - begin.tv_nsec) / 1000000000L;
+        long double sec = (long double) end.tv_sec - begin.tv_sec;
+        long double t = ns + sec;
+        avg += (t - avg) / (i + 1);
     }
 
-    printf("Time: %Lf us\n", (total / 10000));
+    printf("Time: %Lf us\n", avg * 1000000);
 
     return 0;
 }
