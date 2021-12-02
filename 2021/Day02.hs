@@ -32,4 +32,4 @@ main = do
     let part1 = follow (0, 0) dirs
     let part2 = followAim (0, 0, 0) dirs
     print (uncurry (*) part1)
-    print ((\ (x,y,_) -> x * y) part2)
+    print ((\ (x, y, _) -> x * y) part2)
