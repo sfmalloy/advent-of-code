@@ -28,9 +28,7 @@ followAim = foldl moveAim
 main :: IO()
 main = do
     content <- readFile "inputs/Day02.in"
-    let lst = lines content
-    let splitLines = map (splitOn " " . pack) lst
-    let dirs = map makePair splitLines
+    let dirs = map (makePair . splitOn " " . pack) (lines content)
     let part1 = follow (0, 0) dirs
     let part2 = followAim (0, 0, 0) dirs
     print (uncurry (*) part1)
