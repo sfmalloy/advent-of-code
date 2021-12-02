@@ -11,8 +11,8 @@ void read_input();
 
 int main() {
     struct timespec begin, end;
-    double total = 0;
-    for (int i = 0; i < 1; ++i) {
+    long double total = 0;
+    for (int i = 0; i < 10000; ++i) {
         clock_gettime(CLOCK_REALTIME, &begin);
 
         const size_t N = 2000;
@@ -33,10 +33,10 @@ int main() {
         }
 
         clock_gettime(CLOCK_REALTIME, &end);
-        total += (double)(end.tv_nsec - begin.tv_nsec);
+        total += (end.tv_nsec - begin.tv_nsec) * 0.001;
     }
 
-    printf("Time: %lf us\n", (total / 10000) * .001);
+    printf("Time: %Lf us\n", (total / 10000));
 
     return 0;
 }
