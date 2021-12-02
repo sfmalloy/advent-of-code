@@ -1,6 +1,6 @@
 # Advent of Code 2021!!
 
-Past couple years I've attempted have been in Python. This year I'm attempting to do all 25 days each in a different language.
+Past couple years I've attempted have been in Python. This year I'm attempting to do all 25 days each in a different language. I may have multiple solutions to some problems if I feel like experimenting in different langauges. To run them you need to `cd extras` and then compile/run.
 
 | Day | Language | Description |
 ------|----------|-------------|
