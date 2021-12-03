@@ -9,6 +9,9 @@
 
 void read_input();
 
+int ARRAY[2000];
+const size_t N = 2000;
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         puts("Usage: ./Day01 <num_runs>");
@@ -23,10 +26,9 @@ int main(int argc, char** argv) {
             return -1;
         }
 
-        const size_t N = 2000;
-        int ARRAY[N];
+        // int ARRAY[N];
 
-        read_input(ARRAY, N);
+        read_input();
 
         int part1 = 0;
         int part2 = 0;
@@ -56,7 +58,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-void read_input(int* ARRAY, size_t N) {
+void read_input() {
     int fd = open("../inputs/Day01.in", O_RDONLY);
     struct stat input_stat;
     fstat(fd, &input_stat);
@@ -64,7 +66,6 @@ void read_input(int* ARRAY, size_t N) {
     char* mem = (char*) mmap(NULL, input_stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     char* fmem = mem;
     for (size_t i = 0; i < N; ++i) {
-        off_t offset = 0;
         char* next;
         ARRAY[i] = strtol(fmem, &next, 10);
         fmem = next+1;
