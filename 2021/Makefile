@@ -1,4 +1,4 @@
-all: 1 2
+all: 1 2 3
 
 1: Day01.s
 	gcc -no-pie $^ -o Day01
@@ -7,7 +7,7 @@ all: 1 2
 	ghc $^
 
 3: Day03.go
-	go build Day03.go
+	go build $^
 
 clean:
 	$(RM) *.o *.hi

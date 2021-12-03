@@ -2,23 +2,11 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
+	"time"
 )
-
-const BUFFER = 12
-
-func binToDec(bin string) int {
-	res := 0
-	pow2 := 1
-
-	for i := len(bin) - 1; i >= 0; i -= 1 {
-		res += pow2 * (int(bin[i]) - int('0'))
-		pow2 *= 2
-	}
-
-	return res
-}
 
 func countBits(nums []string) []int {
 	counts := make([]int, len(nums[0]))
@@ -71,37 +59,36 @@ func filterNums(nums []string, index int, useMostCommon bool) []string {
 }
 
 func main() {
+	startTime := time.Now()
+
+	// File input
 	f, err := os.Open("inputs/Day03.in")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer f.Close()
-
+	// Java-like Scanner object that reads line by line
 	scanner := bufio.NewScanner(f)
 	nums := make([]string, 0)
-
-	// equivalent to while scanner.hasNext() like in Java
+	// Go uses "for" for all loops, so this is essentially a traditional "while" loop
 	for scanner.Scan() {
 		nums = append(nums, scanner.Text())
 	}
 
+	halfLen := len(nums) / 2
 	bits := countBits(nums)
 	gamma := 0
 	epsilon := 0
 	pow2 := 1
-	numLines := len(nums)
+	// Convert part 1 results to decimal
 	for i := len(nums[0]) - 1; i >= 0; i -= 1 {
-		if bits[i] > numLines/2 {
+		if bits[i] > halfLen {
 			gamma += pow2
-		} else if bits[i] < numLines/2 {
+		} else if bits[i] < halfLen {
 			epsilon += pow2
 		}
 		pow2 *= 2
 	}
-
-	// Part 1
-	println(gamma * epsilon)
 
 	oxygen := make([]string, len(nums))
 	carbon := make([]string, len(nums))
@@ -118,6 +105,24 @@ func main() {
 		}
 	}
 
-	// Part 2
-	println(binToDec(oxygen[0]) * binToDec(carbon[0]))
+	elapsed := time.Since(startTime)
+	f.Close()
+
+	// Convert part 2 results to decimal
+	oDec := 0
+	cDec := 0
+	pow2 = 1
+	for i := L - 1; i >= 0; i -= 1 {
+		if oxygen[0][i] == '1' {
+			oDec += pow2
+		}
+		if carbon[0][i] == '1' {
+			cDec += pow2
+		}
+		pow2 *= 2
+	}
+
+	println(gamma * epsilon)
+	println(oDec * cDec)
+	fmt.Printf("Time: %s\n", elapsed)
 }
