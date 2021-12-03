@@ -11,13 +11,13 @@ PHP
 (done) x86 Assembly
 Julia
 Rust
-Go
+(done) Go
 Python
 Ruby
 Perl
 Bash
 Scala
-Haskell
+(done) Haskell
 Swift
 R
 TypeScript

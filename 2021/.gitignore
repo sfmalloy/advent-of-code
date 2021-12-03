@@ -2,6 +2,7 @@
 *
 !*.*
 !*/
+!Makefile
 
 .vscode/
 .ionide/
@@ -12,3 +13,5 @@ test.in
 .metals/
 *.hi
 *.o
+*.out
+build/

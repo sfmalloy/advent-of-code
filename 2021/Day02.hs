@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-import Text.Printf
 import System.IO
 import Data.Text (splitOn, Text, pack, unpack)
 

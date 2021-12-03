@@ -14,11 +14,13 @@ int main(int argc, char** argv) {
         puts("Usage: ./Day01 <num_runs>");
         return -1;
     }
+
     struct timespec begin, end;
     long double avg = 0;
     for (int i = 0; i < strtol(argv[1], NULL, 10); ++i) {
         if (clock_gettime(CLOCK_REALTIME, &begin) == -1) {
-            perror("start time error");
+            puts("start time error");
+            return -1;
         }
 
         const size_t N = 2000;
@@ -37,7 +39,6 @@ int main(int argc, char** argv) {
             if (ARRAY[i] > ARRAY[i - 3])
                 ++part2;
         }
-
 
         if (clock_gettime(CLOCK_REALTIME, &end) == -1) {
             puts("Usage: ./Day01 <num_runs>");
