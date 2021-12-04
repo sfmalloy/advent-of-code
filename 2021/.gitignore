@@ -19,3 +19,5 @@ test.in
 *.class
 *.out
 *.iml
+*.class
+
