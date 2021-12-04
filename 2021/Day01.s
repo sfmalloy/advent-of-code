@@ -1,18 +1,12 @@
-    .data
-ARRAY:
-    .align 4
-    .zero 8000
-PRINT_STR:
-    .asciz "%lld\n"
-FILENAME:
-    .asciz "inputs/Day01.in\0"
-N:
-    .long 2000
 
+    .data
+    .align 32
+ARRAY:
+    .zero 8000
     .text
     .global main
 #==============================================================================
-# print(void) -> void
+# print(int num) -> void
 print:
     pushq %rbp
     movq %rsp, %rbp
@@ -27,44 +21,6 @@ print:
     leave
     ret
 
-#==============================================================================
-# part1(void) -> int
-part1:
-    pushq %rbp
-    movq %rsp, %rbp
-
-    movq $40, %rax
-
-.part1_end:
-    leave
-    ret
-
-#==============================================================================
-# part2(void) -> int
-part2:
-    pushq %rbp
-    movq %rsp, %rbp
-
-    xorl %eax, %eax         # zero out counter
-    leaq ARRAY, %rdi        # array pointer
-    movl $2, %esi           # end index
-.part2_loop:
-    cmpl N, %esi
-    je .part2_end
-
-    movl 12(%rdi), %ecx
-    cmp (%rdi), %ecx        # if *(ARRAY+12) > *ARRAY then jump to .L03
-    jg .L03
-    jmp .L04
-.L03:
-    inc %eax                # increment counter
-.L04:
-    inc %esi                # increment index
-    addq $4, %rdi           # move array pointer
-    jmp .part2_loop          # jump to start of loop
-.part2_end:
-    leave
-    ret
 #==============================================================================
 
 read_input:
@@ -101,28 +57,6 @@ read_input:
     movq %r12, %r13         # Copy mmap return value into r13 for use with strtol
     subq $16, %rsp          # Make room for temp char*
     xorq %r14, %r14         # Zero out index
-    leaq ARRAY, %r15        # Save address of ARRAY
-
-.input_loop:
-    leaq -160(%rbp), %rdi   # Address of memory pointer (char**)
-    movq %rdi, -152(%rbp)   # Save address on stack
-
-    movq $10, %rdx          # strtol arg 3 = base 10
-    movq -152(%rbp), %rsi   # strtol arg 2 = Address of char* for advancing mem ptr
-    movq %r13, %rdi         # strtol arg 1 = mem ptr
-    call strtol
-
-    movq %rax, (%r15)       # Move strtol result into array
-    addq $4, %r15           # Advance array pointer
-    movq -160(%rbp), %r13   # Advance to next line
-
-    inc %r14                # Increment index
-    cmpq N, %r14            # compare N to index
-    jl .input_loop
-.input_loop_end:
-    movq %r14, %rsi
-    movq $PRINT_STR, %rdi
-    callq printf
 
     movq -96(%rbp), %rsi    # munmap arg 2 = mem size in bytes to unmap
     movq %r12, %rdi         # munmap arg 1 = address to unmap
@@ -149,13 +83,19 @@ main:
     movq %rsp, %rbp
 
     callq read_input
-
-    movq $40, %rdi
-    callq print
+    movq N, %rdi
 
     xorl %eax, %eax
     leave
     ret
 
 #==============================================================================
-
+    .data
+N:
+    .long 2000
+FILENAME:
+    .asciz "inputs/Day01.in"
+PRINT_STR:
+    .asciz "%d\n"
+DEBUG:
+    .asciz "index = %d\n"

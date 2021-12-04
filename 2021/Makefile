@@ -9,6 +9,9 @@ all: 1 2 3
 3: Day03.go
 	go build $^
 
+4: Day04.java
+	javac Day04.java
+
 clean:
-	$(RM) *.o *.hi
+	$(RM) *.o *.hi *.class
 	$(RM) Day01 Day02 Day03
