@@ -31,6 +31,7 @@ public class Day04 {
                             board[i][j++] = Integer.parseInt(elem);
                         }
                     }
+
                 }
                 boards.add(board);
             }
@@ -46,7 +47,7 @@ public class Day04 {
                     // mark the key in the board
                     boolean found = false;
                     for (var row : board) {
-                        for (int c = 0; c < row.length; ++c) {
+                        for (int c = 0; c < 5; ++c) {
                             if (row[c] == key) {
                                 row[c] *= -1;
                                 found = true;
