@@ -31,7 +31,7 @@ public class Day04 {
             if (lines.length == 5) {
                 Square[][] board = new Square[5][5];
                 for (int i = 0; i < 5; ++i) {
-                    List<Integer> line = Arrays.stream(lines[i].split(" ")).filter(s -> s != " " && s.length() >= 1).map(Integer::parseInt).collect(Collectors.toList());
+                    List<Integer> line = Arrays.stream(lines[i].split(" ")).filter(s -> s.length() > 0).map(Integer::parseInt).collect(Collectors.toList());
                     for (int j = 0; j < 5; ++j) {
                         board[i][j] = new Square(line.get(j));
                     }
