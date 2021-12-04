@@ -1,107 +1,97 @@
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashSet;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Day04 {
-    public static class Square {
-        public int id;
-        public boolean marked;
-
-        public Square(int id) {
-            this.id = id;
-            this.marked = false;
-        }
-    }
-
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner input = new Scanner(new File("inputs/Day04.in"));
+        Instant start = Instant.now();
 
-        // all possible sums
-        List<Integer> nums = Arrays.asList(input.nextLine().split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
-        ArrayList<Square[][]> boards = new ArrayList<>();
+        Scanner input = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream("inputs/Day04.in"))));
+        ArrayList<Integer> nums = new ArrayList<>();
+        for (var n : input.nextLine().split(",")) {
+            nums.add(Integer.parseInt(n));
+        }
 
+        ArrayList<int[][]> boards = new ArrayList<>();
         input.useDelimiter("\n\n");
         while (input.hasNext()) {
             String[] lines = input.next().strip().split("\n");
             if (lines.length == 5) {
-                Square[][] board = new Square[5][5];
+                int[][] board = new int[5][5];
                 for (int i = 0; i < 5; ++i) {
-                    List<Integer> line = Arrays.stream(lines[i].split(" ")).filter(s -> s.length() > 0).map(Integer::parseInt).collect(Collectors.toList());
-                    for (int j = 0; j < 5; ++j) {
-                        board[i][j] = new Square(line.get(j));
+                    int j = 0;
+                    for (var elem : lines[i].split(" ")) {
+                        if (elem.length() > 0) {
+                            board[i][j++] = Integer.parseInt(elem);
+                        }
                     }
                 }
                 boards.add(board);
             }
         }
 
+        int first = 0;
+        int last = 0;
         HashSet<Integer> won = new HashSet<>();
         for (var key : nums) {
-            int idx = 1;
+            int b = 1;
             for (var board : boards) {
-                // marks the key
-                boolean found = false;
-                for (var row : board) {
-                    for (var col : row) {
-                        if (col.id == key) {
-                            col.marked = true;
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (found)
-                        break;
-                }
-
-                if (found && !won.contains(idx)) {
-                    // rows
-                    for (int i = 0; i < 5; ++i) {
-                        int marked = 0;
-                        for (int j = 0; j < 5; ++j) {
-                            marked += board[i][j].marked ? 1 : 0;
-                        }
-                        if (marked == 5)
-                            won.add(idx);
-                    }
-
-                    if (won.contains(idx)) {
-                        if (won.size() == 1 || won.size() == boards.size())
-                            System.out.println(boardSum(board) * key);
-                    }
-
-                    if (!won.contains(idx)) {
-                        // cols
-                        for (int j = 0; j < 5; ++j) {
-                            int marked = 0;
-                            for (int i = 0; i < 5; ++i) {
-                                marked += board[i][j].marked ? 1 : 0;
+                if (!won.contains(b)) {
+                    // mark the key in the board
+                    boolean found = false;
+                    for (var row : board) {
+                        for (int c = 0; c < row.length; ++c) {
+                            if (row[c] == key) {
+                                row[c] *= -1;
+                                found = true;
+                                break;
                             }
-                            if (marked == 5)
-                                won.add(idx);
+                        }
+                        if (found)
+                            break;
+                    }
+
+                    // check for win if board hasn't already been won
+                    if (found) {
+                        for (int i = 0; i < 5; ++i) {
+                            int markedRows = 0;
+                            int markedCols = 0;
+                            for (int j = 0; j < 5; ++j) {
+                                markedRows += board[i][j] < 0 ? 1 : 0;
+                                markedCols += board[j][i] < 0 ? 1 : 0;
+                            }
+                            if (markedRows == 5 || markedCols == 5)
+                                won.add(b);
                         }
 
-                        if (won.contains(idx)) {
-                            if (won.size() == 1 || won.size() == boards.size())
-                                System.out.println(boardSum(board) * key);
+                        if (won.contains(b)) {
+                            if (won.size() == 1)
+                                first = boardSum(board) * key;
+                            else if (won.size() == boards.size())
+                                last = boardSum(board) * key;
                         }
                     }
                 }
-                ++idx;
+                ++b;
             }
         }
+        Instant end = Instant.now();
+        System.out.printf("%d\n%d\n", first, last);
+        System.out.printf("Time: %f ms\n", Duration.between(start, end).toNanos() / 1000000.0);
     }
 
-    public static int boardSum(Square[][] board) {
+    public static int boardSum(int[][] board) {
         int sum = 0;
         for (var row : board) {
             for (var col : row) {
-                if (!col.marked)
-                    sum += col.id;
+                if (col > 0)
+                    sum += col;
             }
         }
         return sum;

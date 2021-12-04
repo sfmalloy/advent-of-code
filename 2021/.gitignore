@@ -4,16 +4,18 @@
 !*/
 !Makefile
 
+# Directories
 .vscode/
 .ionide/
 todo/
-test.in
-.fake
+out/
+build/
 .pls_cache/
 .metals/
-*.hi
-*.o
-*.out
-build/
+
+# Files
+test.in
+.*
 *.class
-.gdb_history
+*.out
+*.iml
