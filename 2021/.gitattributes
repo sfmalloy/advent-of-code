@@ -1,2 +1,2 @@
 # Set default line ending behavior
-* text=lf
+* text eol=lf
