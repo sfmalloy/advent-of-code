@@ -13,7 +13,7 @@ Julia
 Rust
 (done) Go
 Python
-Ruby
+(done) Ruby
 Perl
 Bash
 Scala
