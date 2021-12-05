@@ -1,81 +1,82 @@
+def bounds(a, b)
+    start = 0
+    finish = 0
+    if a < b then
+        return a, b
+    end
+    return b, a
+end
+
 Point = Struct.new(:x, :y)
 
-part1 = Hash.new
-points = Hash.new
+no_diag = Hash.new(0)
+diag = Hash.new(0)
+
 File.readlines("inputs/Day05.in").each do |line|
     p1, p2 = line.split(" -> ")
     x1, y1 = p1.split(",").map(&:to_i)
     x2, y2 = p2.split(",").map(&:to_i)
+
+    dx = 0
+    dy = 0
+    x = x_end = y = y_end = 0
+    is_diag = false
     if y1 == y2 then
-        start = x1 < x2 ? x1 : x2
-        finish = x1 == start ? x2 : x1
-        for x in start..finish do
-            pt = Point.new(x, y1)
-            if not points.has_key?(pt) then
-                points[pt] = 0
-            end
-            if not part1.has_key?(pt) then
-                part1[pt] = 0
-            end
-            part1[pt] += 1
-            points[pt] += 1
-        end
+        dx = 1
+        y = y_end = y1
+        x, x_end = bounds(x1, x2)
     elsif x1 == x2 then
-        start = y1 < y2 ? y1 : y2
-        finish = y1 == start ? y2 : y1
-        for y in start..finish do
-            pt = Point.new(x1, y)
-            if not points.has_key?(pt) then
-                points[pt] = 0
-            end
-            if not part1.has_key?(pt) then
-                part1[pt] = 0
-            end
-            part1[pt] += 1
-            points[pt] += 1
-        end
+        dy = 1
+        x = x_end = x1
+        y, y_end = bounds(y1, y2)
     elsif x1 > x2 then
         dy = y2 < y1 ? 1 : -1
+        dx = 1
         x = x2
         y = y2
-        while x <= x1 do
-            pt = Point.new(x, y)
-            if not points.has_key?(pt) then
-                points[pt] = 0
-            end
-            points[pt] += 1
-            x += 1
-            y += dy
-        end
-    elsif x2 > x1 then
+        x_end = x1
+        y_end = y1
+        is_diag = true
+    else
         dy = y1 < y2 ? 1 : -1
+        dx = 1
         x = x1
         y = y1
-        while x <= x2 do
+        x_end = x2
+        y_end = y1
+        is_diag = true
+    end
+
+    if not is_diag then
+        while x <= x_end and y <= y_end do
             pt = Point.new(x, y)
-            if not points.has_key?(pt) then
-                points[pt] = 0
-            end
-            points[pt] += 1
-            x += 1
+            no_diag[pt] += 1
+            diag[pt] += 1
             y += dy
+            x += dx
+        end
+    else
+        while x <= x_end do
+            pt = Point.new(x, y)
+            diag[pt] += 1
+            y += dy
+            x += dx
         end
     end
 end
 
-total = 0
-part1.each do |pt, count|
+part1 = 0
+no_diag.each do |pt, count|
     if count > 1 then
-        total += 1
+        part1 += 1
     end
 end
-puts total
+puts part1
 
-total = 0
-points.each do |pt, count|
+part2 = 0
+diag.each do |pt, count|
     if count > 1 then
-        total += 1
+        part2 += 1
     end
 end
-
-puts total
+puts part2
