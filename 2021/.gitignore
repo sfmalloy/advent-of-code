@@ -20,4 +20,5 @@ test.in
 *.out
 *.iml
 *.class
+*.o
 
