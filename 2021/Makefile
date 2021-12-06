@@ -1,4 +1,4 @@
-all: 1 2 3
+all: 6
 
 1: Day01.s
 	gcc -m64 -g -no-pie $^ -o Day01
@@ -10,8 +10,11 @@ all: 1 2 3
 	go build $^
 
 4: Day04.java
-	javac Day04.java
+	javac $^
+
+6: Day06.c
+	gcc -g $^ -o Day06
 
 clean:
-	$(RM) *.o *.hi *.class
-	$(RM) Day01 Day02 Day03
+	$(RM) *.o *.hi *.class a.out
+	$(RM) Day01 Day02 Day03 Day06

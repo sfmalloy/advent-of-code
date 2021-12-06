@@ -1,23 +1,28 @@
+Langs used: 
+-----------
+x86 Assembly
+Haskell
+Go
+Java
+Ruby
 C
+
+Langs to use:
+-------------
 C++
 C#
 F#
-(done) Java
 JavaScript
 Kotlin
 Common Lisp
 OCaml
 PHP
-(done) x86 Assembly
 Julia
 Rust
-(done) Go
 Python
-(done) Ruby
 Perl
 Bash
 Scala
-(done) Haskell
 Swift
 R
 TypeScript
