@@ -93,5 +93,5 @@ time = Benchmark.realtime {
 
 puts part1
 puts part2
-time = sprintf("%.3f ms", time * 1000)
+time = sprintf("Time: %.3f ms", time * 1000)
 puts time

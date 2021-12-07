@@ -26,5 +26,5 @@ Scala
 Swift
 R
 TypeScript
-Awk
+Dart
 Elixir

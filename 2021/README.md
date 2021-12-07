@@ -9,7 +9,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |3|Go|Interesting langauge. Like some sort of C/Python hybrid or something. Solution ended up being kind of fast-ish. Arrays are weird to work with.|
 |4|Java|Java streams and Scanner made input parsing not terrible. The rest of the problem was fine because of that.|
 |5|Ruby|I like Ruby. Similar to Python so it's easy to get a hang of quick and write some quick code. Initial solution is not the best but it works! Also hashes are wonderful and super easy to use in Ruby, 10/10|
-|6|C|I like C, no complaints really. Possibly will try to super-optimize this. At first I ended up trying to simulate using a linked list for part 1, but it didn't work for part 2 because it was too slow. Then I realized I only need the counts and nothing else, making my part 1 solution obsolete. I kept it though in the `extras` directory for fun.|
+|6|C|I like C, no complaints really. This problem was good for C because there weren't complicated data structures to deal with. At first I ended up trying to simulate using a linked list for part 1, but it didn't work for part 2 because it was too slow. Then I realized I only need the counts and nothing else, making my part 1 solution obsolete. I kept it though in the `extras` directory for fun.|
 |7|
 |8|
 |9|

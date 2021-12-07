@@ -21,4 +21,4 @@ test.in
 *.iml
 *.class
 *.o
-
+*.hi

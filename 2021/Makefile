@@ -1,19 +1,19 @@
-all: 6
+all: 1 2 3 4 6
 
 1: Day01.s
-	gcc -m64 -g -no-pie $^ -o Day01
+	@gcc -m64 -g -no-pie $^ -o Day01
 
 2: Day02.hs
-	ghc $^
+	@ghc $^
 
 3: Day03.go
-	go build $^
+	@go build $^
 
 4: Day04.java
-	javac $^
+	@javac $^
 
 6: Day06.c
-	gcc -g $^ -o Day06
+	@gcc $^ -o Day06
 
 clean:
 	$(RM) *.o *.hi *.class a.out
