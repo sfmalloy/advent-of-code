@@ -1,4 +1,4 @@
-all: 1 2 3 4 6
+all: 1 2 3 4 6 7
 
 1: Day01.s
 	@gcc -m64 -g -no-pie $^ -o Day01
@@ -14,6 +14,9 @@ all: 1 2 3 4 6
 
 6: Day06.c
 	@gcc $^ -o Day06
+
+7: Day07.kt
+	@kotlinc $^ -include-runtime -d Day07.jar
 
 clean:
 	$(RM) *.o *.hi *.class a.out

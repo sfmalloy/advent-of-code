@@ -12,6 +12,8 @@ out/
 build/
 .pls_cache/
 .metals/
+.idea/
+lib/
 
 # Files
 test.in
@@ -22,3 +24,5 @@ test.in
 *.class
 *.o
 *.hi
+*.xml
+*.jar
