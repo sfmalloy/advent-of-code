@@ -19,5 +19,5 @@ all: 1 2 3 4 6 7
 	@kotlinc $^ -include-runtime -d Day07.jar
 
 clean:
-	$(RM) *.o *.hi *.class a.out
+	$(RM) *.o *.hi *.class a.out *.jar
 	$(RM) Day01 Day02 Day03 Day06
