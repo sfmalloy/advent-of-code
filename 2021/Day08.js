@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 let intersection = (a, b) => {
     let intersect = new Set();
     for (let elem of b) {
@@ -6,7 +8,7 @@ let intersection = (a, b) => {
         }
     }
     return intersect;
-}
+};
 
 let negation = (fullset, subset) => {
     let negate = new Set();
@@ -15,21 +17,20 @@ let negation = (fullset, subset) => {
             negate.add(elem);
         }
     }
-
     return negate;
-}
+};
 
 let findPattern = (number, keys, others, compareFunction) => {
     let removeIndex = -1;
     for (let pattern of others) {
-        if (compareFunction(keys, pattern)) {
+        if (compareFunction(keys, pattern, intersection, negation)) {
             keys[number] = pattern;
             removeIndex = others.indexOf(pattern);
             break;
         }
     }
     others.splice(removeIndex, 1);
-}
+};
 
 let startTime = performance.now();
 
@@ -76,24 +77,24 @@ for (let entry of entries) {
 
     // Use different combinations of intersections and negations to filter the rest
     // of the cases.
-    findPattern(9, keys, others, (keys, pattern) => {
+    findPattern(9, keys, others, (keys, pattern, intersection) => {
         return intersection(keys[4], pattern).size == 4;
     });
 
-    findPattern(0, keys, others, (keys, pattern) => {
+    findPattern(0, keys, others, (keys, pattern, intersection, negation) => {
         let negate = negation(keys[8], pattern);
         return negate.size == 1 && intersection(negate, keys[1]).size == 0;
     });
 
-    findPattern(6, keys, others, (keys, pattern) => {
+    findPattern(6, keys, others, (_, pattern) => {
         return pattern.size == 6;
     });
 
-    findPattern(3, keys, others, (keys, pattern) => {
+    findPattern(3, keys, others, (keys, pattern, intersection) => {
         return intersection(keys[1], pattern).size == 2;
     });
 
-    findPattern(5, keys, others, (keys, pattern) => {
+    findPattern(5, keys, others, (keys, pattern, intersection) => {
         return intersection(keys[6], pattern).size == 5;
     });
 
@@ -116,4 +117,4 @@ let endTime = performance.now();
 
 console.log(easyCount);
 console.log(sum);
-console.log(`Time: ${(endTime - startTime).toFixed(3)}ms`)
+console.log(`Time: ${(endTime - startTime).toFixed(3)}ms`);
