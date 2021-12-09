@@ -7,13 +7,13 @@ Java
 Ruby
 C
 Kotlin
+JavaScript
 
 Langs to use:
 -------------
 C++
 C#
 F#
-JavaScript
 Common Lisp
 OCaml
 PHP
