@@ -12,7 +12,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |6|C|I like C, no complaints really. This problem was good for C because there weren't complicated data structures to deal with. At first I ended up trying to simulate using a linked list for part 1, but it didn't work for part 2 because it was too slow. Then I realized I only need the counts and nothing else, making my part 1 solution obsolete. I kept it though in the `extras` directory for fun.|
 |7|Kotlin|Kotlin is really nice. Compiles to Java JVM bytecode but has a more concise syntax. Overall great language, and fairly nice problem to do in Kotlin!|
 |8|Javascript|This was honestly a really good problem for Javascript. Being able to pass comparison functions made this solution *mostly* clean.|
-|9|
+|9|Julia|An alright language. Some weird quirks but overall an alright experience. Having set unions built in came in very handy|
 |10|
 |11|
 |12|
