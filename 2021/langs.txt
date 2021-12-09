@@ -8,6 +8,7 @@ Ruby
 C
 Kotlin
 JavaScript
+Julia
 
 Langs to use:
 -------------
@@ -17,7 +18,6 @@ F#
 Common Lisp
 OCaml
 PHP
-Julia
 Rust
 Python
 Perl
