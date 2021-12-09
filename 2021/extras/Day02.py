@@ -1,1 +1,0 @@
-print('\n'.join(map(str,(lambda p:(sum(p[0])*sum(p[1]),sum(p[0])*sum(p[0][i]*sum(p[1][:i])for i in range(len(p[1])))))([list(e)for e in list(map(f,[(lambda l:(l[0],int(l[1])))(line.split())for line in open(__import__('sys').argv[1])])for f in[lambda p:p[1]if p[0][0]=='f'else 0,lambda p:(-1 if p[0][0]=='u'else 1)*p[1]if p[0][0]in'ud'else 0])]))))
