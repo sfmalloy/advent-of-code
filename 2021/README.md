@@ -13,7 +13,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |7|Kotlin|Kotlin is really nice. Compiles to Java JVM bytecode but has a more concise syntax. Overall great language, and fairly nice problem to do in Kotlin!|
 |8|Javascript|This was honestly a really good problem for Javascript. Being able to pass comparison functions made this solution *mostly* clean.|
 |9|Julia|An alright language. Some weird quirks but overall an alright experience. Having set unions built in came in very handy|
-|10|
+|10|Swift|Not a huge fan of Swift for some reason. The syntax is overall fine in the end, but the compiler error messages weren't always the best. Also having multiple types for a string, and not letting me just make a character using single quotes was annoying. (I suppose it makes sense if this language is designed to make Apple apps). For the problem itself, tried to solve using recursion at first, ended up using "stacks" (arrays used as stacks). That part wasn't too bad after getting used to using `!` when needed.|
 |11|
 |12|
 |13|

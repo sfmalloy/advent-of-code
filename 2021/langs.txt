@@ -9,22 +9,12 @@ C
 Kotlin
 JavaScript
 Julia
+Swift
 
 Langs to use:
 -------------
-C++
-C#
-F#
-Common Lisp
-OCaml
-PHP
-Rust
-Python
-Perl
-Bash
-Scala
-Swift
-R
-TypeScript
-Dart
-Elixir
+Compiled: C++, Rust, C#
+Interpreted: PHP, Python, Perl, R, Typescript
+Functional: OCaml, Common Lisp, Elixir, F#
+JVM: Scala, Groovy
+Misc: Lua
