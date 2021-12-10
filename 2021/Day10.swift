@@ -1,16 +1,5 @@
 import Foundation
 
-// Found this extension online that lets you index into a string
-// using an integer instead of always having to do the index function
-// call nonsense. This is entirely for convenience and to make the code
-// much cleaner
-extension StringProtocol {
-    // Overriding the subscript method to accept an Int and return a Character
-    subscript(offset: Int) -> Character {
-        return self[index(startIndex, offsetBy: offset)]
-    }
-}
-
 let errorValues = [
     Character(")"): 3,
     Character("]"): 57,
