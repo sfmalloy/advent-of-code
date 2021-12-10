@@ -11,7 +11,6 @@ extension StringProtocol {
     }
 }
 
-
 let errorValues = [
     Character(")"): 3,
     Character("]"): 57,
@@ -53,10 +52,10 @@ for line in lines {
         }
     }
 
-    if valid && stack.count > 0 {
+    if valid {
         var currScore = 0
-        for c in stack.reversed() {
-            let value = autocompleteValues[c]!
+        for i in stride(from: stack.count-1, through: 0, by: -1) {
+            let value = autocompleteValues[stack[i]]!
             currScore = (5 * currScore) + value
         }
         autocompleteScores.append(currScore)
