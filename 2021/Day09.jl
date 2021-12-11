@@ -1,4 +1,4 @@
-function check_adjacent(r, c, heightmap)
+function check_adjacent(r::Int64, c::Int64, heightmap::Vector{Vector{Int64}})::Bool
     valid = true
     if r > 1
         valid = valid && heightmap[r-1][c] > heightmap[r][c]
@@ -15,36 +15,36 @@ function check_adjacent(r, c, heightmap)
     return valid
 end
 
-function flood(r, c, heightmap, seen)
-    if heightmap[r][c] == 9 || (r, c) in seen
+function flood(r::Int64, c::Int64, heightmap::Vector{Vector{Int64}}, seen::BitSet)::BitSet
+    if heightmap[r][c] == 9 || (r * length(heightmap[r]) + c) in seen
         return seen
     end
 
-    new_seen = union(seen, Set([(r, c)]))
+    push!(seen, (r * length(heightmap[r]) + c))
     if r > 1
-        union!(new_seen, flood(r-1, c, heightmap, new_seen))
+        union!(seen, flood(r-1, c, heightmap, seen))
     end
     if r < length(heightmap)
-        union!(new_seen, flood(r+1, c, heightmap, new_seen))
+        union!(seen, flood(r+1, c, heightmap, seen))
     end
     if c > 1
-        union!(new_seen, flood(r, c-1, heightmap, new_seen))
+        union!(seen, flood(r, c-1, heightmap, seen))
     end
     if c < length(heightmap[r])
-        union!(new_seen, flood(r, c+1, heightmap, new_seen))
+        union!(seen, flood(r, c+1, heightmap, seen))
     end
 
-    return new_seen
+    return seen
 end
 
 function main()
-    heightmap = []
+    heightmap = Vector{Int64}[]
     for line in eachline("inputs/Day09.in")
         push!(heightmap, map(c -> parse(Int64, c), split(line, "")))
     end
 
     part1 = 0
-    low_points = []
+    low_points = Tuple{Int64,Int64}[]
     for row in 1:length(heightmap)
         for col in 1:length(heightmap[row])
             if check_adjacent(row, col, heightmap)
@@ -53,15 +53,17 @@ function main()
             end
         end
     end
-    println(part1)
 
-    sizes = []
+    sizes = Int64[]
     for (row, col) in low_points
-        push!(sizes, flood(row, col, heightmap, Set()))
+        push!(sizes, length(flood(row, col, heightmap, BitSet())))
     end
 
-    sorted = sort(map(s -> length(s), sizes))
-    println(sorted[length(sorted)] * sorted[length(sorted)-1] * sorted[length(sorted)-2])
+    sort!(sizes)
+    part2 = sizes[length(sizes)] * sizes[length(sizes)-1] * sizes[length(sizes)-2]
+
+    println(part1)
+    println(part2)
 end
 
 main()
