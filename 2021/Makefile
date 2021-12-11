@@ -4,7 +4,7 @@ all: 1 2 3 4 6 7 10
 	@gcc -m64 -g -no-pie $^ -o Day01
 
 2: Day02.hs
-	@ghc $^
+	@ghc -v0 $^
 
 3: Day03.go
 	@go build $^
@@ -23,4 +23,4 @@ all: 1 2 3 4 6 7 10
 
 clean:
 	$(RM) *.o *.hi *.class a.out *.jar
-	$(RM) Day01 Day02 Day03 Day06
+	$(RM) Day01 Day02 Day03 Day06 Day10
