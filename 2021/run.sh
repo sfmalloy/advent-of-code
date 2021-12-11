@@ -30,6 +30,9 @@ then
 elif [ $1 -eq 10 ]
 then
     ./Day10
+elif [ $1 -eq 11 ]
+then
+    ./Day11.pl
 else
     echo "Day not found"
 fi

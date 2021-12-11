@@ -10,11 +10,12 @@ Kotlin
 JavaScript
 Julia
 Swift
+Perl
 
 Langs to use:
 -------------
 Compiled: C++, Rust, C#
-Interpreted: PHP, Python, Perl, R, Typescript
+Interpreted: PHP, Python, R, Typescript
 Functional: OCaml, Common Lisp, Elixir, F#
 JVM: Scala, Groovy
 Misc: Lua

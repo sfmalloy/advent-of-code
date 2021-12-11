@@ -14,7 +14,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |8|Javascript|This was honestly a really good problem for Javascript. Being able to pass comparison functions made this solution *mostly* clean.|
 |9|Julia|An alright language. Some weird quirks but overall an alright experience. Having set unions built in came in very handy|
 |10|Swift|Not a huge fan of Swift for some reason. The syntax is overall fine in the end, but the compiler error messages weren't always the best. Mostly, Strings are not fun to deal with in this language. There's a lot of setup to use them which makes it somewhat tedious. For the problem itself, tried to solve using recursion at first, ended up using "stacks" (arrays used as stacks). That part wasn't too bad after getting used to using `!` when needed.|
-|11|
+|11|Perl|Perl is an interesting language. Everything is lists or scalars and it's interesting to convert between the two. Not having to convert a read in string to an integer to do arithmetic on it was interesting. Could do some interesting visualizations fairly easily in this language if desired.|
 |12|
 |13|
 |14|
