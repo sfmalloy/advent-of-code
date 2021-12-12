@@ -84,7 +84,7 @@ public class Day04 {
         }
         Instant end = Instant.now();
         System.out.printf("%d\n%d\n", first, last);
-        System.out.printf("Time: %f ms\n", Duration.between(start, end).toNanos() / 1000000.0);
+        System.out.printf("Time: %.3fms\n", Duration.between(start, end).toNanos() / 1000000.0);
     }
 
     public static int boardSum(int[][] board) {

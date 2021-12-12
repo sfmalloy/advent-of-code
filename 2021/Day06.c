@@ -23,7 +23,7 @@ int main() {
     clock_gettime(CLOCK_REALTIME, &finish);
 
     printf("%llu\n%llu\n", part1, part2);
-    printf("Time: %.3lf µs\n", (double)((finish.tv_sec - start.tv_sec) + ((finish.tv_nsec - start.tv_nsec) / 1e9)) * 1e6);
+    printf("Time: %.3lfµs\n", (double)((finish.tv_sec - start.tv_sec) + ((finish.tv_nsec - start.tv_nsec) / 1e9)) * 1e6);
 
     return 0;
 }

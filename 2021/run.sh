@@ -1,6 +1,30 @@
 #!/usr/bin/bash
 
-if [ $1 -eq 1 ]
+if [ "$#" -ne 1 ]
+then
+    ./Day01
+    echo
+    ./Day02
+    echo
+    ./Day03
+    echo
+    java Day04
+    echo
+    ruby Day05.rb
+    echo
+    ./Day06
+    echo
+    java -jar Day07.jar
+    echo
+    node Day08.js
+    echo
+    julia Day09.jl
+    echo
+    ./Day10
+    echo
+    ./Day11.pl
+    echo
+elif [ $1 -eq 1 ]
 then
     ./Day01
 elif [ $1 -eq 2 ]

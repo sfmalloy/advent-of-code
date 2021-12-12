@@ -13,7 +13,7 @@ all: 1 2 3 4 6 7 10
 	@javac $^
 
 6: Day06.c
-	@gcc $^ -o Day06
+	@gcc $^ -O2 -o Day06
 
 7: Day07.kt
 	@kotlinc $^ -include-runtime -d Day07.jar

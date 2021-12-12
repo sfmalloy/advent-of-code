@@ -16,7 +16,7 @@ fun main() {
         for (d in dists) {
             val delta = max(d, dist) - min(d, dist)
             total1 += delta
-            total2 += delta * (delta + 1UL) / 2UL
+            total2 += delta * (delta + 1UL) shr 1
         }
         part1 = min(part1, total1)
         part2 = min(part2, total2)
@@ -26,5 +26,5 @@ fun main() {
 
     println(part1)
     println(part2)
-    println("Time %.3f ms".format((endTime - startTime) / 1e6))
+    println("Time %.3fms".format((endTime - startTime) / 1e6))
 }
