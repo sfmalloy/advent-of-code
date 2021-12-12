@@ -73,16 +73,25 @@ def get_min_path(curr, raw, filtered, key_limit, keys=set(), seen=set()):
             dist = min(dist, len(raw[curr][s]) - 1 + get_min_path(s, raw, filtered, key_limit, keys | {s}, seen | {curr}))
     return dist
 
-def part_one(maze):
-    keys = 0
-    goals = {}
-    for r in range(len(maze)):
-        for c in range(len(maze[r])):
-            if maze[r][c].islower():
-                keys += 1
-            if maze[r][c] not in '.#':
-                goals[maze[r][c]] = (r,c)
+@memoize
+def get_min_path_quad(curr, raw, filtered, key_limit, keys=set(), seen=set()):
+    if len(keys) == key_limit:
+        return 0
+    starts = []
+    for p in filtered[curr].values():
+        i = 0
+        while i < len(p) and (p[i] in seen or p[i].lower() in keys):
+            i += 1
+        if i < len(p) and p[i].islower():
+            starts.append(p[i])
+    
+    dist = 1000000000000
+    for s in starts:
+        if s not in seen:
+            dist = min(dist, len(raw[curr][s]) - 1 + get_min_path(s, raw, filtered, key_limit, keys | {s}, seen | {curr}))
+    return dist
 
+def get_all_paths(maze, goals):
     raw_paths = {}
     filtered_paths = defaultdict(dict)
     for k in goals:
@@ -90,7 +99,7 @@ def part_one(maze):
         for p in raw_paths[k]:
             path = ''
             for c in raw_paths[k][p]:
-                if c not in f'.@':
+                if c not in f'.@1234':
                     path += c
             filtered_paths[k][p] = path
     
@@ -103,9 +112,39 @@ def part_one(maze):
                     break
         for t in to_remove:
             filtered_paths[k].pop(t)
+    return raw_paths, filtered_paths
 
-    print(get_min_path('@', raw_paths, filtered_paths, keys))
+
+def part_one(maze, goals, keys):
+    raw_paths, filtered_paths = get_all_paths(maze, goals)
+    print(get_min_path('@', raw_paths, filtered_paths, keys))    
 
 def main(in_file: TextIOWrapper):
     maze = [list(map(str, l.strip())) for l in in_file.readlines()]
-    part_one(maze)
+
+    keys = 0
+    goals = {}
+    for r in range(len(maze)):
+        for c in range(len(maze[r])):
+            if maze[r][c].islower():
+                keys += 1
+            if maze[r][c] not in '.#':
+                goals[maze[r][c]] = (r,c)
+
+    part_one(maze, goals, keys)
+    # mr, mc = goals['@']
+    # maze[mr-1][mc-1:mc+2] = ['1', '#', '2']
+    # maze[mr][mc-1:mc+2] = ['#', '#', '#']
+    # maze[mr+1][mc-1:mc+2] = ['3', '#', '4']
+
+    # for r in range(len(maze)):
+    #     for c in range(len(maze[r])):
+    #         if maze[r][c] in '1234':
+    #             goals[maze[r][c]] = (r,c)
+    # goals.pop('@')
+
+    # for r in maze:
+    #     print(''.join(r))
+    
+    # raw_paths, filtered_paths = get_all_paths(maze, goals)
+    # print(filtered_paths)
