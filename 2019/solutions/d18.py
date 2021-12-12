@@ -73,8 +73,7 @@ def get_min_path(curr, raw, filtered, key_limit, keys=set(), seen=set()):
             dist = min(dist, len(raw[curr][s]) - 1 + get_min_path(s, raw, filtered, key_limit, keys | {s}, seen | {curr}))
     return dist
 
-def main(in_file: TextIOWrapper):
-    maze = [list(map(str, l.strip())) for l in in_file.readlines()]
+def part_one(maze):
     keys = 0
     goals = {}
     for r in range(len(maze)):
@@ -105,4 +104,8 @@ def main(in_file: TextIOWrapper):
         for t in to_remove:
             filtered_paths[k].pop(t)
 
-    print(get_min_path('@', raw_paths, filtered_paths, keys))    
+    print(get_min_path('@', raw_paths, filtered_paths, keys))
+
+def main(in_file: TextIOWrapper):
+    maze = [list(map(str, l.strip())) for l in in_file.readlines()]
+    part_one(maze)
