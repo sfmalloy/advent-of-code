@@ -15,7 +15,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |9|Julia|An alright language. Some weird quirks but overall an alright experience. Having set unions built in came in very handy|
 |10|Swift|Not a huge fan of Swift for some reason. The syntax is overall fine in the end, but the compiler error messages weren't always the best. Mostly, Strings are not fun to deal with in this language. There's a lot of setup to use them which makes it somewhat tedious. For the problem itself, tried to solve using recursion at first, ended up using "stacks" (arrays used as stacks). That part wasn't too bad after getting used to using `!` when needed.|
 |11|Perl|Perl is an interesting language. Everything is lists or scalars and it's interesting to convert between the two. Not having to convert a read in string to an integer to do arithmetic on it was interesting. Could do some interesting visualizations fairly easily in this language if desired.|
-|12|
+|12|Common Lisp|Done purely functional, no setq or anything like that. It was *very* hard at first but eventually dropped the notion that this needs to be clean/efficient code and ended up with this solution. It was very satisfying in the end and I'm glad I solved this in Lisp. Path finding problems fit recursion very nicely too, which helps (a lot).|
 |13|
 |14|
 |15|

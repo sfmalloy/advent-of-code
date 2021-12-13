@@ -11,11 +11,12 @@ JavaScript
 Julia
 Swift
 Perl
+Common Lisp
 
 Langs to use:
 -------------
 Compiled: C++, Rust, C#
 Interpreted: PHP, Python, R, Typescript
-Functional: OCaml, Common Lisp, Elixir, F#
+Functional: OCaml, Elixir, F#
 JVM: Scala, Groovy
 Misc: Lua
