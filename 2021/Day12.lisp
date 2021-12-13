@@ -16,7 +16,6 @@
         '() 
         (append (split-all (cdr lst)) (list (split (car lst))))))
 
-
 ; Count unique paths from curr-node to the end
 (defun count-paths (curr-node pairs search-pairs &optional visited (num-unique 0))
     (cond
@@ -37,26 +36,28 @@
         (t (leave curr-node pairs (cdr search-pairs) visited num-unique))))
 
 ; Count paths while able to visit a single small cave twice
-(defun count-paths-2 (curr-node pairs search-pairs &optional visited (num-unique 0))
+(defun count-paths2 (curr-node pairs search-pairs &optional visited (num-unique 0))
     (cond
         ((string= curr-node "end") 1)
         ((and (string= curr-node "start") 
             (member "start" visited :test #'string=)) 0)
-        ((= 1 (count (string-downcase curr-node) visited :test #'string=)) 
+        ((member (string-downcase curr-node) visited :test #'string=) 
             (+ num-unique (leave curr-node pairs pairs visited num-unique)))
-        (t (+ num-unique (leave-2 curr-node pairs pairs visited num-unique)))))
+        (t (+ num-unique (leave2 curr-node pairs pairs visited num-unique)))))
 
 ; Leave a node counting the paths from it to the end while able to visit a single small cave twice, and other small caves at most once
-(defun leave-2 (curr-node pairs search-pairs visited num-unique)
+(defun leave2 (curr-node pairs search-pairs visited num-unique)
     (cond
         ((null search-pairs) num-unique)
         ((string= curr-node (caar search-pairs)) 
-            (+ (leave-2 curr-node pairs (cdr search-pairs) visited num-unique) 
-                (count-paths-2 (cadar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
+            (+ (leave2 curr-node pairs (cdr search-pairs) visited num-unique) 
+                (count-paths2 (cadar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
         ((string= curr-node (cadar search-pairs)) 
-            (+ (leave-2 curr-node pairs (cdr search-pairs) visited num-unique) 
-                (count-paths-2 (caar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
-        (t (leave-2 curr-node pairs (cdr search-pairs) visited num-unique))))
+            (+ (leave2 curr-node pairs (cdr search-pairs) visited num-unique) 
+                (count-paths2 (caar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
+        (t (leave2 curr-node pairs (cdr search-pairs) visited num-unique))))
 
-(print (count-paths "start" (split-all (read-file (open "inputs/Day12.in") 22)) (split-all (read-file (open "inputs/Day12.in") 22))))
-(print (count-paths-2 "start" (split-all (read-file (open "inputs/Day12.in") 22)) (split-all (read-file (open "inputs/Day12.in") 22))))
+; Part 1
+(format t "~d~%" (funcall (lambda (input) (count-paths "start" input input)) (split-all (read-file (open "inputs/Day12.in") 22))))
+; Part 2
+(format t "~d~%" (funcall (lambda (input) (count-paths2 "start" input input)) (split-all (read-file (open "inputs/Day12.in") 22))))
