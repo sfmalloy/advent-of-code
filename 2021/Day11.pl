@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 use warnings;
 use strict;
 use Time::HiRes qw(clock_gettime CLOCK_MONOTONIC);

@@ -22,8 +22,11 @@ then
     echo
     ./Day10
     echo
-    ./Day11.pl
+    perl Day11.pl
     echo
+    clisp Day12.lisp
+    echo
+    ./Day13
 elif [ $1 -eq 1 ]
 then
     ./Day01
@@ -56,7 +59,13 @@ then
     ./Day10
 elif [ $1 -eq 11 ]
 then
-    ./Day11.pl
+    perl Day11.pl
+elif [ $1 -eq 12 ]
+then
+    clisp Day12.lisp
+elif [ $1 -eq 13 ]
+then
+    ./Day13
 else
     echo "Day not found"
 fi

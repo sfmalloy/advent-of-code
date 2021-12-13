@@ -12,10 +12,11 @@ Julia
 Swift
 Perl
 Common Lisp
+Rust
 
 Langs to use:
 -------------
-Compiled: C++, Rust, C#
+Compiled: C++, C#
 Interpreted: PHP, Python, R, Typescript
 Functional: OCaml, Elixir, F#
 JVM: Scala, Groovy
