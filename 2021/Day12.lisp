@@ -50,8 +50,12 @@
 (defun leave-2 (curr-node pairs search-pairs visited num-unique)
     (cond
         ((null search-pairs) num-unique)
-        ((string= curr-node (caar search-pairs)) (+ (leave-2 curr-node pairs (cdr search-pairs) visited num-unique) (count-paths-2 (cadar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
-        ((string= curr-node (cadar search-pairs)) (+ (leave-2 curr-node pairs (cdr search-pairs) visited num-unique) (count-paths-2 (caar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
+        ((string= curr-node (caar search-pairs)) 
+            (+ (leave-2 curr-node pairs (cdr search-pairs) visited num-unique) 
+                (count-paths-2 (cadar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
+        ((string= curr-node (cadar search-pairs)) 
+            (+ (leave-2 curr-node pairs (cdr search-pairs) visited num-unique) 
+                (count-paths-2 (caar search-pairs) pairs pairs (append (list curr-node) visited) num-unique)))
         (t (leave-2 curr-node pairs (cdr search-pairs) visited num-unique))))
 
 (print (count-paths "start" (split-all (read-file (open "inputs/Day12.in") 22)) (split-all (read-file (open "inputs/Day12.in") 22))))
