@@ -1,4 +1,3 @@
-from collections import deque
 class Opcode:
     def __init__(self, code: int, size: int):
         self.code: int = code
@@ -78,7 +77,7 @@ class Intcode:
             return self.program[self.program[self.ip + offset] + self.rel_base]
         else:
             return self.program[self.ip + offset]
-    def reset(self, flush=True):
+    def reset(self):
         self.program = self.initial_program.copy()
 
         self.ip = 0
@@ -86,27 +85,24 @@ class Intcode:
         self.rel_base = 0
 
         self.input.clear()
-        if flush:
-            self.output.clear()
+        self.output.clear()
     def read_in(self, *data):
         self.input += list(data)
-    def read_out(self, flush=True, fast=False) -> list[int]:
-        if fast:
-            return self.output
+    def read_out(self, flush=True) -> list[int]:
+        out_copy = self.output.copy()
         if flush:
-            out_copy = self.output.copy()
             self.output.clear()
-            return out_copy
+        return out_copy
     def flush_out(self) -> None:
         self.output.clear()
-    def mode(self, code: int) -> deque[int]:
-        digits = deque()
-        digits.appendleft(code % 100)
+    def mode(self, code: int) -> list[int]:
+        digits = []
+        digits.append(code % 100)
         code //= 100
         while len(digits) < 4:
-            digits.appendleft(code % 10)
+            digits.append(code % 10)
             code //= 10
-        return digits
+        return list(reversed(digits))
     def run(self):
         while True:
             mode = self.mode(self.program[self.ip])
