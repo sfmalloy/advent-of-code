@@ -1,4 +1,4 @@
-all: 1 2 3 4 6 7 10 13
+all: 14
 
 1: Day01.s
 	@gcc -m64 -g -no-pie $^ -o Day01
@@ -23,6 +23,9 @@ all: 1 2 3 4 6 7 10 13
 
 13: Day13.rs
 	@rustc Day13.rs
+
+14: Day14.scala
+	@scalac $^
 
 clean:
 	$(RM) *.o *.hi *.class a.out *.jar

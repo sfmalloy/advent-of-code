@@ -66,6 +66,9 @@ then
 elif [ $1 -eq 13 ]
 then
     ./Day13
+elif [ $1 -eq 14 ]
+then
+    scala Day14
 else
     echo "Day not found"
 fi
