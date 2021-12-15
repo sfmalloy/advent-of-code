@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import { performance } from 'perf_hooks'
 
 function getCountDiff(_pairs: Map<string, number>, _counts: Map<string, number>, rules: Map<string, string>, limit: number) {
     let pairs: Map<string, number> = new Map<string, number>(_pairs)
@@ -52,6 +53,8 @@ function getCountDiff(_pairs: Map<string, number>, _counts: Map<string, number>,
     return max - min;
 }
 
+let startTime = performance.now();
+
 let file: string[] = fs.readFileSync('inputs/Day14.in', 'utf-8').split('\n')
 let polymer: string = file[0]
 
@@ -78,5 +81,11 @@ for (let i = 0; i < polymer.length - 1; ++i) {
     pairs.set(pair, pairs.get(pair)! + 1)
 }
 
-console.log(getCountDiff(pairs, counts, rules, 10))
-console.log(getCountDiff(pairs, counts, rules, 40))
+let part1: number = getCountDiff(pairs, counts, rules, 10)
+let part2: number = getCountDiff(pairs, counts, rules, 40)
+
+let endTime = performance.now();
+
+console.log(part1)
+console.log(part2)
+console.log(`Time: ${(endTime - startTime).toFixed(3)}ms`)
