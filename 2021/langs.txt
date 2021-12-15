@@ -13,11 +13,12 @@ Swift
 Perl
 Common Lisp
 Rust
+Typescript
 
 Langs to use:
 -------------
 Compiled: C++, C#
-Interpreted: PHP, Python, R, Typescript
+Interpreted: PHP, Python, R
 Functional: OCaml, Elixir, F#
 JVM: Scala, Groovy
 Misc: Lua

@@ -17,7 +17,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |11|Perl|Perl is an interesting language. Everything is lists or scalars and it's interesting to convert between the two. Not having to convert a read in string to an integer to do arithmetic on it was interesting. Could do some interesting visualizations fairly easily in this language if desired.|
 |12|Common Lisp|Done purely functional, no setq or anything like that. It was *very* hard at first but eventually dropped the notion that this needs to be clean/efficient code and ended up with this solution. It was very satisfying in the end and I'm glad I solved this in Lisp. Path finding problems fit recursion very nicely too, which helps (a lot).|
 |13|Rust|Good language. Fast and fun to use, and has lots of neat std lib stuff I want to explore eventually. Fun fact I started this problem in Typescript and realized Sets don't work good with custom classes, so I switched to Rust which has #derive for basic implementations of methods for comparison and hashing.|
-|14|
+|14|Typescript|Pretty much just Javascript with types. I really enjoyed using this language, has a good Map class which was 1000% needed for this day. I tired Lua at first and it was not fun so not sure if I'll actually use Lua for a problem or not.|
 |15|
 |16|
 |17|

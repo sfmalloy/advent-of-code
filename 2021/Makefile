@@ -24,9 +24,6 @@ all: 14
 13: Day13.rs
 	@rustc Day13.rs
 
-14: Day14.scala
-	@scalac $^
-
 clean:
 	$(RM) *.o *.hi *.class a.out *.jar
 	$(RM) Day01 Day02 Day03 Day06 Day10 Day13

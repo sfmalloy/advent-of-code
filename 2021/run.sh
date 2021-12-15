@@ -68,7 +68,7 @@ then
     ./Day13
 elif [ $1 -eq 14 ]
 then
-    scala Day14
+    ts-node Day14.ts
 else
     echo "Day not found"
 fi
