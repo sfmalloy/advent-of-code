@@ -1,4 +1,4 @@
-all: 14
+all: 15
 
 1: Day01.s
 	@gcc -m64 -g -no-pie $^ -o Day01
@@ -23,6 +23,9 @@ all: 14
 
 13: Day13.rs
 	@rustc Day13.rs
+
+15: Day15.cpp
+	@g++ -O2 Day15.cpp -o Day15
 
 clean:
 	$(RM) *.o *.hi *.class a.out *.jar
