@@ -1,4 +1,4 @@
-all: 15
+all: 16
 
 1: Day01.s
 	@gcc -m64 -g -no-pie $^ -o Day01
@@ -27,6 +27,9 @@ all: 15
 15: Day15.cpp
 	@g++ -O2 Day15.cpp -o Day15
 
+16: Day16.ml
+	@ocamlc -o Day16 Day16.ml
+
 clean:
-	$(RM) *.o *.hi *.class a.out *.jar
-	$(RM) Day01 Day02 Day03 Day06 Day10 Day13
+	$(RM) *.o *.hi *.class a.out *.jar *.cmi *.cmo
+	$(RM) Day01 Day02 Day03 Day06 Day10 Day13 Day15 Day16
