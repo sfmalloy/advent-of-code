@@ -77,7 +77,9 @@ for (y_vel in (y_max+1):(abs(y_min)-1)) {
     for (x_vel in 0:x_min) {
         xs = simulate_x(x_vel, x_min, x_max)
         if (length(xs) > 0) {
-
+            for (r in xs) {
+                
+            }
         }
     }
 }
