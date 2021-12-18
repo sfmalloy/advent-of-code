@@ -15,11 +15,6 @@ foreach (var c in text) {
     bitdex += 4;
 }
 
-foreach (var b in bits) {
-    Console.Write(b);
-}
-Console.WriteLine();
-
 int Decode(byte[] bits, int start, int length) {
     var total = 0;
     for (int b = start + length - 1, pow2 = 1; b >= start; --b, pow2 *= 2)
@@ -30,7 +25,7 @@ int Decode(byte[] bits, int start, int length) {
 int ip = 0;
 int versionSum = 0;
 while (Decode(bits, ip, bits.Length - ip) != 0) {
-    Console.WriteLine("IP => {0} (len={1})", ip, bits.Length);
+    // Console.WriteLine("IP => {0} (len={1})", ip, bits.Length);
     int version = Decode(bits, ip, 3);
     Console.WriteLine("Version => {0}", version);
 
@@ -42,7 +37,7 @@ while (Decode(bits, ip, bits.Length - ip) != 0) {
     Console.WriteLine("Type ID => {0}", typeId);
 
     if (typeId == 4) {
-        while (ip < bits.Length && bits[ip] != 0) {
+        while (bits[ip] != 0) {
             ip += 5;
         }
         ip += 5;
@@ -53,11 +48,11 @@ while (Decode(bits, ip, bits.Length - ip) != 0) {
         
         if (lengthTypeId == 1) {
             int N = Decode(bits, ip, 11);
-            Console.WriteLine("Number of subpackets => {0}", N);
+            // Console.WriteLine("Number of subpackets => {0}", N);
             ip += 11;
         } else {
             int L = Decode(bits, ip, 15);
-            Console.WriteLine("Total length of packets => {0}", L);
+            // Console.WriteLine("Total length of packets => {0}", L);
             ip += 15;
         }
     }

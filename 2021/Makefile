@@ -28,7 +28,8 @@ all: 16
 	@g++ -O2 Day15.cpp -o Day15
 
 16: Day16.ml
-	@ocamlc -o Day16 Day16.ml
+	@ocamlc -g -o Day16 Day16.ml
+	@$(RM) *.cmi *.cmo
 
 clean:
 	$(RM) *.o *.hi *.class a.out *.jar *.cmi *.cmo
