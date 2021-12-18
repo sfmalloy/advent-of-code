@@ -1,6 +1,6 @@
 library('sets')
 
-input <- read.table("inputs/test.in")
+input <- read.table("inputs/Day17.in")
 x_str <- strsplit(input[1,3], "\\.\\.|,|x|=")[[1]][3:4]
 y_str <- strsplit(input[1,4], "\\.\\.|,|y|=")[[1]][3:4]
 
@@ -43,8 +43,8 @@ simulate_x <- function(vel, min, max) {
     }
 
     pos <- list()
-    while (vel > 0 && x <= max) {
-        pos[[length(pos)+1]] <- pair(pos=x, step=step)
+    while (vel >= 0 && x >= min && x <= max) {
+        pos[[length(pos)+1]] <- triple(pos=x, step=step, vel=vel)
         x = x + vel
         vel = vel - 1
         step = step + 1
@@ -53,33 +53,24 @@ simulate_x <- function(vel, min, max) {
     return(pos)
 }
 
-x_dist <- function(vel, steps) {
-    dist <- (seq_sum(vel) - seq_sum(vel - steps))
-    if (dist < 0) {
-        return (0)
-    }
-    return (dist)
-}
-
 part1 <- seq_sum(abs(y_min) - 1)
 part2 <- (y_max - y_min + 1) * (x_max - x_min + 1)
 
-# for (y in :y_max) {
-
-#     for (x in )
-#     for (r in ys) {
-
-#     }
-# }
-
-for (y_vel in (y_max+1):(abs(y_min)-1)) {
+for (y_vel in (y_min):(abs(y_min)-1)) {
     ys = simulate_y(y_vel, y_min, y_max)
-    for (x_vel in 0:x_min) {
+    for (x_vel in 0:x_min-1) {
         xs = simulate_x(x_vel, x_min, x_max)
-        if (length(xs) > 0) {
-            for (r in xs) {
-                
+        for (yt in ys) {
+            found <- FALSE
+            for (xt in xs) {
+                if (yt$step == xt$step || ((xt$step == x_vel) && (yt$step > xt$step))) {
+                    part2 = part2 + 1
+                    found <- TRUE
+                    break
+                } 
             }
+            if (found)
+                break
         }
     }
 }

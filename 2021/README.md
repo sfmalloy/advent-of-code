@@ -20,7 +20,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |14|Typescript|Pretty much just Javascript with types. I really enjoyed using this language, has a good Map class which was 1000% needed for this day. I tired Lua at first and it was not fun so not sure if I'll actually use Lua for a problem or not.|
 |15|C++|C++ fast and has a priority queue built in which came in *very* handy today. Overall nice experience, and I finally implemented Dijkstra's for I think the first time during this so that's fun.|
 |16|
-|17|
+|17|R|R isn't great on its own...imported the `sets` library so I could have tuples which helped a lot in this problem|
 |18|
 |19|
 |20|
