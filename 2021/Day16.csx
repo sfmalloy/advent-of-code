@@ -1,12 +1,383 @@
 using System;
 using System.Collections.Generic;
 
-var text = System.IO.File.ReadAllText("inputs/test.in").TrimEnd();
-var bits = new byte[text.Length * 4];
-var bitdex = 0;
+/*****************************************************************************/
+// Classes for Lexer / Parser
+
+
+class Token {
+    public ulong address { get; set; }
+    public ulong typeId { get; set; }
+    public ulong lengthType { get; set; }
+    public ulong length { get; set; }
+    public ulong value { get; set; }
+
+}
+
+interface Packet {
+    void Accept(IVisitor visitor);
+}
+
+class Operator {
+    public ulong lengthType { get; set; }
+    public ulong length { get; set; }
+}
+
+class Literal : Packet { 
+    public ulong value { get; set; }
+    
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class Sum : Operator, Packet { 
+    public List<Packet> subpackets { get; set; }
+    
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class Product : Operator, Packet { 
+    public List<Packet> subpackets { get; set; }
+
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class Minimum : Operator, Packet { 
+    public List<Packet> subpackets { get; set; }
+
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class Maximum : Operator, Packet { 
+    public List<Packet> subpackets { get; set; }
+
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class GreaterThan : Operator, Packet { 
+    public Packet lhs { get; set; }
+    public Packet rhs { get; set; }
+
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class LessThan : Operator, Packet {
+    public Packet lhs { get; set; }
+    public Packet rhs { get; set; }
+    
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+class EqualTo : Operator, Packet { 
+    public Packet lhs { get; set; }
+    public Packet rhs { get; set; }
+
+    public void Accept(IVisitor visitor) {
+        visitor.Visit(this);
+    }
+}
+
+interface IVisitor {
+    // void Visit(Operator packet);
+    void Visit(Literal packet);
+    void Visit(Sum packet);
+    void Visit(Product packet);
+    void Visit(Minimum packet);
+    void Visit(Maximum packet);
+    void Visit(GreaterThan packet);
+    void Visit(LessThan packet);
+    void Visit(EqualTo packet);
+}
+
+
+
+/*****************************************************************************/
+// Parser
+class Parser {
+    List<Token> tokens;
+    int parserIdx;
+
+    public Parser(List<Token> tokens) {
+        this.tokens = tokens;
+        this.parserIdx = 0;
+    }
+
+    public Packet Parse() {
+        Packet root;
+
+        switch (tokens[parserIdx].typeId) {
+            case 0:  root = Add();     break;
+            case 1:  root = Times();   break;
+            case 2:  root = Min();     break;
+            case 3:  root = Max();     break;
+            case 5:  root = Greater(); break;
+            case 6:  root = Less();    break;
+            case 7:  root = Equal();   break;
+            default: root = Number();  break;
+        }
+
+        return root;
+    }
+
+    List<Packet> SubPackets() {
+        Token curr = tokens[parserIdx];
+        List<Packet> subpackets = new List<Packet>();
+        if (curr.lengthType == 1) {
+            for (ulong i = 0; i < curr.length; ++i) {
+                ++parserIdx;
+                subpackets.Add(Parse());
+            }
+        } else {
+            while (tokens[parserIdx].address <= curr.address + curr.length) {
+                ++parserIdx;
+                subpackets.Add(Parse());
+            }
+        }
+
+        return subpackets;
+    }
+
+    Sum Add() {
+        return new Sum() { subpackets = SubPackets() };
+    }
+
+    Product Times() {
+        return new Product() { subpackets = SubPackets() };
+    }
+
+    Minimum Min() {
+        return new Minimum() { subpackets = SubPackets() };
+    }
+
+    Maximum Max() {
+        return new Maximum() { subpackets = SubPackets() };
+    }
+
+    GreaterThan Greater() {
+        List<Packet> subpackets = SubPackets();
+        return new GreaterThan() { lhs = subpackets[0], rhs = subpackets[1] };
+    }
+
+    LessThan Less() {
+        List<Packet> subpackets = SubPackets();
+        return new LessThan() { lhs = subpackets[0], rhs = subpackets[1] };
+    }
+
+    EqualTo Equal() {
+        List<Packet> subpackets = SubPackets();
+        return new EqualTo() { lhs = subpackets[0], rhs = subpackets[1] };
+    }
+
+    Literal Number() {
+        return new Literal() { value = tokens[parserIdx].value };
+    }
+}
+
+/*****************************************************************************/
+
+class PrintVisitor : IVisitor {
+    int indent = -1;
+
+    public void Print(string value) {
+        string str = "";
+        for (int i = 0; i < indent; ++i) {
+            str += "  ";
+        }
+
+        Console.WriteLine(str + value);
+    }
+
+    public void Print(ulong value) {
+        string str = "";
+        for (int i = 0; i < indent; ++i) {
+            str += "  ";
+        }
+        Console.WriteLine(str + value.ToString());
+    }
+
+    public void Visit(Literal packet) {
+        indent += 1;
+        Print(packet.value);
+        indent -= 1;
+    }
+
+    public void Visit(Sum packet) {
+        indent += 1;
+        
+        Print("Sum");
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+        }
+
+        indent -= 1;
+    }
+
+    public void Visit(Product packet) {
+        indent += 1;
+        
+        Print("Product");
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+        }
+
+        indent -= 1;
+    }
+
+    public void Visit(Minimum packet) {
+        indent += 1;
+        
+        Print("Minimum");
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+        }
+
+        indent -= 1;
+    }
+
+    public void Visit(Maximum packet) {
+        indent += 1;
+        
+        Print("Maximum");
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+        }
+
+        indent -= 1;
+    }
+
+    public void Visit(GreaterThan packet) {
+        indent += 1;
+        
+        Print("GreaterThan");
+        packet.lhs.Accept(this);
+        packet.rhs.Accept(this);
+
+        indent -= 1;
+    }
+
+    public void Visit(LessThan packet) {
+        indent += 1;
+        
+        Print("GreaterThan");
+        packet.lhs.Accept(this);
+        packet.rhs.Accept(this);
+
+        indent -= 1;
+    }
+
+    public void Visit(EqualTo packet) {
+        indent += 1;
+        
+        Print("EqualTo");
+        packet.lhs.Accept(this);
+        packet.rhs.Accept(this);
+
+        indent -= 1;
+    }
+}
+/*****************************************************************************/
+class EvalVisitor : IVisitor {
+    public ulong result{ get; set; }
+
+    public void Visit(Literal packet) {
+        result = packet.value;
+    }
+
+    public void Visit(Sum packet) {
+        ulong sum = 0;
+
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+            sum += result;
+        }
+
+        result = sum;
+    }
+
+    public void Visit(Product packet) {
+        ulong prod = 1;
+
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+            prod *= result;
+        }
+
+        result = prod;
+    }
+
+    public void Visit(Minimum packet) {
+        ulong min = ulong.MaxValue;
+
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+            if (min > result)
+                min = result;
+        }
+
+        result = min;
+    }
+
+    public void Visit(Maximum packet) {
+        ulong max = 0;
+
+        foreach (Packet subpacket in packet.subpackets) {
+            subpacket.Accept(this);
+            if (max < result)
+                max = result;
+        }
+
+        result = max;
+    }
+
+    public void Visit(GreaterThan packet) {
+        packet.lhs.Accept(this);
+        ulong a = result;
+        packet.rhs.Accept(this);
+        ulong b = result;
+
+        result = a > b ? 1UL : 0UL;
+    }
+
+    public void Visit(LessThan packet) {
+        packet.lhs.Accept(this);
+        ulong a = result;
+        packet.rhs.Accept(this);
+        ulong b = result;
+
+        result = a < b ? 1UL : 0UL;
+    }
+
+    public void Visit(EqualTo packet) {
+        packet.lhs.Accept(this);
+        ulong a = result;
+        packet.rhs.Accept(this);
+        ulong b = result;
+
+        result = a == b ? 1UL : 0UL;
+    }
+}
+
+/*****************************************************************************/
+// Setup
+string text = System.IO.File.ReadAllText("inputs/Day16.in").TrimEnd();
+byte[] bits = new byte[text.Length * 4];
+ulong bitdex = 0;
 
 foreach (var c in text) {
-    var s = Byte.Parse(Char.ToString(c), System.Globalization.NumberStyles.HexNumber);
+    byte s = Byte.Parse(Char.ToString(c), System.Globalization.NumberStyles.HexNumber);
     
     bits[bitdex] = (byte) ((s & 8) >> 3);
     bits[bitdex + 1] = (byte) ((s & 4) >> 2);
@@ -15,49 +386,83 @@ foreach (var c in text) {
     bitdex += 4;
 }
 
-int Decode(byte[] bits, int start, int length) {
-    var total = 0;
-    for (int b = start + length - 1, pow2 = 1; b >= start; --b, pow2 *= 2)
+ulong Decode(byte[] bits, ulong start, ulong length) {
+    ulong total = 0;
+    for (ulong b = start + length - 1, pow2 = 1; b + 1 >= start + 1; --b, pow2 *= 2) {
         total += pow2 * bits[b];
+    }
     return total;
 }
 
-int ip = 0;
-int versionSum = 0;
-while (Decode(bits, ip, bits.Length - ip) != 0) {
-    // Console.WriteLine("IP => {0} (len={1})", ip, bits.Length);
-    int version = Decode(bits, ip, 3);
-    Console.WriteLine("Version => {0}", version);
-
+/*****************************************************************************/
+// Part 1 / Lexer
+ulong ip = 0;
+ulong versionSum = 0;
+List<Token> tokens = new List<Token>();
+while (Decode(bits, ip, ((ulong) (bits.Length)) - ip) != 0) {
+    ulong address = ip;
+    ulong version = Decode(bits, ip, 3);
     versionSum += version;
     ip += 3;
 
-    int typeId = Decode(bits, ip, 3);
+    ulong typeId = Decode(bits, ip, 3);
     ip += 3;
-    Console.WriteLine("Type ID => {0}", typeId);
 
     if (typeId == 4) {
+        List<byte> literal = new List<byte>();
         while (bits[ip] != 0) {
+            literal.Add(bits[ip + 1]);
+            literal.Add(bits[ip + 2]);
+            literal.Add(bits[ip + 3]);
+            literal.Add(bits[ip + 4]);
+
             ip += 5;
         }
-        ip += 5;
-    } else {
-        int lengthTypeId = bits[ip];
-        ++ip;
-        Console.WriteLine("Length Type ID => {0}", lengthTypeId);
         
+        literal.Add(bits[ip + 1]);
+        literal.Add(bits[ip + 2]);
+        literal.Add(bits[ip + 3]);
+        literal.Add(bits[ip + 4]);
+
+        ip += 5;
+        tokens.Add(new Token() { 
+            address = address, 
+            typeId = typeId, 
+            value = Decode(literal.ToArray(), 0, (ulong) literal.Count) 
+        });
+
+    } else {
+        ulong lengthTypeId = bits[ip];
+        ulong length;
+        ++ip;
+
         if (lengthTypeId == 1) {
-            int N = Decode(bits, ip, 11);
-            // Console.WriteLine("Number of subpackets => {0}", N);
+            length = Decode(bits, ip, 11);
             ip += 11;
         } else {
-            int L = Decode(bits, ip, 15);
-            // Console.WriteLine("Total length of packets => {0}", L);
+            length = Decode(bits, ip, 15);
             ip += 15;
         }
-    }
 
-    Console.WriteLine();
+        tokens.Add(new Token() {
+            address = address,
+            typeId = typeId,
+            lengthType = lengthTypeId,
+            length = length
+        });
+    }
 }
 
+/*****************************************************************************/
+
+Parser parser = new Parser(tokens);
+PrintVisitor pVisitor = new PrintVisitor();
+EvalVisitor eVisitor = new EvalVisitor();
+Packet root = parser.Parse();
+root.Accept(pVisitor);
+root.Accept(eVisitor);
+
+// 59232068388 too low :/
+
 Console.WriteLine(versionSum);
+Console.WriteLine(eVisitor.result);
