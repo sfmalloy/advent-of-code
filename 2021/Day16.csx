@@ -4,7 +4,6 @@ using System.Collections.Generic;
 /*****************************************************************************/
 // Classes for Lexer / Parser
 
-
 class Token {
     public ulong address { get; set; }
     public ulong typeId { get; set; }
@@ -91,7 +90,6 @@ class EqualTo : Operator, Packet {
 }
 
 interface IVisitor {
-    // void Visit(Operator packet);
     void Visit(Literal packet);
     void Visit(Sum packet);
     void Visit(Product packet);
@@ -101,8 +99,6 @@ interface IVisitor {
     void Visit(LessThan packet);
     void Visit(EqualTo packet);
 }
-
-
 
 /*****************************************************************************/
 // Parser
@@ -271,7 +267,7 @@ class PrintVisitor : IVisitor {
     public void Visit(LessThan packet) {
         indent += 1;
         
-        Print("GreaterThan");
+        Print("LessThan");
         packet.lhs.Accept(this);
         packet.rhs.Accept(this);
 
@@ -288,6 +284,7 @@ class PrintVisitor : IVisitor {
         indent -= 1;
     }
 }
+
 /*****************************************************************************/
 class EvalVisitor : IVisitor {
     public ulong result{ get; set; }
@@ -369,10 +366,20 @@ class EvalVisitor : IVisitor {
         result = a == b ? 1UL : 0UL;
     }
 }
+/*****************************************************************************/
+// Helper functions
+
+ulong Decode(byte[] bits, ulong start, ulong length) {
+    ulong total = 0;
+    for (ulong b = start + length - 1, pow2 = 1; b + 1 >= start + 1; --b, pow2 *= 2) {
+        total += pow2 * bits[b];
+    }
+    return total;
+}
 
 /*****************************************************************************/
 // Setup
-string text = System.IO.File.ReadAllText("inputs/Day16.in").TrimEnd();
+string text = System.IO.File.ReadAllText("inputs/test.in").TrimEnd();
 byte[] bits = new byte[text.Length * 4];
 ulong bitdex = 0;
 
@@ -386,13 +393,6 @@ foreach (var c in text) {
     bitdex += 4;
 }
 
-ulong Decode(byte[] bits, ulong start, ulong length) {
-    ulong total = 0;
-    for (ulong b = start + length - 1, pow2 = 1; b + 1 >= start + 1; --b, pow2 *= 2) {
-        total += pow2 * bits[b];
-    }
-    return total;
-}
 
 /*****************************************************************************/
 // Part 1 / Lexer
@@ -454,6 +454,7 @@ while (Decode(bits, ip, ((ulong) (bits.Length)) - ip) != 0) {
 }
 
 /*****************************************************************************/
+// Part 2, Parse and Eval
 
 Parser parser = new Parser(tokens);
 PrintVisitor pVisitor = new PrintVisitor();
