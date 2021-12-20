@@ -10,7 +10,6 @@ class Token {
     public ulong lengthType { get; set; }
     public ulong length { get; set; }
     public ulong value { get; set; }
-
 }
 
 interface Packet {
@@ -137,10 +136,10 @@ class Parser {
                 subpackets.Add(Parse());
             }
         } else {
-            while (tokens[parserIdx].address <= curr.address + curr.length) {
-                ++parserIdx;
+            while (++parserIdx < tokens.Count && tokens[parserIdx].address != curr.address + 22 + curr.length) {
                 subpackets.Add(Parse());
             }
+            --parserIdx;
         }
 
         return subpackets;
@@ -164,16 +163,22 @@ class Parser {
 
     GreaterThan Greater() {
         List<Packet> subpackets = SubPackets();
+        if (subpackets.Count < 2)
+            throw new Exception("Not enough arguments for GreaterThan operator");
         return new GreaterThan() { lhs = subpackets[0], rhs = subpackets[1] };
     }
 
     LessThan Less() {
         List<Packet> subpackets = SubPackets();
+        if (subpackets.Count < 2)
+            throw new Exception("Not enough arguments for LessThan operator");
         return new LessThan() { lhs = subpackets[0], rhs = subpackets[1] };
     }
 
     EqualTo Equal() {
         List<Packet> subpackets = SubPackets();
+        if (subpackets.Count < 2)
+            throw new Exception("Not enough arguments for EqualTo operator");
         return new EqualTo() { lhs = subpackets[0], rhs = subpackets[1] };
     }
 
@@ -185,7 +190,13 @@ class Parser {
 /*****************************************************************************/
 
 class PrintVisitor : IVisitor {
-    int indent = -1;
+    private int indent;
+    private StreamWriter file;
+
+    public PrintVisitor(StreamWriter file) {
+        indent = -1;
+        this.file = file;
+    }
 
     public void Print(string value) {
         string str = "";
@@ -193,20 +204,12 @@ class PrintVisitor : IVisitor {
             str += "  ";
         }
 
-        Console.WriteLine(str + value);
-    }
-
-    public void Print(ulong value) {
-        string str = "";
-        for (int i = 0; i < indent; ++i) {
-            str += "  ";
-        }
-        Console.WriteLine(str + value.ToString());
+        file.WriteLine(str + value);
     }
 
     public void Visit(Literal packet) {
         indent += 1;
-        Print(packet.value);
+        Print("Literal: " + packet.value);
         indent -= 1;
     }
 
@@ -367,6 +370,88 @@ class EvalVisitor : IVisitor {
     }
 }
 /*****************************************************************************/
+
+class CodeVisitor : IVisitor {
+    public ulong result{ get; set; }
+
+    public void Visit(Literal packet) {
+        Console.Write(packet.value);
+        result = packet.value;
+    }
+
+    public void Visit(Sum packet) {
+        Console.Write("(");
+        for (int i = 0; i < packet.subpackets.Count; ++i) {
+            packet.subpackets[i].Accept(this);
+            if (i < packet.subpackets.Count - 1) {
+                Console.Write(" + ");
+            }
+        }
+        Console.Write(")");
+    }
+
+    public void Visit(Product packet) {
+
+        Console.Write("(");
+        for (int i = 0; i < packet.subpackets.Count; ++i) {
+            packet.subpackets[i].Accept(this);
+            if (i < packet.subpackets.Count - 1) {
+                Console.Write(" * ");
+            }
+        }
+        Console.Write(")");
+
+    }
+
+    public void Visit(Minimum packet) {
+        Console.Write("min(");
+        for (int i = 0; i < packet.subpackets.Count; ++i) {
+            packet.subpackets[i].Accept(this);
+            if (i < packet.subpackets.Count - 1) {
+                Console.Write(", ");
+            }
+        }
+        Console.Write(")");
+
+    }
+
+    public void Visit(Maximum packet) {
+        Console.Write("max(");
+        for (int i = 0; i < packet.subpackets.Count; ++i) {
+            packet.subpackets[i].Accept(this);
+            if (i < packet.subpackets.Count - 1) {
+                Console.Write(", ");
+            }
+        }
+        Console.Write(")");
+    }
+
+    public void Visit(GreaterThan packet) {
+        Console.Write("(");
+        packet.lhs.Accept(this);
+        Console.Write(" > ");
+        packet.rhs.Accept(this);
+        Console.Write(")");
+
+    }
+
+    public void Visit(LessThan packet) {
+        Console.Write("(");
+        packet.lhs.Accept(this);
+        Console.Write(" < ");
+        packet.rhs.Accept(this);
+        Console.Write(")");
+    }
+
+    public void Visit(EqualTo packet) {
+        Console.Write("(");
+        packet.lhs.Accept(this);
+        Console.Write(" == ");
+        packet.rhs.Accept(this);
+        Console.Write(")");
+    }
+}
+/*****************************************************************************/
 // Helper functions
 
 ulong Decode(byte[] bits, ulong start, ulong length) {
@@ -379,7 +464,10 @@ ulong Decode(byte[] bits, ulong start, ulong length) {
 
 /*****************************************************************************/
 // Setup
-string text = System.IO.File.ReadAllText("inputs/test.in").TrimEnd();
+string filename = "inputs/Day16.in";
+if (Args.Count > 0)
+    filename = Args[0];
+string text = System.IO.File.ReadAllText(filename).TrimEnd();
 byte[] bits = new byte[text.Length * 4];
 ulong bitdex = 0;
 
@@ -457,13 +545,15 @@ while (Decode(bits, ip, ((ulong) (bits.Length)) - ip) != 0) {
 // Part 2, Parse and Eval
 
 Parser parser = new Parser(tokens);
-PrintVisitor pVisitor = new PrintVisitor();
+CodeVisitor pyVisitor = new CodeVisitor();
 EvalVisitor eVisitor = new EvalVisitor();
+
 Packet root = parser.Parse();
-root.Accept(pVisitor);
 root.Accept(eVisitor);
 
-// 59232068388 too low :/
-
+using (var file = File.AppendText("AST.txt")) {
+    PrintVisitor pVisitor = new PrintVisitor(file);
+    root.Accept(pVisitor);
+}
 Console.WriteLine(versionSum);
 Console.WriteLine(eVisitor.result);
