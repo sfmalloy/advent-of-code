@@ -19,7 +19,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |13|Rust|Good language. Fast and fun to use, and has lots of neat std lib stuff I want to explore eventually. Fun fact I started this problem in Typescript and realized Sets don't work good with custom classes, so I switched to Rust which has #derive for basic implementations of methods for comparison and hashing.|
 |14|Typescript|Pretty much just Javascript with types. I really enjoyed using this language, has a good Map class which was 1000% needed for this day. I tired Lua at first and it was not fun so not sure if I'll actually use Lua for a problem or not.|
 |15|C++|C++ fast and has a priority queue built in which came in *very* handy today. Overall nice experience, and I finally implemented Dijkstra's for I think the first time during this so that's fun.|
-|16|
+|16|C#|C# very good. Like better Java made by Microsoft. Super easy to implement the Visitor design pattern in for making a mini-compiler|
 |17|R|R isn't great on its own...imported the `sets` library so I could have tuples which helped a lot in this problem|
 |18|
 |19|

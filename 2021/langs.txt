@@ -15,12 +15,13 @@ Common Lisp
 Rust
 Typescript
 C++
+C#
 R
 
 Langs to use:
 -------------
-Compiled: C#
+Compiled: D
 Interpreted: PHP, Python
-Functional: OCaml, Elixir, F#
+Functional: OCaml, F#
 JVM: Scala, Groovy
 Misc: CoffeeScript
