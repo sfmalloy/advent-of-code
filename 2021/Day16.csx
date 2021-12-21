@@ -548,7 +548,7 @@ EvalVisitor eVisitor = new EvalVisitor();
 Packet root = parser.Parse();
 root.Accept(eVisitor);
 
-using (var file = File.AppendText("AST.txt")) {
+using (var file = File.CreateText("AST.txt")) {
     PrintVisitor pVisitor = new PrintVisitor(file);
     root.Accept(pVisitor);
 }
