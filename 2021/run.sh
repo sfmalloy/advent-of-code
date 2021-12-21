@@ -69,6 +69,18 @@ then
 elif [ $1 -eq 14 ]
 then
     ts-node Day14.ts
+elif [ $1 -eq 15 ]
+then
+    ./Day15
+elif [ $1 -eq 16 ]
+then
+    dotnet-script Day16.csx
+elif [ $1 -eq 17 ]
+then
+    Rscript Day17.R
+elif [ $1 -eq 18 ]
+then
+    python Day18.py
 else
     echo "Day not found"
 fi

@@ -1,0 +1,1072 @@
+Sum
+  Product
+    GreaterThan
+      Literal: 261839571
+      Literal: 418703
+    Literal: 55956
+  Maximum
+    Literal: 49045
+    Literal: 9901349
+    Literal: 4
+    Literal: 90535300
+  Maximum
+    Literal: 8
+    Literal: 777300
+    Literal: 17943
+  Product
+    GreaterThan
+      Literal: 2117752
+      Literal: 2117752
+    Literal: 247
+  Minimum
+    Literal: 12043879
+    Literal: 10486502
+  Product
+    Literal: 577215
+    EqualTo
+      Literal: 73128484
+      Literal: 39191707
+  Product
+    Literal: 110
+    Literal: 196
+    Literal: 140
+    Literal: 163
+    Literal: 201
+  Sum
+    Literal: 12
+  Literal: 936389
+  Sum
+    Literal: 206
+    Literal: 328434
+  Product
+    GreaterThan
+      Literal: 2430
+      Literal: 64
+    Literal: 24492
+  Literal: 35
+  Product
+    Literal: 226851297
+    GreaterThan
+      Literal: 14
+      Literal: 602
+  Product
+    GreaterThan
+      Sum
+        Literal: 3
+        Literal: 2
+        Literal: 2
+      Sum
+        Literal: 12
+        Literal: 2
+        Literal: 14
+    Literal: 68
+  Minimum
+    Literal: 8555
+  Product
+    Literal: 26846
+    LessThan
+      Sum
+        Literal: 4
+        Literal: 15
+        Literal: 7
+      Sum
+        Literal: 10
+        Literal: 2
+        Literal: 10
+  Sum
+    Literal: 2268
+    Literal: 10
+    Literal: 4440
+  Literal: 3143
+  Product
+    Literal: 65
+    Literal: 248
+  Sum
+    Literal: 55647393431
+    Literal: 7
+    Literal: 30174
+    Literal: 6
+  Product
+    EqualTo
+      Sum
+        Literal: 9
+        Literal: 15
+        Literal: 2
+      Sum
+        Literal: 4
+        Literal: 13
+        Literal: 9
+    Literal: 1602
+  Maximum
+    Literal: 2694
+  Sum
+    Literal: 22940
+    Literal: 2224710492
+    Literal: 166
+    Literal: 47390
+    Literal: 1
+  Product
+    Literal: 9
+    EqualTo
+      Literal: 5
+      Literal: 435
+  Product
+    Literal: 60
+  Maximum
+    Literal: 1919
+    Literal: 15
+  Product
+    Literal: 168
+    Literal: 162
+    Literal: 240
+    Literal: 153
+  Literal: 37
+  Minimum
+    Literal: 22173
+    Literal: 10149170
+    Literal: 3752
+  Product
+    Literal: 63108
+    GreaterThan
+      Literal: 1563166678
+      Literal: 1563166678
+  Maximum
+    Literal: 208
+    Literal: 346759
+    Literal: 139
+    Literal: 220
+    Literal: 11501116
+  Minimum
+    Minimum
+      Sum
+        Minimum
+          Product
+            Sum
+              Minimum
+                Maximum
+                  Minimum
+                    Sum
+                      Product
+                        Maximum
+                          Maximum
+                            Sum
+                              Product
+                                Product
+                                  Product
+                                    Product
+                                      Minimum
+                                        Product
+                                          Literal: 3040
+  Product
+    LessThan
+      Literal: 2334
+      Literal: 107
+    Literal: 26087201
+  Literal: 11
+  Product
+    Sum
+      Literal: 9
+      Literal: 5
+      Literal: 7
+    Sum
+      Literal: 2
+      Literal: 12
+      Literal: 14
+    Sum
+      Literal: 3
+      Literal: 4
+      Literal: 4
+  Product
+    Literal: 3457
+    EqualTo
+      Literal: 71333
+      Literal: 71333
+  Product
+    LessThan
+      Literal: 19020
+      Literal: 19020
+    Literal: 343915
+  Sum
+    Product
+      Literal: 6
+      Literal: 4
+      Literal: 11
+    Product
+      Literal: 8
+      Literal: 9
+      Literal: 2
+    Product
+      Literal: 15
+      Literal: 13
+      Literal: 8
+  Product
+    Literal: 252705618
+    LessThan
+      Literal: 13
+      Literal: 6457440
+  Literal: 490866
+  Product
+    LessThan
+      Sum
+        Literal: 12
+        Literal: 11
+        Literal: 11
+      Sum
+        Literal: 9
+        Literal: 14
+        Literal: 5
+    Literal: 61333
+  Product
+    Literal: 227
+    Literal: 72
+    Literal: 251
+  Minimum
+    Literal: 160
+    Literal: 2
+    Literal: 236045
+    Literal: 697477
+  Literal: 125
+  Literal: 141
+  Literal: 417
+  Literal: 1705
+  Product
+    Literal: 187
+    LessThan
+      Literal: 151
+      Literal: 3306291123429
+  Minimum
+    Literal: 6767147
+    Literal: 190
+    Literal: 185675
+    Literal: 724935
+    Literal: 4236193
+  Product
+    Literal: 3765
+    LessThan
+      Literal: 114
+      Literal: 83
+  Product
+    LessThan
+      Literal: 29266
+      Literal: 29266
+    Literal: 253
+  Product
+    Literal: 1240
+    GreaterThan
+      Sum
+        Literal: 6
+        Literal: 12
+        Literal: 13
+      Sum
+        Literal: 9
+        Literal: 6
+        Literal: 2
+  Product
+    GreaterThan
+      Literal: 2558
+      Literal: 51269
+    Literal: 3
+Sum
+  Product
+    GreaterThan
+      Literal: 261839571
+      Literal: 418703
+    Literal: 55956
+  Maximum
+    Literal: 49045
+    Literal: 9901349
+    Literal: 4
+    Literal: 90535300
+  Maximum
+    Literal: 8
+    Literal: 777300
+    Literal: 17943
+  Product
+    GreaterThan
+      Literal: 2117752
+      Literal: 2117752
+    Literal: 247
+  Minimum
+    Literal: 12043879
+    Literal: 10486502
+  Product
+    Literal: 577215
+    EqualTo
+      Literal: 73128484
+      Literal: 39191707
+  Product
+    Literal: 110
+    Literal: 196
+    Literal: 140
+    Literal: 163
+    Literal: 201
+  Sum
+    Literal: 12
+  Literal: 936389
+  Sum
+    Literal: 206
+    Literal: 328434
+  Product
+    GreaterThan
+      Literal: 2430
+      Literal: 64
+    Literal: 24492
+  Literal: 35
+  Product
+    Literal: 226851297
+    GreaterThan
+      Literal: 14
+      Literal: 602
+  Product
+    GreaterThan
+      Sum
+        Literal: 3
+        Literal: 2
+        Literal: 2
+      Sum
+        Literal: 12
+        Literal: 2
+        Literal: 14
+    Literal: 68
+  Minimum
+    Literal: 8555
+  Product
+    Literal: 26846
+    LessThan
+      Sum
+        Literal: 4
+        Literal: 15
+        Literal: 7
+      Sum
+        Literal: 10
+        Literal: 2
+        Literal: 10
+  Sum
+    Literal: 2268
+    Literal: 10
+    Literal: 4440
+  Literal: 3143
+  Product
+    Literal: 65
+    Literal: 248
+  Sum
+    Literal: 55647393431
+    Literal: 7
+    Literal: 30174
+    Literal: 6
+  Product
+    EqualTo
+      Sum
+        Literal: 9
+        Literal: 15
+        Literal: 2
+      Sum
+        Literal: 4
+        Literal: 13
+        Literal: 9
+    Literal: 1602
+  Maximum
+    Literal: 2694
+  Sum
+    Literal: 22940
+    Literal: 2224710492
+    Literal: 166
+    Literal: 47390
+    Literal: 1
+  Product
+    Literal: 9
+    EqualTo
+      Literal: 5
+      Literal: 435
+  Product
+    Literal: 60
+  Maximum
+    Literal: 1919
+    Literal: 15
+  Product
+    Literal: 168
+    Literal: 162
+    Literal: 240
+    Literal: 153
+  Literal: 37
+  Minimum
+    Literal: 22173
+    Literal: 10149170
+    Literal: 3752
+  Product
+    Literal: 63108
+    GreaterThan
+      Literal: 1563166678
+      Literal: 1563166678
+  Maximum
+    Literal: 208
+    Literal: 346759
+    Literal: 139
+    Literal: 220
+    Literal: 11501116
+  Minimum
+    Minimum
+      Sum
+        Minimum
+          Product
+            Sum
+              Minimum
+                Maximum
+                  Minimum
+                    Sum
+                      Product
+                        Maximum
+                          Maximum
+                            Sum
+                              Product
+                                Product
+                                  Product
+                                    Product
+                                      Minimum
+                                        Product
+                                          Literal: 3040
+  Product
+    LessThan
+      Literal: 2334
+      Literal: 107
+    Literal: 26087201
+  Literal: 11
+  Product
+    Sum
+      Literal: 9
+      Literal: 5
+      Literal: 7
+    Sum
+      Literal: 2
+      Literal: 12
+      Literal: 14
+    Sum
+      Literal: 3
+      Literal: 4
+      Literal: 4
+  Product
+    Literal: 3457
+    EqualTo
+      Literal: 71333
+      Literal: 71333
+  Product
+    LessThan
+      Literal: 19020
+      Literal: 19020
+    Literal: 343915
+  Sum
+    Product
+      Literal: 6
+      Literal: 4
+      Literal: 11
+    Product
+      Literal: 8
+      Literal: 9
+      Literal: 2
+    Product
+      Literal: 15
+      Literal: 13
+      Literal: 8
+  Product
+    Literal: 252705618
+    LessThan
+      Literal: 13
+      Literal: 6457440
+  Literal: 490866
+  Product
+    LessThan
+      Sum
+        Literal: 12
+        Literal: 11
+        Literal: 11
+      Sum
+        Literal: 9
+        Literal: 14
+        Literal: 5
+    Literal: 61333
+  Product
+    Literal: 227
+    Literal: 72
+    Literal: 251
+  Minimum
+    Literal: 160
+    Literal: 2
+    Literal: 236045
+    Literal: 697477
+  Literal: 125
+  Literal: 141
+  Literal: 417
+  Literal: 1705
+  Product
+    Literal: 187
+    LessThan
+      Literal: 151
+      Literal: 3306291123429
+  Minimum
+    Literal: 6767147
+    Literal: 190
+    Literal: 185675
+    Literal: 724935
+    Literal: 4236193
+  Product
+    Literal: 3765
+    LessThan
+      Literal: 114
+      Literal: 83
+  Product
+    LessThan
+      Literal: 29266
+      Literal: 29266
+    Literal: 253
+  Product
+    Literal: 1240
+    GreaterThan
+      Sum
+        Literal: 6
+        Literal: 12
+        Literal: 13
+      Sum
+        Literal: 9
+        Literal: 6
+        Literal: 2
+  Product
+    GreaterThan
+      Literal: 2558
+      Literal: 51269
+    Literal: 3
+Sum
+  Product
+    GreaterThan
+      Literal: 261839571
+      Literal: 418703
+    Literal: 55956
+  Maximum
+    Literal: 49045
+    Literal: 9901349
+    Literal: 4
+    Literal: 90535300
+  Maximum
+    Literal: 8
+    Literal: 777300
+    Literal: 17943
+  Product
+    GreaterThan
+      Literal: 2117752
+      Literal: 2117752
+    Literal: 247
+  Minimum
+    Literal: 12043879
+    Literal: 10486502
+  Product
+    Literal: 577215
+    EqualTo
+      Literal: 73128484
+      Literal: 39191707
+  Product
+    Literal: 110
+    Literal: 196
+    Literal: 140
+    Literal: 163
+    Literal: 201
+  Sum
+    Literal: 12
+  Literal: 936389
+  Sum
+    Literal: 206
+    Literal: 328434
+  Product
+    GreaterThan
+      Literal: 2430
+      Literal: 64
+    Literal: 24492
+  Literal: 35
+  Product
+    Literal: 226851297
+    GreaterThan
+      Literal: 14
+      Literal: 602
+  Product
+    GreaterThan
+      Sum
+        Literal: 3
+        Literal: 2
+        Literal: 2
+      Sum
+        Literal: 12
+        Literal: 2
+        Literal: 14
+    Literal: 68
+  Minimum
+    Literal: 8555
+  Product
+    Literal: 26846
+    LessThan
+      Sum
+        Literal: 4
+        Literal: 15
+        Literal: 7
+      Sum
+        Literal: 10
+        Literal: 2
+        Literal: 10
+  Sum
+    Literal: 2268
+    Literal: 10
+    Literal: 4440
+  Literal: 3143
+  Product
+    Literal: 65
+    Literal: 248
+  Sum
+    Literal: 55647393431
+    Literal: 7
+    Literal: 30174
+    Literal: 6
+  Product
+    EqualTo
+      Sum
+        Literal: 9
+        Literal: 15
+        Literal: 2
+      Sum
+        Literal: 4
+        Literal: 13
+        Literal: 9
+    Literal: 1602
+  Maximum
+    Literal: 2694
+  Sum
+    Literal: 22940
+    Literal: 2224710492
+    Literal: 166
+    Literal: 47390
+    Literal: 1
+  Product
+    Literal: 9
+    EqualTo
+      Literal: 5
+      Literal: 435
+  Product
+    Literal: 60
+  Maximum
+    Literal: 1919
+    Literal: 15
+  Product
+    Literal: 168
+    Literal: 162
+    Literal: 240
+    Literal: 153
+  Literal: 37
+  Minimum
+    Literal: 22173
+    Literal: 10149170
+    Literal: 3752
+  Product
+    Literal: 63108
+    GreaterThan
+      Literal: 1563166678
+      Literal: 1563166678
+  Maximum
+    Literal: 208
+    Literal: 346759
+    Literal: 139
+    Literal: 220
+    Literal: 11501116
+  Minimum
+    Minimum
+      Sum
+        Minimum
+          Product
+            Sum
+              Minimum
+                Maximum
+                  Minimum
+                    Sum
+                      Product
+                        Maximum
+                          Maximum
+                            Sum
+                              Product
+                                Product
+                                  Product
+                                    Product
+                                      Minimum
+                                        Product
+                                          Literal: 3040
+  Product
+    LessThan
+      Literal: 2334
+      Literal: 107
+    Literal: 26087201
+  Literal: 11
+  Product
+    Sum
+      Literal: 9
+      Literal: 5
+      Literal: 7
+    Sum
+      Literal: 2
+      Literal: 12
+      Literal: 14
+    Sum
+      Literal: 3
+      Literal: 4
+      Literal: 4
+  Product
+    Literal: 3457
+    EqualTo
+      Literal: 71333
+      Literal: 71333
+  Product
+    LessThan
+      Literal: 19020
+      Literal: 19020
+    Literal: 343915
+  Sum
+    Product
+      Literal: 6
+      Literal: 4
+      Literal: 11
+    Product
+      Literal: 8
+      Literal: 9
+      Literal: 2
+    Product
+      Literal: 15
+      Literal: 13
+      Literal: 8
+  Product
+    Literal: 252705618
+    LessThan
+      Literal: 13
+      Literal: 6457440
+  Literal: 490866
+  Product
+    LessThan
+      Sum
+        Literal: 12
+        Literal: 11
+        Literal: 11
+      Sum
+        Literal: 9
+        Literal: 14
+        Literal: 5
+    Literal: 61333
+  Product
+    Literal: 227
+    Literal: 72
+    Literal: 251
+  Minimum
+    Literal: 160
+    Literal: 2
+    Literal: 236045
+    Literal: 697477
+  Literal: 125
+  Literal: 141
+  Literal: 417
+  Literal: 1705
+  Product
+    Literal: 187
+    LessThan
+      Literal: 151
+      Literal: 3306291123429
+  Minimum
+    Literal: 6767147
+    Literal: 190
+    Literal: 185675
+    Literal: 724935
+    Literal: 4236193
+  Product
+    Literal: 3765
+    LessThan
+      Literal: 114
+      Literal: 83
+  Product
+    LessThan
+      Literal: 29266
+      Literal: 29266
+    Literal: 253
+  Product
+    Literal: 1240
+    GreaterThan
+      Sum
+        Literal: 6
+        Literal: 12
+        Literal: 13
+      Sum
+        Literal: 9
+        Literal: 6
+        Literal: 2
+  Product
+    GreaterThan
+      Literal: 2558
+      Literal: 51269
+    Literal: 3
+Sum
+  Product
+    GreaterThan
+      Literal: 261839571
+      Literal: 418703
+    Literal: 55956
+  Maximum
+    Literal: 49045
+    Literal: 9901349
+    Literal: 4
+    Literal: 90535300
+  Maximum
+    Literal: 8
+    Literal: 777300
+    Literal: 17943
+  Product
+    GreaterThan
+      Literal: 2117752
+      Literal: 2117752
+    Literal: 247
+  Minimum
+    Literal: 12043879
+    Literal: 10486502
+  Product
+    Literal: 577215
+    EqualTo
+      Literal: 73128484
+      Literal: 39191707
+  Product
+    Literal: 110
+    Literal: 196
+    Literal: 140
+    Literal: 163
+    Literal: 201
+  Sum
+    Literal: 12
+  Literal: 936389
+  Sum
+    Literal: 206
+    Literal: 328434
+  Product
+    GreaterThan
+      Literal: 2430
+      Literal: 64
+    Literal: 24492
+  Literal: 35
+  Product
+    Literal: 226851297
+    GreaterThan
+      Literal: 14
+      Literal: 602
+  Product
+    GreaterThan
+      Sum
+        Literal: 3
+        Literal: 2
+        Literal: 2
+      Sum
+        Literal: 12
+        Literal: 2
+        Literal: 14
+    Literal: 68
+  Minimum
+    Literal: 8555
+  Product
+    Literal: 26846
+    LessThan
+      Sum
+        Literal: 4
+        Literal: 15
+        Literal: 7
+      Sum
+        Literal: 10
+        Literal: 2
+        Literal: 10
+  Sum
+    Literal: 2268
+    Literal: 10
+    Literal: 4440
+  Literal: 3143
+  Product
+    Literal: 65
+    Literal: 248
+  Sum
+    Literal: 55647393431
+    Literal: 7
+    Literal: 30174
+    Literal: 6
+  Product
+    EqualTo
+      Sum
+        Literal: 9
+        Literal: 15
+        Literal: 2
+      Sum
+        Literal: 4
+        Literal: 13
+        Literal: 9
+    Literal: 1602
+  Maximum
+    Literal: 2694
+  Sum
+    Literal: 22940
+    Literal: 2224710492
+    Literal: 166
+    Literal: 47390
+    Literal: 1
+  Product
+    Literal: 9
+    EqualTo
+      Literal: 5
+      Literal: 435
+  Product
+    Literal: 60
+  Maximum
+    Literal: 1919
+    Literal: 15
+  Product
+    Literal: 168
+    Literal: 162
+    Literal: 240
+    Literal: 153
+  Literal: 37
+  Minimum
+    Literal: 22173
+    Literal: 10149170
+    Literal: 3752
+  Product
+    Literal: 63108
+    GreaterThan
+      Literal: 1563166678
+      Literal: 1563166678
+  Maximum
+    Literal: 208
+    Literal: 346759
+    Literal: 139
+    Literal: 220
+    Literal: 11501116
+  Minimum
+    Minimum
+      Sum
+        Minimum
+          Product
+            Sum
+              Minimum
+                Maximum
+                  Minimum
+                    Sum
+                      Product
+                        Maximum
+                          Maximum
+                            Sum
+                              Product
+                                Product
+                                  Product
+                                    Product
+                                      Minimum
+                                        Product
+                                          Literal: 3040
+  Product
+    LessThan
+      Literal: 2334
+      Literal: 107
+    Literal: 26087201
+  Literal: 11
+  Product
+    Sum
+      Literal: 9
+      Literal: 5
+      Literal: 7
+    Sum
+      Literal: 2
+      Literal: 12
+      Literal: 14
+    Sum
+      Literal: 3
+      Literal: 4
+      Literal: 4
+  Product
+    Literal: 3457
+    EqualTo
+      Literal: 71333
+      Literal: 71333
+  Product
+    LessThan
+      Literal: 19020
+      Literal: 19020
+    Literal: 343915
+  Sum
+    Product
+      Literal: 6
+      Literal: 4
+      Literal: 11
+    Product
+      Literal: 8
+      Literal: 9
+      Literal: 2
+    Product
+      Literal: 15
+      Literal: 13
+      Literal: 8
+  Product
+    Literal: 252705618
+    LessThan
+      Literal: 13
+      Literal: 6457440
+  Literal: 490866
+  Product
+    LessThan
+      Sum
+        Literal: 12
+        Literal: 11
+        Literal: 11
+      Sum
+        Literal: 9
+        Literal: 14
+        Literal: 5
+    Literal: 61333
+  Product
+    Literal: 227
+    Literal: 72
+    Literal: 251
+  Minimum
+    Literal: 160
+    Literal: 2
+    Literal: 236045
+    Literal: 697477
+  Literal: 125
+  Literal: 141
+  Literal: 417
+  Literal: 1705
+  Product
+    Literal: 187
+    LessThan
+      Literal: 151
+      Literal: 3306291123429
+  Minimum
+    Literal: 6767147
+    Literal: 190
+    Literal: 185675
+    Literal: 724935
+    Literal: 4236193
+  Product
+    Literal: 3765
+    LessThan
+      Literal: 114
+      Literal: 83
+  Product
+    LessThan
+      Literal: 29266
+      Literal: 29266
+    Literal: 253
+  Product
+    Literal: 1240
+    GreaterThan
+      Sum
+        Literal: 6
+        Literal: 12
+        Literal: 13
+      Sum
+        Literal: 9
+        Literal: 6
+        Literal: 2
+  Product
+    GreaterThan
+      Literal: 2558
+      Literal: 51269
+    Literal: 3

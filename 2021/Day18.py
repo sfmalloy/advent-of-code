@@ -1,4 +1,5 @@
 import json
+from timeit import default_timer
 
 def find_explodable(num, found=False, d=0, idx=0):
     if isinstance(num, int):
@@ -66,6 +67,8 @@ def magnitude(num):
     return 3*magnitude(num[0]) + 2*magnitude(num[1])
 
 def main():
+    start_time = default_timer()
+
     numbers = []
     with open('inputs/Day18.in') as f:
         for line in f.readlines():
@@ -75,14 +78,17 @@ def main():
     snail_sum = numbers[0]
     for snail in numbers[1:]:
         snail_sum = add(snail_sum, snail)
-    print(magnitude(snail_sum))
 
     max_magnitude = 0
     for i in range(len(numbers)):
         for j in range(len(numbers)):
             if i != j:
                 max_magnitude = max(max_magnitude, magnitude(add(numbers[i], numbers[j])))
+    end_time = default_timer()
+
+    print(magnitude(snail_sum))
     print(max_magnitude)
+    print(f'Time: {1000*(end_time-start_time):.3f}ms')
 
 if __name__ == '__main__':
     main()
