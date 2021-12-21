@@ -27,6 +27,16 @@ then
     clisp Day12.lisp
     echo
     ./Day13
+    echo
+    ts-node Day14.ts
+    echo
+    ./Day15
+    echo
+    dotnet-script Day16.csx
+    echo
+    Rscript Day17.R
+    echo
+    python Day18.py
 elif [ $1 -eq 1 ]
 then
     ./Day01
