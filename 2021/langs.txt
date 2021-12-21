@@ -17,11 +17,12 @@ Typescript
 C++
 C#
 R
+Python
 
 Langs to use:
 -------------
 Compiled: D
-Interpreted: PHP, Python
+Interpreted: PHP, 
 Functional: OCaml, F#
 JVM: Scala, Groovy
 Misc: CoffeeScript

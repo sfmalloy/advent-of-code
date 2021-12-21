@@ -1,54 +1,88 @@
 import json
 
-def find_explodable(num, d=0, path=[]):
+def find_explodable(num, found=False, d=0, idx=0):
     if isinstance(num, int):
-        return None
+        return idx+(not found), found
     elif isinstance(num, list) and d == 4:
-        return path
-    lhs = find_explodable(num[0], d+1, path + [0])
-    rhs = find_explodable(num[1], d+1, path + [1])
-    if lhs is not None:
-        return lhs
-    elif rhs is not None:
-        return rhs
-    return None
+        return idx, True
+    idx, found = find_explodable(num[0], found, d+1, idx)
+    idx, found = find_explodable(num[1], found, d+1, idx)
+    return idx, found
 
-def num_list(num, lst=[]):
+def num_list(num, lst=None):
+    if lst == None:
+        lst = []
     if isinstance(num, int):
         lst.append(num)
         return lst
     lst = num_list(num[0], lst)
     return num_list(num[1], lst)
 
+def outer_explode(num, e_idx, l_idx, r_idx, l_val, r_val, idx=0, d=0):
+    if isinstance(num, int):
+        if idx == l_idx:
+            num += l_val
+        elif idx == r_idx:
+            num += r_val
+        return num, idx+1
+    if idx == e_idx and d == 4:
+        return 0, idx+2
+    lhs, idx = outer_explode(num[0], e_idx, l_idx, r_idx, l_val, r_val, idx, d+1)
+    rhs, idx = outer_explode(num[1], e_idx, l_idx, r_idx, l_val, r_val, idx, d+1)
+    return [lhs] + [rhs], idx
+
 def explode(num):
-    e = find_explodable(num)
-    regular_nums = num_list(num)
-    idx = sum(e)
-    lhs = 0 if idx == 0 else regular_nums[idx-1]
-    rhs = 0 if idx+1 == len(regular_nums) else regular_nums[idx+2]
+    idx, found = find_explodable(num)
+    if found:
+        regular_nums = num_list(num)
+        num = outer_explode(num, idx, idx-1, idx+2, regular_nums[idx], regular_nums[idx+1])[0]
+    return num, found
 
-
-def split(num):
-    pass
+def split_snail(num, found=False):
+    if isinstance(num, int):
+        if num >= 10 and not found:
+            lhs = num//2
+            rhs = lhs if num%2==0 else lhs+1
+            return [lhs, rhs], True
+        return num, found
+    lhs, found = split_snail(num[0], found)
+    rhs, found = split_snail(num[1], found)
+    return [lhs] + [rhs], found
 
 def add(a, b):
     added = [a, b]
     while True:
-        new = explode(add)
-        new = split(new)
-        if new == added:
+        added, changed = explode(added)
+        if changed:
+            continue
+        added, changed = split_snail(added)
+        if not changed:
             break
-        added = new
     return added
 
-numbers = []
-with open('inputs/test.in') as f:
-    for line in f.readlines():
-        numbers.append(json.loads(line.strip()))
+def magnitude(num):
+    if isinstance(num, int):
+        return num
+    return 3*magnitude(num[0]) + 2*magnitude(num[1])
 
-explode(numbers[0])
+def main():
+    numbers = []
+    with open('inputs/Day18.in') as f:
+        for line in f.readlines():
+            # no eval here lol
+            numbers.append(json.loads(line.strip()))
 
-# snail_sum = numbers[0]
-# for snail in numbers[1:]:
-#     snail_sum = add(snail_sum, snail)
-# print(snail_sum)
+    snail_sum = numbers[0]
+    for snail in numbers[1:]:
+        snail_sum = add(snail_sum, snail)
+    print(magnitude(snail_sum))
+
+    max_magnitude = 0
+    for i in range(len(numbers)):
+        for j in range(len(numbers)):
+            if i != j:
+                max_magnitude = max(max_magnitude, magnitude(add(numbers[i], numbers[j])))
+    print(max_magnitude)
+
+if __name__ == '__main__':
+    main()

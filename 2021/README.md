@@ -21,7 +21,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |15|C++|C++ fast and has a priority queue built in which came in *very* handy today. Overall nice experience, and I finally implemented Dijkstra's for I think the first time during this so that's fun.|
 |16|C#|C# very good. Like better Java made by Microsoft. Super easy to implement the Visitor design pattern in for making a mini-compiler|
 |17|R|R isn't great on its own...imported the `sets` library so I could have tuples which helped a lot in this problem|
-|18|
+|18|Python|One of my, if not my most favorite language. So many useful built-in libraries, and fun stuff you can do with non-static types and whatnot (if you look I used `isinstance` a lot haha). This problem was perfect for Python with the way lists work, and worked very naturally recursively.|
 |19|
 |20|
 |21|
