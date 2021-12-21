@@ -400,7 +400,6 @@ class CodeVisitor : IVisitor {
             }
         }
         Console.Write(")");
-
     }
 
     public void Visit(Minimum packet) {
@@ -412,7 +411,6 @@ class CodeVisitor : IVisitor {
             }
         }
         Console.Write(")");
-
     }
 
     public void Visit(Maximum packet) {
@@ -432,7 +430,6 @@ class CodeVisitor : IVisitor {
         Console.Write(" > ");
         packet.rhs.Accept(this);
         Console.Write(")");
-
     }
 
     public void Visit(LessThan packet) {
