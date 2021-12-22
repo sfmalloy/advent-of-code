@@ -30,3 +30,4 @@ test.*
 *.json
 *.cmo
 *.cmi
+*.csv

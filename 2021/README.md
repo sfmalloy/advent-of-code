@@ -23,8 +23,8 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |17|R|R isn't great on its own...imported the `sets` library so I could have tuples which helped a lot in this problem|
 |18|Python|One of my, if not my most favorite language. So many useful built-in libraries, and fun stuff you can do with non-static types and whatnot (if you look I used `isinstance` a lot haha). This problem was perfect for Python with the way lists work, and worked very naturally recursively.|
 |19|
-|20|
-|21|
+|20|PHP|This problem was a doozy honestly, but honestly...PHP actually made it easier with how arrays are essentially just dictionaries.|
+|21|Lua|Went back to Lua, was able to do some dynamic programming stuff. Scoping is still somewhat confusing sometimes but glad I was able to solve a day in Lua in the end (after giving up on it Day 14).|
 |22|
 |23|
 |24|

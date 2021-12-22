@@ -1,4 +1,4 @@
-all: 1 2 3 4 6 7 10 13 15
+all: 20
 
 1: Day01.s
 	@echo "Compiling Day01.s..."
@@ -35,6 +35,10 @@ all: 1 2 3 4 6 7 10 13 15
 15: Day15.cpp
 	@echo "Compiling Day15.cpp..."
 	@g++ -O2 Day15.cpp -o Day15
+
+20: Day20.d
+	@echo "Compiling Day20.d..."
+	@dmd $^ -ofDay20
 
 clean:
 	$(RM) *.o *.hi *.class a.out *.jar *.cmi *.cmo
