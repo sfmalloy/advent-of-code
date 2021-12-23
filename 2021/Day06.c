@@ -13,7 +13,7 @@ u64 make_fish(int num_runs, u64* fish);
 
 int main() {
     struct timespec start, finish;
-    clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     u64 fish[9];
     init_fish(fish);
@@ -21,7 +21,7 @@ int main() {
     u64 part1 = make_fish(80, fish);
     u64 part2 = make_fish(176, fish);
 
-    clock_gettime(CLOCK_REALTIME, &finish);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
 
     printf("%llu\n%llu\n", part1, part2);
     printf("Time: %.3lfµs\n", (double)((finish.tv_sec - start.tv_sec) + ((finish.tv_nsec - start.tv_nsec) / 1e9)) * 1e6);
