@@ -12,10 +12,11 @@ void init_fish(u64* fish);
 u64 make_fish(int num_runs, u64* fish);
 
 int main() {
-    u64 fish[9];
-    init_fish(fish);
     struct timespec start, finish;
     clock_gettime(CLOCK_REALTIME, &start);
+
+    u64 fish[9];
+    init_fish(fish);
 
     u64 part1 = make_fish(80, fish);
     u64 part2 = make_fish(176, fish);
