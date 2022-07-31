@@ -403,25 +403,25 @@ class CodeVisitor : IVisitor {
     }
 
     public void Visit(Minimum packet) {
-        Console.Write("min(");
+        Console.Write("min([");
         for (int i = 0; i < packet.subpackets.Count; ++i) {
             packet.subpackets[i].Accept(this);
             if (i < packet.subpackets.Count - 1) {
                 Console.Write(", ");
             }
         }
-        Console.Write(")");
+        Console.Write("])");
     }
 
     public void Visit(Maximum packet) {
-        Console.Write("max(");
+        Console.Write("max([");
         for (int i = 0; i < packet.subpackets.Count; ++i) {
             packet.subpackets[i].Accept(this);
             if (i < packet.subpackets.Count - 1) {
                 Console.Write(", ");
             }
         }
-        Console.Write(")");
+        Console.Write("])");
     }
 
     public void Visit(GreaterThan packet) {
@@ -554,3 +554,5 @@ using (var file = File.CreateText("AST.txt")) {
 }
 Console.WriteLine(versionSum);
 Console.WriteLine(eVisitor.result);
+
+// root.Accept(pyVisitor);
