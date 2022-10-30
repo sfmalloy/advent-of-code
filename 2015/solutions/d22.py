@@ -27,7 +27,7 @@ attacks = [
     Attack(mana=229, effect_turns=5, effect_idx=2, regen=101)
 ]
 
-INF = 10**20
+INF = float('inf')
 # i may just be decreasing the limit until I got to "inf" as the final answer...
 # it works. it's slow but it works
 LIMIT = INF
@@ -100,7 +100,7 @@ def main(in_file: TextIOWrapper):
     LIMIT = INF
     while True:
         curr = do_turn(deepcopy(player), boss_hp, boss_dmg)
-        if curr == float('inf'):
+        if curr == INF:
             break
         LIMIT = curr
     print(LIMIT)
@@ -111,4 +111,4 @@ def main(in_file: TextIOWrapper):
         if curr == INF:
             break
         LIMIT = curr
-        print(LIMIT)
+    print(LIMIT)
