@@ -28,16 +28,13 @@ attacks = [
 ]
 
 INF = float('inf')
-# i may just be decreasing the limit until I got to "inf" as the final answer...
-# it works. it's slow but it works
-LIMIT = INF
 
-def do_turn(player: Player, boss_hp: int, boss_dmg: int, mana_spent: int=0, player_turn: bool=True, hard: bool=False):
+def do_turn(player: Player, boss_hp: int, boss_dmg: int, limit, mana_spent: int=0, player_turn: bool=True, hard: bool=False):
     if hard and player_turn:
         player.hp -= 1
         if player.hp <= 0:
             return INF
-    if mana_spent >= LIMIT:
+    if mana_spent >= limit:
         return INF
     if boss_hp <= 0:
         return mana_spent
@@ -79,13 +76,13 @@ def do_turn(player: Player, boss_hp: int, boss_dmg: int, mana_spent: int=0, play
                     new.effects[a.effect_idx] = copy(a)
                 else:
                     new_boss_hp -= a.dmg
-                best = min(best, do_turn(new, new_boss_hp, boss_dmg, mana_spent+a.mana, not player_turn, hard))
-                if (LIMIT == INF and best != INF) or best < LIMIT:
+                best = min(best, do_turn(new, new_boss_hp, boss_dmg, limit, mana_spent+a.mana, not player_turn, hard))
+                if (limit == INF and best != INF) or best < limit:
                     return best
     elif boss_hp > 0:
         player.hp -= boss_dmg - player.armor
         if player.hp > 0:
-            best = min(best, do_turn(player, boss_hp, boss_dmg, mana_spent, not player_turn, hard))
+            best = min(best, do_turn(player, boss_hp, boss_dmg, limit, mana_spent, not player_turn, hard))
     elif boss_hp <= 0:
         return mana_spent
 
@@ -96,19 +93,18 @@ def main(in_file: TextIOWrapper):
     boss_dmg = int(in_file.readline().split(':')[1])
     player = Player(hp=50, mana=500)
 
-    global LIMIT
-    LIMIT = INF
+    limit = INF
     while True:
-        curr = do_turn(deepcopy(player), boss_hp, boss_dmg)
+        curr = do_turn(deepcopy(player), boss_hp, boss_dmg, limit)
         if curr == INF:
             break
-        LIMIT = curr
-    print(LIMIT)
+        limit = curr
+    print(limit)
 
-    LIMIT = INF
+    limit = INF
     while True:
-        curr = do_turn(deepcopy(player), boss_hp, boss_dmg, hard=True)
+        curr = do_turn(deepcopy(player), boss_hp, boss_dmg, limit, hard=True)
         if curr == INF:
             break
-        LIMIT = curr
-    print(LIMIT)
+        limit = curr
+    print(limit)
