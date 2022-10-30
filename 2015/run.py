@@ -17,9 +17,7 @@ def run_all():
         curr_time = run_single(day_num)
         if curr_time > 0:
             total_time += curr_time
-            day_num += 1
-        else:
-            break
+        day_num += 1
         print()
     return total_time
 
