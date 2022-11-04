@@ -1,18 +1,3 @@
-# Definitely not an excuse to use Javascript again for a hard problem
-
-# Scanners can detect beacons within a 1000x1000x1000 cube relative to their position
-# Scanners do not detect other scanners
-# Scanners do not know their own position
-
-# Can construct 3d region based on scanners that detect overlapping beacons
-# Need to detect 12 beacons that both scanners detect within an overlap
-# Once that's done you can reconstruct the region
-
-# Scanners don't know their rotation/direction
-# Rotated some multiple of 90-degrees in x, y, and z.
-# Could be 1 of 24 orientations
-
-# Matrix math helper functions
 sin = (theta) ->
     switch theta
         when 0 then 0
@@ -46,12 +31,6 @@ rotMatrix = (x, y, z) ->
         ]
     ]
 
-printMatrix = (matrix) ->
-    console.log("#{matrix[0][0]}\t#{matrix[0][1]}\t#{matrix[0][2]}")
-    console.log("#{matrix[1][0]}\t#{matrix[1][1]}\t#{matrix[1][2]}")
-    console.log("#{matrix[2][0]}\t#{matrix[2][1]}\t#{matrix[2][2]}")
-    console.log("\n")
-
 transformVector = (t, v) ->
     [
         t[0][0] * v[0] + t[0][1] * v[1] + t[0][2] * v[2],
@@ -59,15 +38,63 @@ transformVector = (t, v) ->
         t[2][0] * v[0] + t[2][1] * v[1] + t[2][2] * v[2]
     ]
 
-distance = (p1, p2) ->
-    Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2 + (p1[2] - p2[2]) ** 2)
+vecDiff = (lhs, rhs) ->
+    [lhs[0] - rhs[0], lhs[1] - rhs[1], lhs[2] - rhs[2]]
 
-manhattan_distance = (p1, p2) ->
-    Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]) + Math.abs(p1[2] - p2[2])
+vecAdd = (lhs, rhs) ->
+    [lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2]]
 
-fs = require('fs')
+vecEqual = (a, b) ->
+    a[0] == b[0] && a[1] == b[1] && a[2] == b[2]
 
-file = fs.readFileSync('inputs/test.in', 'utf-8')
+rotationMatrices = []
+for x in [0, 90, 180, 270]
+    for y in [0, 90, 180, 270]
+        for z in [0, 90, 180, 270]
+            eq = false
+            curr = rotMatrix(x, y, z)
+            for m in rotationMatrices
+                if vecEqual(m[0], curr[0]) \
+                    && vecEqual(m[1], curr[1]) \
+                    && vecEqual(m[2], curr[2])
+                    eq = true
+                    break
+            if !eq
+                rotationMatrices.push(curr)
+
+getDiff = (root, t, scanners) ->
+    diffs = {}
+    for a in scanners[root]
+        for b in scanners[t]
+            for m in rotationMatrices
+                diff = vecDiff(a, transformVector(m, b))
+                if !vecEqual(diff, [0, 0, 0])
+                    strDiff = JSON.stringify([diff, root, t, m])
+                    if !(strDiff of diffs)
+                        diffs[strDiff] = []
+                    diffs[strDiff].push([a, transformVector(m, b)])
+    return diffs
+
+
+findBeacons = (root, scanners) ->
+    diffs = {}
+    if root + 1 > scanners.length - 1
+        return diffs
+    for t in [root + 1..scanners.length - 1]
+        diff = getDiff(root, t, scanners)
+        diffs = { ...diffs, ...diff }
+    beacons = {}
+    for d, a of diffs
+        if a.length >= 12
+            beacons[d] = a
+    return beacons
+
+# 294 too low :(
+# 327 not right :(
+# 390 too high
+
+
+file = require('fs').readFileSync('inputs/Day19.in', 'utf-8')
          .split("\n\n")
          .map((block) -> block.split('\n').splice(1))
 
@@ -76,15 +103,54 @@ scanners = ((beacon.trimEnd()
                    .map((num) -> parseInt(num, 10)) for beacon in scanner)
                    .filter((beacon) -> beacon.length == 3) for scanner in file)
 
-rotationMatrices = []
-for x in [0, 90, 180]
-    for y in [0, 90, 180]
-        for z in [0, 90, 180]
-            rotationMatrices.push(rotMatrix(x, y, z))
+positions = {
+    0: [0, 0, 0]
+}
 
-s0 = scanners[0][9]
-s1 = scanners[1][0]
+rotations = {
+    0: -1
+}
 
-min_dist = 10000
-console.log(rotationMatrices.length)
-console.log(manhattan_distance([-500, 1000, -1500], [-1000, 1000, -1000]))
+pLen = 0
+for _ of positions
+    pLen += 1
+
+while pLen < scanners.length
+    for i in [0..scanners.length - 1]
+        console.log(i)
+        beaconMap = findBeacons(i, scanners)
+        for key, beaconList of beaconMap
+            [diff, start, end, m] = JSON.parse(key)
+            if start of positions
+                rotations[end] = m
+                for i in [0..scanners[end].length - 1]
+                    scanners[end][i] = transformVector(m, scanners[end][i])
+                positions[end] = vecAdd(diff, positions[start])
+            else if end of positions
+                newDiff = getDiff(end, start, scanners)
+                for k, v of newDiff
+                    if v.length >= 12
+                        [diff, start, end, m] = JSON.parse(k)
+                        break
+                positions[end] = vecAdd(diff, positions[start])
+                for i in [0..scanners[end].length - 1]
+                    scanners[end][i] = transformVector(m, scanners[end][i])
+            else
+                console.log("neither found... #{start} #{end} #{beaconList.length}")
+    pLen = 0
+    for _ of positions
+        pLen += 1
+
+unique = new Set
+for s in [0..scanners.length - 1]
+    scn = scanners[s]
+    for p in [0..scn.length - 1]
+        unique.add(JSON.stringify(vecAdd(positions[s], scn[p])))
+
+total = 0
+for s in scanners
+    total += s.length
+console.log(positions)
+console.log(total)
+console.log(unique.size)
+console.log(unique)
