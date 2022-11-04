@@ -31,3 +31,5 @@ test.*
 *.cmo
 *.cmi
 *.csv
+!tsconfig.json
+!package.json

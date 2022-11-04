@@ -78,9 +78,7 @@ getDiff = (root, t, scanners) ->
 
 findBeacons = (root, scanners) ->
     diffs = {}
-    if root + 1 > scanners.length - 1
-        return diffs
-    for t in [root + 1..scanners.length - 1]
+    for t in [0..scanners.length - 1]
         diff = getDiff(root, t, scanners)
         diffs = { ...diffs, ...diff }
     beacons = {}
@@ -89,10 +87,8 @@ findBeacons = (root, scanners) ->
             beacons[d] = a
     return beacons
 
-# 294 too low :(
-# 327 not right :(
-# 390 too high
-
+manhattanDistance = (p1, p2) ->
+    Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]) + Math.abs(p1[2] - p2[2])
 
 file = require('fs').readFileSync('inputs/Day19.in', 'utf-8')
          .split("\n\n")
@@ -111,46 +107,31 @@ rotations = {
     0: -1
 }
 
-pLen = 0
-for _ of positions
-    pLen += 1
-
-while pLen < scanners.length
-    for i in [0..scanners.length - 1]
-        console.log(i)
-        beaconMap = findBeacons(i, scanners)
+done = new Set()
+next = [0]
+while next.length > 0
+    curr = next.shift()
+    beaconMap = findBeacons(curr, scanners)
+    if !done.has(curr)
         for key, beaconList of beaconMap
-            [diff, start, end, m] = JSON.parse(key)
+            [diff, start, end, rot] = JSON.parse(key)
             if start of positions
                 rotations[end] = m
                 for i in [0..scanners[end].length - 1]
-                    scanners[end][i] = transformVector(m, scanners[end][i])
+                    scanners[end][i] = transformVector(rot, scanners[end][i])
                 positions[end] = vecAdd(diff, positions[start])
-            else if end of positions
-                newDiff = getDiff(end, start, scanners)
-                for k, v of newDiff
-                    if v.length >= 12
-                        [diff, start, end, m] = JSON.parse(k)
-                        break
-                positions[end] = vecAdd(diff, positions[start])
-                for i in [0..scanners[end].length - 1]
-                    scanners[end][i] = transformVector(m, scanners[end][i])
-            else
-                console.log("neither found... #{start} #{end} #{beaconList.length}")
-    pLen = 0
-    for _ of positions
-        pLen += 1
+            if !done.has(end) && !next.includes(end)
+                next.push(end)
+        done.add(curr)
 
 unique = new Set
+largestDist = 0
 for s in [0..scanners.length - 1]
     scn = scanners[s]
     for p in [0..scn.length - 1]
         unique.add(JSON.stringify(vecAdd(positions[s], scn[p])))
+    for t in [s..scanners.length - 1]
+        largestDist = Math.max(largestDist, manhattanDistance(positions[s], positions[t]))
 
-total = 0
-for s in scanners
-    total += s.length
-console.log(positions)
-console.log(total)
 console.log(unique.size)
-console.log(unique)
+console.log(largestDist)

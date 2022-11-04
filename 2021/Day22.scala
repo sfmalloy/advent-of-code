@@ -1,5 +1,3 @@
-import kotlin.ULong
-
 import scala.collection.mutable
 import scala.io.Source
 import scala.math.{max, min}
@@ -19,7 +17,7 @@ object Day22 {
     }
 
     def main(args: Array[String]): Unit = {
-        val file = Source.fromFile("inputs/test.in")
+        val file = Source.fromFile("./inputs/Day22.in")
         val stateRanges: mutable.ArrayBuffer[(Boolean, (Long, Long), (Long, Long), (Long, Long))] = mutable.ArrayBuffer()
         val cubes: mutable.ArrayBuffer[Cube] = mutable.ArrayBuffer()
 
@@ -56,45 +54,5 @@ object Day22 {
         println(part1)
         currentState.clear()
         file.close()
-
-        var totalOn: Long = 0L
-        var totalOff: Long = 0L
-        // brute force to find all of the actual overlapping cubes, not just their volumes
-        // then see whether they are supposed to be on or off
-        for (i <- cubes.indices) {
-            if (cubes(i).state) {
-                var localOn = cubes(i).volume()
-                for (j <- 0 until i) {
-                    if (cubes(j).state)
-                        localOn -= cubes(j).overlap(cubes(i))
-                    else
-                        localOn += cubes(j).overlap(cubes(i))
-                }
-                printf("On => %d\n", localOn)
-                totalOn += localOn
-            } else {
-                var localOff = 0L
-                for (j <- 0 until i) {
-                    if (cubes(j).state) {
-                        localOff += cubes(j).overlap(cubes(i))
-                        for (k <- 0 until j) {
-                            if (cubes(k).state) {
-                                localOff -= cubes(k).overlap(cubes(j))
-                            }
-                        }
-                    }
-                }
-                printf("Off => %d\n", localOff)
-                totalOff += localOff
-            }
-        }
-        printf("Unique cubes that have been turned on at one point: %d\n", totalOn)
-        printf("Unique cubes that have been turned on at one point: %d\n", totalOff)
-        // 2758514936282235
-        // 2520680994726215
     }
-
-//    def simulateRange(state: Boolean, xBegin: Int, xEnd: Int, yBegin: Int, yEnd: Int, zBegin: Int, zEnd: Int): Unit = {
-//
-//    }
 }

@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "noImplicitAny": false,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "./Day14.ts"
+    ]
+}
