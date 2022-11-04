@@ -21,11 +21,11 @@ Langs used:
 19. CoffeeScript
 20. PHP
 21. Lua
-22. ???
+22. Scala
 23. ???
 24. ???
 25. ???
 
 Langs to use:
 -------------
-D, OCaml, Scala, Groovy
+Nim, D, OCaml
