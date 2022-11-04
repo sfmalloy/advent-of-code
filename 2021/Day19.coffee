@@ -47,6 +47,8 @@ vecAdd = (lhs, rhs) ->
 vecEqual = (a, b) ->
     a[0] == b[0] && a[1] == b[1] && a[2] == b[2]
 
+startTime = performance.now()
+
 rotationMatrices = []
 for x in [0, 90, 180, 270]
     for y in [0, 90, 180, 270]
@@ -89,8 +91,6 @@ findBeacons = (root, scanners) ->
 
 manhattanDistance = (p1, p2) ->
     Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]) + Math.abs(p1[2] - p2[2])
-
-startTime = performance.now()
 
 console.log('THIS WILL TAKE AWHILE')
 file = require('fs').readFileSync('inputs/Day19.in', 'utf-8')
