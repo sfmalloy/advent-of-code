@@ -3,7 +3,9 @@ import scala.io.Source
 import scala.math.{max, min}
 
 object Day22 {
-    class Cube(val state: Boolean, val xMin: Long, val xMax: Long, val yMin: Long, val yMax: Long, val zMin: Long, val zMax: Long, val onCount: Long = 0) {
+    class Cube(val state: Boolean, val xMin: Long, val xMax: Long, val yMin: Long, val yMax: Long, val zMin: Long, val zMax: Long) {
+        private var offOverlaps: mutable.ArrayBuffer[Cube] = mutable.ArrayBuffer()
+
         def overlap(other: Cube): Long = {
             val dx = max(min(xMax + 1, other.xMax + 1) - max(xMin, other.xMin), 0)
             val dy = max(min(yMax + 1, other.yMax + 1) - max(yMin, other.yMin), 0)
@@ -14,45 +16,78 @@ object Day22 {
         def volume(): Long = {
             (xMax + 1 - xMin) * (yMax + 1 - yMin) * (zMax + 1 - zMin)
         }
+
+        def addOffOverlap(other: Cube): Unit = {
+            val o = overlap(other)
+            if (o > 0) {
+                for (cube <- offOverlaps) {
+                    cube.addOffOverlap(other)
+                }
+                offOverlaps.addOne(new Cube(false, max(xMin, other.xMin), 
+                    min(xMax, other.xMax), 
+                    max(yMin, other.yMin), 
+                    min(yMax, other.yMax), 
+                    max(zMin, other.zMin), 
+                    min(zMax, other.zMax))
+                )
+            }
+        }
+
+        def onCount(level: Int = 0): Long = {
+            var lightsOff = 0L
+            for (cube <- offOverlaps) {
+                lightsOff += cube.onCount(level + 1)
+            }
+            volume() - lightsOff
+        }
+
+        override def toString(): String = {
+            s"(${xMin} ${xMax}) (${yMin} ${yMax}) (${zMin} ${zMax})"
+        }
+    }
+
+    def totalVolume(cubes: mutable.ArrayBuffer[Cube]): Long = {
+        for (c <- 0 to cubes.length - 1) {
+            for (p <- 0 to c - 1) {
+                cubes(p).addOffOverlap(cubes(c))
+            }
+        }
+
+        var on: Long = 0
+        for (cube <- cubes) {
+            if (cube.state) {
+                on += cube.onCount()
+            }
+        }
+        return on
     }
 
     def main(args: Array[String]): Unit = {
+        val startTime = System.nanoTime()
+
         val file = Source.fromFile("./inputs/Day22.in")
         val stateRanges: mutable.ArrayBuffer[(Boolean, (Long, Long), (Long, Long), (Long, Long))] = mutable.ArrayBuffer()
         val cubes: mutable.ArrayBuffer[Cube] = mutable.ArrayBuffer()
+        val smallCubes: mutable.ArrayBuffer[Cube] = mutable.ArrayBuffer()
 
         for (line <- file.getLines()) {
             val (stateLine, rangeLine) = line.split(" ") match { case Array(s, r) => (s, r) }
-            val (xRange, yRange, zRange) = rangeLine.split(",").map((s:String) => {
+            val ((xMin, xMax), (yMin, yMax), (zMin, zMax)) = rangeLine.split(",").map((s:String) => {
                 val nums = s.split("=")(1).split("\\.\\.")
                 (nums(0).toLong, nums(1).toLong)
             }) match {
                 case Array(xRange, yRange, zRange) => (xRange, yRange, zRange)
             }
 
-            stateRanges.addOne(stateLine.equals("on"), xRange, yRange, zRange)
+            cubes.addOne(new Cube(stateLine.equals("on"), xMin, xMax, yMin, yMax, zMin, zMax))
+            if (xMin >= -50 && xMax <= 50 && yMin >= -50 && yMax <= 50 && zMin >= -50 && zMax <= 50)
+                smallCubes.addOne(new Cube(stateLine.equals("on"), xMin, xMax, yMin, yMax, zMin, zMax))
         }
 
-        val currentState: mutable.HashMap[(Long, Long, Long), Boolean] = mutable.HashMap()
-        for ((state, (xBegin, xEnd), (yBegin, yEnd), (zBegin, zEnd)) <- stateRanges) {
-            cubes.addOne(new Cube(state, xBegin, xEnd, yBegin, yEnd, zBegin, zEnd))
-            for (x <- max(-50, xBegin) to min(xEnd, 50)) {
-                for (y <- max(-50, yBegin) to min(yEnd, 50)) {
-                    for (z <- max(-50, zBegin) to min(zEnd, 50)) {
-                        currentState((x, y, z)) = state
-                    }
-                }
-            }
-        }
-
-        var part1 = 0
-        for ((_, state) <- currentState) {
-            if (state) {
-                part1 += 1
-            }
-        }
-        println(part1)
-        currentState.clear()
+        println(totalVolume(smallCubes))
+        println(totalVolume(cubes))
         file.close()
+        val endTime = System.nanoTime()
+        printf("%.3fms\n", (endTime - startTime) / 1000000.0)
     }
 }

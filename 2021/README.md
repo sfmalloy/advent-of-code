@@ -25,7 +25,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |19|CoffeeScript|JavaScript without curley braces and slightly more strict formatting. Not bad. Solution used a lot of vector operations which I wished I could've used a different language for but it got the job done. (Albeit slowly)|
 |20|PHP|This problem was a doozy honestly, but honestly...PHP actually made it easier with how arrays are essentially just dictionaries.|
 |21|Lua|Went back to Lua, was able to do some dynamic programming stuff. Scoping is still somewhat confusing sometimes but glad I was able to solve a day in Lua in the end (after giving up on it Day 14).|
-|22|
+|22|Scala|I really liked Scala for this problem. Runs *decently* fast for a JVM language. Problem was fun overall, involved some fun recursion.|
 |23|
 |24|
 |25|
