@@ -90,6 +90,9 @@ findBeacons = (root, scanners) ->
 manhattanDistance = (p1, p2) ->
     Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]) + Math.abs(p1[2] - p2[2])
 
+startTime = performance.now()
+
+console.log('THIS WILL TAKE AWHILE')
 file = require('fs').readFileSync('inputs/Day19.in', 'utf-8')
          .split("\n\n")
          .map((block) -> block.split('\n').splice(1))
@@ -123,6 +126,8 @@ while next.length > 0
             if !done.has(end) && !next.includes(end)
                 next.push(end)
         done.add(curr)
+    if done.size == Math.floor(scanners.length / 2)
+        console.log('Still going...')
 
 unique = new Set
 largestDist = 0
@@ -135,3 +140,10 @@ for s in [0..scanners.length - 1]
 
 console.log(unique.size)
 console.log(largestDist)
+
+endTime = performance.now()
+
+minutes = Math.floor(((endTime - startTime) / 1000) / 60)
+seconds = Math.round(((endTime - startTime) / 1000) - (minutes * 60))
+
+console.log("Time: #{minutes}min #{seconds}sec")
