@@ -19,7 +19,7 @@ def main():
     parser = ArgumentParser()
     parser.add_argument('-d', '--day', dest='day', help='Downloads day <d> input if not already downloaded.')
     try:
-        YEAR = 2022
+        YEAR = 2016
 
         options = parser.parse_args()
         day_num = options.day
