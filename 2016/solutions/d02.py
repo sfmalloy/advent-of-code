@@ -28,7 +28,6 @@ def walk(steps, keypad):
     while '5' not in keypad[curr.r]:
         curr.r += 1
     curr.c = keypad[curr.r].index('5')
-    print(curr)
     for line in steps:
         steps = line.strip()
         for step in steps:

@@ -18,6 +18,9 @@ if sys.version_info.minor >= 11:
         d07.main,
         d08.main,
         d09.main,
+        d10.main,
+        d11.main,
+        d12.main,
     ]
 
 @dataclass

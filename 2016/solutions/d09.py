@@ -2,7 +2,6 @@ from io import TextIOWrapper
 
 
 def expand(string: str):
-    print(string)
     i = 0
     size = 0
     while i < len(string):
