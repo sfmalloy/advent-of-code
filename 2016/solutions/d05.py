@@ -1,7 +1,5 @@
 from io import TextIOWrapper
 from hashlib import md5
-import random
-import string
 
 
 def main(file: TextIOWrapper):
