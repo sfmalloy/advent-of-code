@@ -42,7 +42,7 @@ def run(prog: list[Instruction], mem: list[int]):
 def main(file: TextIOWrapper):
     """
     Opcode: 
-        3 bits for operation
+        2 bits for operation
         1 bit for first operand being immediate or register
         1 bit for second operand being immediate or register
     """
