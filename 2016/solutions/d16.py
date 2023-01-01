@@ -1,22 +1,34 @@
 from io import TextIOWrapper
-from dataclasses import dataclass
+from collections import deque
 
 
-def step(a: str):
-    temp = a
-    b = 0
-    bit_len = 0
-    while temp > 0:
-        b <<= 1
-        b |= temp & 1
-        temp >>= 1
-        bit_len += 1
-    b = ~b + (1 << (max(bit_len, 1)))
-    a <<= bit_len+1
-    a |= b
-    return a
+def step(start: str):
+    a = deque(start)
+    b = deque()
+    for bit in a:
+        b.appendleft('0' if bit == '1' else '1')
+    a.append('0')
+    return ''.join(a+b)
+
+
+def checksum(data: str):
+    res = ''
+    while len(data) % 2 == 0:
+        res = ''
+        for i in range(0, len(data), 2):
+            res += '1' if data[i] == data[i+1] else '0'
+        data = res
+    return res
+
+
+def fill_disk(size: int, start: str):
+    curr = start
+    while len(curr) < size:
+        curr = step(curr)
+    curr = curr[:size]
+    return checksum(curr)
 
 
 def main(file: TextIOWrapper):
-    print(bin(step(int('111100001010', 2))))
-    return -1,-1
+    data = file.read().strip()
+    return fill_disk(272, data), fill_disk(35651584, data)
