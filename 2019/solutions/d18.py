@@ -1,150 +1,121 @@
 from io import TextIOWrapper
 from dataclasses import dataclass
-from collections import defaultdict
+from collections import defaultdict, deque
+from queue import PriorityQueue
+import heapq
 
-class Dir:
-    N = 0
-    E = 1
-    S = 2
-    W = 3
-
-    dr = [-1,0,1,0]
-    dc = [0,1,0,-1]
 
 @dataclass(frozen=True, eq=True)
-class State:
+class Point:
     r: int
     c: int
-    keys: list[str]
 
-g_cache = {}
-g_paths = defaultdict(list)
-
-def get_paths(r, c, goal, maze, visited=set()):
-    if (r, c, goal) in g_cache:
-        return g_cache[(r, c, goal)]
-    if maze[r][c] == goal:
-        return goal
-    min_path = ''
-    for d in range(Dir.N, Dir.W+1):
-        new_r = r + Dir.dr[d]
-        new_c = c + Dir.dc[d]
-        if maze[new_r][new_c] != '#' and (new_r, new_c) not in visited:
-            curr = maze[r][c] + get_paths(new_r, new_c, goal, maze, visited | {(r,c)})
-            if curr != maze[r][c] and (len(curr) < len(min_path) or min_path == ''):
-                min_path = curr
-    if min_path != '':
-        g_cache[(r, c, goal)] = min_path
-    return min_path
-
-def get_key_paths(curr_key, key_points, maze):
-    dists = {}
-    r, c = key_points[curr_key]
-    for k in key_points.keys():
-        if k != curr_key:
-            dists[k] = get_paths(r, c, k, maze)
-    return dists
-
-def memoize(f):
-    memo = {}
-    def helper(curr, raw, filtered, key_limit, keys=set(), seen=set()):
-        tkeys = tuple(sorted(keys))
-        tseen = tuple(sorted(seen))
-        if (curr, tkeys, tseen) not in memo:
-            memo[(curr, tkeys, tseen)] = f(curr, raw, filtered, key_limit, keys, seen)
-        return memo[(curr, tkeys, tseen)]
-    return helper
-
-@memoize
-def get_min_path(curr, raw, filtered, key_limit, keys=set(), seen=set()):
-    if len(keys) == key_limit:
-        return 0
-    starts = []
-    for p in filtered[curr].values():
-        i = 0
-        while i < len(p) and (p[i] in seen or p[i].lower() in keys):
-            i += 1
-        if i < len(p) and p[i].islower():
-            starts.append(p[i])
-    
-    dist = 1000000000000
-    for s in starts:
-        if s not in seen:
-            dist = min(dist, len(raw[curr][s]) - 1 + get_min_path(s, raw, filtered, key_limit, keys | {s}, seen | {curr}))
-    return dist
-
-@memoize
-def get_min_path_quad(curr, raw, filtered, key_limit, keys=set(), seen=set()):
-    if len(keys) == key_limit:
-        return 0
-    starts = []
-    for p in filtered[curr].values():
-        i = 0
-        while i < len(p) and (p[i] in seen or p[i].lower() in keys):
-            i += 1
-        if i < len(p) and p[i].islower():
-            starts.append(p[i])
-    
-    dist = 1000000000000
-    for s in starts:
-        if s not in seen:
-            dist = min(dist, len(raw[curr][s]) - 1 + get_min_path(s, raw, filtered, key_limit, keys | {s}, seen | {curr}))
-    return dist
-
-def get_all_paths(maze, goals):
-    raw_paths = {}
-    filtered_paths = defaultdict(dict)
-    for k in goals:
-        raw_paths[k] = get_key_paths(k, goals, maze)
-        for p in raw_paths[k]:
-            path = ''
-            for c in raw_paths[k][p]:
-                if c not in f'.@1234':
-                    path += c
-            filtered_paths[k][p] = path
-    
-    for k in goals:
-        to_remove = []
-        for g1,p1 in filtered_paths[k].items():
-            for g2,p2 in filtered_paths[k].items():
-                if g1 != g2 and p1 in p2:
-                    to_remove.append(g1)
-                    break
-        for t in to_remove:
-            filtered_paths[k].pop(t)
-    return raw_paths, filtered_paths
+    def __add__(self, other):
+        return Point(self.r + other.r, self.c + other.c)
 
 
-def part_one(maze, goals, keys):
-    raw_paths, filtered_paths = get_all_paths(maze, goals)
-    print(get_min_path('@', raw_paths, filtered_paths, keys))    
+@dataclass(frozen=True, eq=True)
+class Node:
+    pos: Point
+    keys: int
+    dist: int
 
+    def __lt__(self, other):
+        return self.dist < other.dist
+
+
+def encode_letter(letter: str):
+    a = 'a' if letter.islower() else 'A'
+    return 2**(ord(letter) - ord(a) + 1)
+
+
+DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
+
+def dist_to_keys(start: Point, goals: set[Point], keys: int, maze: list[list[int]]):
+    local_q = deque([(start, 0)])
+    visited = set()
+
+    local_dists = []
+    while len(local_q) > 0 and len(local_dists) < len(goals):
+        pos, dist = local_q.popleft()
+        if pos in goals:
+            local_dists.append((pos, dist))
+        visited.add(pos)
+
+        for d in DIRS:
+            new = pos+d
+            if (maze[new.r][new.c] > 0 or -maze[new.r][new.c] & keys) and new not in visited:
+                local_q.append((new, dist+1))
+
+    return local_dists
+
+
+def solve(in_file: TextIOWrapper):
+    ipt = [l.strip() for l in in_file.readlines()]
+    maze = []
+    start = Point(0, 0)
+    num_keys = 0
+    key_pos = {}
+    pos_key = {}
+    for i,r in enumerate(ipt):
+        row = []
+        for j,c in enumerate(r):
+            if c == '.':
+                row.append(1)
+            elif c == '#':
+                row.append(0)
+            elif c == '@':
+                row.append(1)
+                start = Point(i, j)
+            elif c.islower():
+                e = encode_letter(c)
+                row.append(e)
+                key_pos[e] = Point(i, j)
+                pos_key[Point(i, j)] = e
+                num_keys += 1
+            elif c.isupper():
+                row.append(-encode_letter(c))
+        maze.append(row)
+
+    all_keys = 0
+    key = 2
+    for i in range(num_keys):
+        all_keys |= key
+        key *= 2
+
+    INF = 2**31
+    dists = defaultdict(lambda: defaultdict(lambda: INF))
+    dist_to_key_cache = {}
+
+    q = []
+    starting_node = Node(start, 0, 0)
+    heapq.heappush(q, starting_node)
+    while len(q) > 0:
+        node: Node = heapq.heappop(q)
+        if node.keys == all_keys:
+            print(node.dist)
+            break
+        
+        local_dists = []
+        if (node.pos, node.keys) in dist_to_key_cache:
+            local_dists = dist_to_key_cache[(node.pos, node.keys)]
+        else:
+            keys_to_find = set()
+            for k, p in key_pos.items():
+                if not k & node.keys:
+                    keys_to_find.add(p)
+            local_dists = dist_to_keys(node.pos, keys_to_find, node.keys, maze)
+            dist_to_key_cache[(node.pos, node.keys)] = local_dists
+
+        for (p, d) in local_dists:
+            k = pos_key[p]
+            if d and node.dist + d < dists[node.keys][k]:
+                dists[node.keys][k] = node.dist + d
+                new_node = Node(p, node.keys|k, dists[node.keys][k])
+                heapq.heappush(q, new_node)
+
+
+import cProfile
 def main(in_file: TextIOWrapper):
-    maze = [list(map(str, l.strip())) for l in in_file.readlines()]
-
-    keys = 0
-    goals = {}
-    for r in range(len(maze)):
-        for c in range(len(maze[r])):
-            if maze[r][c].islower():
-                keys += 1
-            if maze[r][c] not in '.#':
-                goals[maze[r][c]] = (r,c)
-
-    part_one(maze, goals, keys)
-    # mr, mc = goals['@']
-    # maze[mr-1][mc-1:mc+2] = ['1', '#', '2']
-    # maze[mr][mc-1:mc+2] = ['#', '#', '#']
-    # maze[mr+1][mc-1:mc+2] = ['3', '#', '4']
-
-    # for r in range(len(maze)):
-    #     for c in range(len(maze[r])):
-    #         if maze[r][c] in '1234':
-    #             goals[maze[r][c]] = (r,c)
-    # goals.pop('@')
-
-    # for r in maze:
-    #     print(''.join(r))
-    
-    # raw_paths, filtered_paths = get_all_paths(maze, goals)
-    # print(filtered_paths)
+    cProfile.runctx('solve(in_file)', globals(), locals(), sort=1)
+    # solve(in_file)
