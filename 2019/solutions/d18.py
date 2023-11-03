@@ -1,27 +1,49 @@
 from io import TextIOWrapper
-from dataclasses import dataclass
 from collections import defaultdict, deque
-from queue import PriorityQueue
 import heapq
 
+HASHES = []
 
-@dataclass(frozen=True, eq=True)
 class Point:
     r: int
     c: int
 
+    def __init__(self, r, c) -> None:
+        self.r = r
+        self.c = c
+
     def __add__(self, other):
         return Point(self.r + other.r, self.c + other.c)
 
+    def __hash__(self):
+        return HASHES[self.r][self.c]
+    
+    def __eq__(self, other):
+        return self.r == other.r and self.c == other.c
 
-@dataclass(frozen=True, eq=True)
+
+DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
+
 class Node:
     pos: Point
     keys: int
     dist: int
 
+    def __init__(self, pos, keys, dist):
+        self.pos = pos
+        self.keys = keys
+        self.dist = dist
+
     def __lt__(self, other):
         return self.dist < other.dist
+
+    def __eq__(self, other):
+        return self.pos == other.pos \
+            and self.keys == other.keys \
+            and self.dist == other.dist
+    
+    def __hash__(self):
+        return hash((self.pos, self.keys, self.dist))
 
 
 def encode_letter(letter: str):
@@ -29,16 +51,14 @@ def encode_letter(letter: str):
     return 2**(ord(letter) - ord(a) + 1)
 
 
-DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
-
-def dist_to_keys(start: Point, goals: set[Point], keys: int, maze: list[list[int]]):
+def dist_to_keys(start: Point, goals: int, keys: int, maze: list[list[int]]):
     local_q = deque([(start, 0)])
     visited = set()
 
     local_dists = []
-    while len(local_q) > 0 and len(local_dists) < len(goals):
+    while len(local_q) > 0:
         pos, dist = local_q.popleft()
-        if pos in goals:
+        if maze[pos.r][pos.c] > 0 and maze[pos.r][pos.c] & goals:
             local_dists.append((pos, dist))
         visited.add(pos)
 
@@ -50,8 +70,21 @@ def dist_to_keys(start: Point, goals: set[Point], keys: int, maze: list[list[int
     return local_dists
 
 
+def pre_hash(R, C):
+    hashes = []
+    for r in range(R):
+        row = []
+        for c in range(C):
+            row.append(hash((r, c)))
+        hashes.append(row)
+    return hashes
+
+
 def solve(in_file: TextIOWrapper):
     ipt = [l.strip() for l in in_file.readlines()]
+    global HASHES
+    HASHES = pre_hash(len(ipt), len(ipt[0]))
+
     maze = []
     start = Point(0, 0)
     num_keys = 0
@@ -100,10 +133,10 @@ def solve(in_file: TextIOWrapper):
         if (node.pos, node.keys) in dist_to_key_cache:
             local_dists = dist_to_key_cache[(node.pos, node.keys)]
         else:
-            keys_to_find = set()
+            keys_to_find = 0
             for k, p in key_pos.items():
                 if not k & node.keys:
-                    keys_to_find.add(p)
+                    keys_to_find |= k
             local_dists = dist_to_keys(node.pos, keys_to_find, node.keys, maze)
             dist_to_key_cache[(node.pos, node.keys)] = local_dists
 
@@ -117,5 +150,5 @@ def solve(in_file: TextIOWrapper):
 
 import cProfile
 def main(in_file: TextIOWrapper):
-    cProfile.runctx('solve(in_file)', globals(), locals(), sort=1)
-    # solve(in_file)
+    # cProfile.runctx('solve(in_file)', globals(), locals(), sort=1)
+    solve(in_file)
