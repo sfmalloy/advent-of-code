@@ -1,45 +1,41 @@
 from io import TextIOWrapper
 from collections import defaultdict, deque
 import heapq
+from dataclasses import dataclass
 
+@dataclass(frozen=True, eq=True)
 class Point:
     r: int
     c: int
 
-    def __init__(self, r, c) -> None:
-        self.r = r
-        self.c = c
+    # def __init__(self, r, c) -> None:
+    #     self.r = r
+    #     self.c = c
 
     def __add__(self, other):
         return Point(self.r + other.r, self.c + other.c)
 
-    def __hash__(self):
-        return hash((self.r, self.c))
+    # def __hash__(self):
+    #     return hash((self.r, self.c))
     
-    def __eq__(self, other):
-        return self.r == other.r and self.c == other.c
+    # def __eq__(self, other):
+    #     return self.r == other.r and self.c == other.c
 
 
+@dataclass(eq=True)
 class Node:
-    pos: Point
     keys: int
     dist: int
-    latest_key: int
-
-    def __init__(self, pos, keys, dist, key):
-        self.pos = pos
-        self.keys = keys
-        self.dist = dist
-        self.latest_key = key
 
     def __lt__(self, other):
         return self.dist < other.dist
 
-    def __eq__(self, other):
-        return self.pos == other.pos \
-            and self.keys == other.keys \
-            and self.dist == other.dist
-    
+
+@dataclass
+class KeyNode:
+    dist: int
+    doors: int
+
 
 def encode_letter(letter: str):
     a = 'a' if letter.islower() else 'A'
@@ -47,21 +43,25 @@ def encode_letter(letter: str):
 
 
 DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
-def dist_to_keys(start: Point, goals: int, keys: int, maze: list[list[int]]):
-    local_q = deque([(start, 0)])
+def dist_to_keys(start: Point, all_keys: int, maze: list[list[int]]):
+    local_q = deque([(start, 0, 0)])
     visited = set()
 
-    local_dists = []
+    local_dists = {}
     while len(local_q) > 0:
-        pos, dist = local_q.popleft()
-        if maze[pos.r][pos.c] > 0 and maze[pos.r][pos.c] & goals:
-            local_dists.append((pos, dist))
+        pos, dist, doors = local_q.popleft()
+        val = maze[pos.r][pos.c]
+        if val > 0 and val & all_keys:
+            local_dists[val] = KeyNode(dist, doors)
         visited.add(pos)
 
         for d in DIRS:
             new = pos+d
-            if (maze[new.r][new.c] > 0 or -maze[new.r][new.c] & keys) and new not in visited:
-                local_q.append((new, dist+1))
+            if new not in visited:
+                if maze[new.r][new.c] > 0:
+                    local_q.append((new, dist+1, doors))
+                elif maze[new.r][new.c] < 0:
+                    local_q.append((new, dist+1, doors | -maze[new.r][new.c]))
 
     return local_dists
 
@@ -87,8 +87,9 @@ def main(in_file: TextIOWrapper):
             elif c.islower():
                 e = encode_letter(c)
                 row.append(e)
-                key_pos[e] = Point(i, j)
-                pos_key[Point(i, j)] = e
+                pos = Point(i, j)
+                key_pos[e] = pos
+                pos_key[pos] = e
                 num_keys += 1
             elif c.isupper():
                 row.append(-encode_letter(c))
@@ -101,29 +102,45 @@ def main(in_file: TextIOWrapper):
         key *= 2
 
     INF = 2**31
-    dists = defaultdict(lambda: defaultdict(lambda: INF))
+    dists = {}
 
-    starting_node = Node(start, 0, 0, 0)
-    q = [starting_node]
-    visited = set()
+    # precalculate BFS
+    for src in set(pos_key.keys()) | {start}:
+        keys = all_keys
+        if src != start:
+            keys ^= pos_key[src]
+        dists[pos_key[src] if src in pos_key else 0] = dist_to_keys(src, keys, maze)
+
+    starting_node = Node(0, 0)
+    q = deque([starting_node])
     while len(q) > 0:
-        node = heapq.heappop(q)
-        if (node.latest_key, node.keys) in visited:
-            continue
+        node = q.popleft()
         if node.keys == all_keys:
             print(node.dist)
             break
-        
-        visited.add((node.latest_key, node.keys))
-        keys_to_find = 0
-        for k, p in key_pos.items():
-            if not k & node.keys:
-                keys_to_find |= k
+        print(dists[node.keys])
 
-        for (p, d) in dist_to_keys(node.pos, keys_to_find, node.keys, maze):
-            k = pos_key[p]
-            keys = node.keys | k
-            if d and node.dist + d < dists[k][keys]:
-                dists[k][keys] = node.dist + d
-                new_node = Node(p, keys, dists[k][keys], k)
-                heapq.heappush(q, new_node)
+    # starting_node = Node(start, 0, 0, 0)
+    # q = [starting_node]
+    # visited = set()
+    # while len(q) > 0:
+    #     node = heapq.heappop(q)
+    #     if (node.latest_key, node.keys) in visited:
+    #         continue
+    #     if node.keys == all_keys:
+    #         print(node.dist)
+    #         break
+        
+        # visited.add((node.latest_key, node.keys))
+        # keys_to_find = 0
+        # for k, p in key_pos.items():
+        #     if not k & node.keys:
+        #         keys_to_find |= k
+
+        # for (p, d) in dist_to_keys(node.pos, keys_to_find, node.keys, maze):
+        #     k = pos_key[p]
+        #     keys = node.keys | k
+        #     if d and node.dist + d < dists[k][keys]:
+        #         dists[k][keys] = node.dist + d
+        #         new_node = Node(p, keys, dists[k][keys], k)
+        #         heapq.heappush(q, new_node)
