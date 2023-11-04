@@ -102,30 +102,28 @@ def main(in_file: TextIOWrapper):
 
     INF = 2**31
     dists = defaultdict(lambda: defaultdict(lambda: INF))
-    dist_to_key_cache = {}
 
     starting_node = Node(start, 0, 0, 0)
     q = [starting_node]
+    visited = set()
     while len(q) > 0:
         node = heapq.heappop(q)
-        if node.dist > dists[node.keys][node.latest_key]:
+        if (node.latest_key, node.keys) in visited:
             continue
         if node.keys == all_keys:
             print(node.dist)
             break
         
-        if (node.latest_key, node.keys) not in dist_to_key_cache:
-            keys_to_find = 0
-            for k, p in key_pos.items():
-                if not k & node.keys:
-                    keys_to_find |= k
-            dist_to_key_cache[(node.latest_key, node.keys)] = dist_to_keys(node.pos, keys_to_find, node.keys, maze)
+        visited.add((node.latest_key, node.keys))
+        keys_to_find = 0
+        for k, p in key_pos.items():
+            if not k & node.keys:
+                keys_to_find |= k
 
-
-        for (p, d) in dist_to_key_cache[(node.latest_key, node.keys)]:
+        for (p, d) in dist_to_keys(node.pos, keys_to_find, node.keys, maze):
             k = pos_key[p]
             keys = node.keys | k
-            if d and node.dist + d < dists[keys][k]:
-                dists[keys][k] = node.dist + d
-                new_node = Node(p, keys, dists[keys][k], k)
+            if d and node.dist + d < dists[k][keys]:
+                dists[k][keys] = node.dist + d
+                new_node = Node(p, keys, dists[k][keys], k)
                 heapq.heappush(q, new_node)
