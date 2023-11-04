@@ -2,8 +2,6 @@ from io import TextIOWrapper
 from collections import defaultdict, deque
 import heapq
 
-HASHES = []
-
 class Point:
     r: int
     c: int
@@ -16,23 +14,23 @@ class Point:
         return Point(self.r + other.r, self.c + other.c)
 
     def __hash__(self):
-        return HASHES[self.r][self.c]
+        return hash((self.r, self.c))
     
     def __eq__(self, other):
         return self.r == other.r and self.c == other.c
 
 
-DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
-
 class Node:
     pos: Point
     keys: int
     dist: int
+    latest_key: int
 
-    def __init__(self, pos, keys, dist):
+    def __init__(self, pos, keys, dist, key):
         self.pos = pos
         self.keys = keys
         self.dist = dist
+        self.latest_key = key
 
     def __lt__(self, other):
         return self.dist < other.dist
@@ -42,15 +40,13 @@ class Node:
             and self.keys == other.keys \
             and self.dist == other.dist
     
-    def __hash__(self):
-        return hash((self.pos, self.keys, self.dist))
-
 
 def encode_letter(letter: str):
     a = 'a' if letter.islower() else 'A'
     return 2**(ord(letter) - ord(a) + 1)
 
 
+DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
 def dist_to_keys(start: Point, goals: int, keys: int, maze: list[list[int]]):
     local_q = deque([(start, 0)])
     visited = set()
@@ -70,20 +66,8 @@ def dist_to_keys(start: Point, goals: int, keys: int, maze: list[list[int]]):
     return local_dists
 
 
-def pre_hash(R, C):
-    hashes = []
-    for r in range(R):
-        row = []
-        for c in range(C):
-            row.append(hash((r, c)))
-        hashes.append(row)
-    return hashes
-
-
-def solve(in_file: TextIOWrapper):
+def main(in_file: TextIOWrapper):
     ipt = [l.strip() for l in in_file.readlines()]
-    global HASHES
-    HASHES = pre_hash(len(ipt), len(ipt[0]))
 
     maze = []
     start = Point(0, 0)
@@ -120,35 +104,28 @@ def solve(in_file: TextIOWrapper):
     dists = defaultdict(lambda: defaultdict(lambda: INF))
     dist_to_key_cache = {}
 
-    q = []
-    starting_node = Node(start, 0, 0)
-    heapq.heappush(q, starting_node)
+    starting_node = Node(start, 0, 0, 0)
+    q = [starting_node]
     while len(q) > 0:
-        node: Node = heapq.heappop(q)
+        node = heapq.heappop(q)
+        if node.dist > dists[node.keys][node.latest_key]:
+            continue
         if node.keys == all_keys:
             print(node.dist)
             break
         
-        local_dists = []
-        if (node.pos, node.keys) in dist_to_key_cache:
-            local_dists = dist_to_key_cache[(node.pos, node.keys)]
-        else:
+        if (node.latest_key, node.keys) not in dist_to_key_cache:
             keys_to_find = 0
             for k, p in key_pos.items():
                 if not k & node.keys:
                     keys_to_find |= k
-            local_dists = dist_to_keys(node.pos, keys_to_find, node.keys, maze)
-            dist_to_key_cache[(node.pos, node.keys)] = local_dists
+            dist_to_key_cache[(node.latest_key, node.keys)] = dist_to_keys(node.pos, keys_to_find, node.keys, maze)
 
-        for (p, d) in local_dists:
+
+        for (p, d) in dist_to_key_cache[(node.latest_key, node.keys)]:
             k = pos_key[p]
-            if d and node.dist + d < dists[node.keys][k]:
-                dists[node.keys][k] = node.dist + d
-                new_node = Node(p, node.keys|k, dists[node.keys][k])
+            keys = node.keys | k
+            if d and node.dist + d < dists[keys][k]:
+                dists[keys][k] = node.dist + d
+                new_node = Node(p, keys, dists[keys][k], k)
                 heapq.heappush(q, new_node)
-
-
-import cProfile
-def main(in_file: TextIOWrapper):
-    # cProfile.runctx('solve(in_file)', globals(), locals(), sort=1)
-    solve(in_file)
