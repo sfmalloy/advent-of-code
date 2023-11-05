@@ -3,13 +3,23 @@ from collections import deque, defaultdict
 from dataclasses import dataclass
 import heapq
 
-@dataclass(frozen=True, eq=True)
+# dataclass hash was slow, shaved some time manually defining it
 class Point:
     r: int
     c: int
 
+    def __init__(self, r, c):
+        self.r = r
+        self.c = c
+
     def __add__(self, other):
         return Point(self.r + other.r, self.c + other.c)
+    
+    def __eq__(self, other):
+        return self.r == other.r and self.c == other.c
+
+    def __hash__(self):
+        return hash((self.r, self.c))
 
 
 @dataclass
