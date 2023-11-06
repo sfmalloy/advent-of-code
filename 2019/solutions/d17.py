@@ -2,7 +2,7 @@ from io import TextIOWrapper
 
 from intcode import Intcode
 
-class bot:
+class Bot:
     def __init__(self, screen):
         self.N = 0
         self.E = 1
@@ -81,6 +81,7 @@ class bot:
             rep += '\n'
         return rep
 
+
 def find_pattern(s, start):
     end = 3
     while s.count(s[start:end]) > 2 and ('A' not in s[start:end] and 'B' not in s[start:end]):
@@ -89,22 +90,22 @@ def find_pattern(s, start):
         end -= 1
     return s[start:end+1]
 
+
 def main(in_file: TextIOWrapper):
     raw_prog = in_file.readline()
     comp = Intcode(raw_prog)
 
     comp.run()
-    screen_ascii = comp.read_out()
+    screen_ascii = comp.read_out_ascii()
     screen = []
     line = ''
     for s in screen_ascii:
-        if s != 10:
-            line += chr(s)
+        if s != '\n':
+            line += s
         elif len(line) > 0:
             screen.append(line)
             line = ''
 
-    x = y = 0
     p1 = 0
     for i in range(1, len(screen)-1):
         for j in range(1, len(screen[i])-1):
@@ -113,15 +114,15 @@ def main(in_file: TextIOWrapper):
                     p1 += i*j
     print(p1)
 
-    b = bot(screen)
+    bot = Bot(screen)
     cmd = []
-    while b.find_open() is not None:
-        turn_dir = b.find_open()
+    while bot.find_open() is not None:
+        turn_dir = bot.find_open()
         cmd.append(turn_dir)
-        b.turn(turn_dir)
+        bot.turn(turn_dir)
 
         step_count = 0
-        while b.step():
+        while bot.step():
             step_count += 1
         cmd.append(step_count)
 
@@ -138,10 +139,10 @@ def main(in_file: TextIOWrapper):
         patt = find_pattern(cmd_str, start)
         patterns[letter] = patt
         a = 0
-        b = cmd_str.find(patt)
+        bot = cmd_str.find(patt)
         while cmd_str.count(patt) > 0 and cmd_str.find(patt) != -1:
-            cmd_str = cmd_str[a:b] + letter + cmd_str[b+len(patt):]
-            b = cmd_str.find(patt)
+            cmd_str = cmd_str[a:bot] + letter + cmd_str[bot+len(patt):]
+            bot = cmd_str.find(patt)
         letter = chr(ord(letter)+1)
         if i < 2:
             while cmd_str[start] in 'ABC':
@@ -151,16 +152,16 @@ def main(in_file: TextIOWrapper):
     comp.program[0] = 2
     ascii_code = []
     for c in cmd_str:
-        ascii_code.append(ord(c))
-    ascii_code.append(10)
+        ascii_code.append(c)
+    ascii_code.append('\n')
     for func in patterns:
         for c in patterns[func]:
-            ascii_code.append(ord(c))
-        ascii_code.append(10)
-    ascii_code.append(ord('n'))
-    ascii_code.append(10)
+            ascii_code.append(c)
+        ascii_code.append('\n')
+    ascii_code.append('n')
+    ascii_code.append('\n')
 
-    comp.read_in(*ascii_code)
+    comp.read_in_ascii(*ascii_code)
     comp.run()
     output = comp.read_out()
     print(output[-1])

@@ -55,6 +55,7 @@ class Intcode:
     REL = Opcode(9, 2)
     HLT = Opcode(99, 0)
 
+
     def __init__(self, program: str):
         self.program = Memory(map(int, program.strip().split(',')))
         self.initial_program = self.program.copy()
@@ -64,8 +65,12 @@ class Intcode:
 
         self.input = []
         self.output = []
+
+
     def is_finished(self):
         return self.program[self.ip] == Intcode.HLT.code
+
+
     def arg(self, offset: int, mode: int, is_result=False) -> int:
         if is_result:
             if mode == Mode.RELATIVE:
@@ -77,6 +82,8 @@ class Intcode:
             return self.program[self.program[self.ip + offset] + self.rel_base]
         else:
             return self.program[self.ip + offset]
+
+
     def reset(self):
         self.program = self.initial_program.copy()
 
@@ -86,15 +93,34 @@ class Intcode:
 
         self.input.clear()
         self.output.clear()
+
+
     def read_in(self, *data):
         self.input += list(data)
+
+
+    def read_in_ascii(self, *data):
+        self.input += [ord(c) for c in data]
+
+
     def read_out(self, flush=True) -> list[int]:
         out_copy = self.output.copy()
         if flush:
             self.output.clear()
         return out_copy
+
+
+    def read_out_ascii(self, flush=True) -> str:
+        out_copy = self.output.copy()
+        if flush:
+            self.output.clear()
+        return ''.join([(chr(o) if o < 255 else str(o)) for o in out_copy])
+
+
     def flush_out(self) -> None:
         self.output.clear()
+
+
     def mode(self, code: int) -> list[int]:
         digits = []
         digits.append(code % 100)
@@ -103,6 +129,8 @@ class Intcode:
             digits.append(code % 10)
             code //= 10
         return list(reversed(digits))
+  
+
     def run(self):
         while True:
             mode = self.mode(self.program[self.ip])
