@@ -21,6 +21,12 @@ class Point:
     def __hash__(self):
         return hash((self.r, self.c))
 
+    def __str__(self):
+        return f'Point({self.r}, {self.c})'
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
 
 @dataclass
 class Node:
@@ -31,7 +37,7 @@ class Node:
 
 @dataclass
 class QueueNode:
-    pos: int
+    pos: list[int]
     dist: int
     keys: int
 
@@ -41,7 +47,7 @@ class QueueNode:
 
 def encode_letter(letter: str):
     a = 'a' if letter.islower() else 'A'
-    return 2**(ord(letter) - ord(a) + 1)
+    return 2**(ord(letter) - ord(a) + 4)
 
 
 DIRS = [Point(-1, 0), Point(1, 0), Point(0, -1), Point(0, 1)]
@@ -53,7 +59,7 @@ def dist_to_nodes(start: Point, maze: list[list[int]]):
     while len(q) > 0:
         pos, dist, doors = q.popleft()
         val = maze[pos.r][pos.c]
-        if val > 1 and dist > 0:
+        if val >= 16 and dist > 0:
             dists[val] = Node(dist, val, doors)
         visited.add(pos)
 
@@ -70,13 +76,11 @@ def dist_to_nodes(start: Point, maze: list[list[int]]):
     return dists
 
 
-def main(in_file: TextIOWrapper):
-    ipt = [l.strip() for l in in_file.readlines()]
-
+def get_min_dist(ipt: list[str]):
     # encode the map using base-2 numbers
     maze = []
     positions = {}
-    start = Point(0, 0)
+    starts = []
     num_keys = 0
     for i,r in enumerate(ipt):
         row = []
@@ -87,7 +91,7 @@ def main(in_file: TextIOWrapper):
                 row.append(0)
             elif c == '@': # robot
                 row.append(1)
-                start = Point(i, j)
+                starts.append(Point(i, j))
             elif c.islower(): # key
                 e = encode_letter(c)
                 row.append(e)
@@ -98,7 +102,7 @@ def main(in_file: TextIOWrapper):
         maze.append(row)
 
     all_keys = 0
-    key = 2
+    key = 16
     for i in range(num_keys):
         all_keys |= key
         key *= 2
@@ -106,25 +110,47 @@ def main(in_file: TextIOWrapper):
     INF = 2**31
     graph = {}
     # precalculate BFS
-    graph[1] = dist_to_nodes(start, maze)
+    for i,start in enumerate(starts):
+        graph[2**i] = dist_to_nodes(start, maze)
     for val_outer, pos_outer in positions.items():
         graph[val_outer] = dist_to_nodes(pos_outer, maze)
 
     dists = defaultdict(lambda: defaultdict(lambda: INF))
 
     visited = set()
-    q = [QueueNode(1, 0, 0)]
+    q = [QueueNode([2**i for i in range(len(starts))], 0, 0)]
     while len(q) > 0:
         node = heapq.heappop(q)
         if node.keys == all_keys:
-            print(node.dist)
-            break
-        if (node.pos, node.keys) in visited:
+            return node.dist
+        if tuple(node.pos) + (node.keys,) in visited:
             continue
-        visited.add((node.pos, node.keys))
-        for key in positions.keys():
-            if not key & node.keys:
-                elem = graph[node.pos][key]
-                dist = node.dist + graph[node.pos][key].dist
-                if (elem.doors | node.keys) == node.keys and dist < dists[key][node.keys | key]:
-                    heapq.heappush(q, QueueNode(key, node.dist + graph[node.pos][key].dist, node.keys | key))
+        visited.add(tuple(node.pos) + (node.keys,))
+        for i,pos in enumerate(node.pos):
+            for key in positions.keys():
+                if not key & node.keys and key in graph[pos]:
+                    elem = graph[pos][key]
+                    dist = node.dist + graph[pos][key].dist
+                    if (elem.doors | node.keys) == node.keys and dist < dists[key][node.keys | key]:
+                        new_pos = [p for p in node.pos]
+                        new_pos[i] = key
+                        heapq.heappush(q, QueueNode(new_pos, node.dist + graph[pos][key].dist, node.keys | key))
+
+
+def get_part1_start(ipt: list[str]):
+    for i,r in enumerate(ipt):
+        for j,c in enumerate(r):
+            if c == '@':
+                return Point(i, j)
+
+
+def main(in_file: TextIOWrapper):
+    ipt = [[c for c in l.strip()] for l in in_file.readlines()]
+    part1 = get_min_dist(ipt)
+    start = get_part1_start(ipt)
+    ipt[start.r-1][start.c-1:start.c+2] = '@#@'
+    ipt[start.r][start.c-1:start.c+2] = '###'
+    ipt[start.r+1][start.c-1:start.c+2] = '@#@'
+    part2 = get_min_dist(ipt)
+    print(part1)
+    print(part2)
