@@ -43,7 +43,7 @@ class QueueNode:
 
     def __lt__(self, other):
         return self.dist < other.dist
-
+    
 
 def encode_letter(letter: str):
     a = 'a' if letter.islower() else 'A'
@@ -123,9 +123,11 @@ def get_min_dist(ipt: list[str]):
         node = heapq.heappop(q)
         if node.keys == all_keys:
             return node.dist
-        if tuple(node.pos) + (node.keys,) in visited:
+        
+        t = tuple(node.pos) + (node.keys,)
+        if t in visited:
             continue
-        visited.add(tuple(node.pos) + (node.keys,))
+        visited.add(t)
         for i,pos in enumerate(node.pos):
             for key in positions.keys():
                 if not key & node.keys and key in graph[pos]:
@@ -146,11 +148,14 @@ def get_part1_start(ipt: list[str]):
 
 def main(in_file: TextIOWrapper):
     ipt = [[c for c in l.strip()] for l in in_file.readlines()]
-    part1 = get_min_dist(ipt)
     start = get_part1_start(ipt)
+
+    part1 = get_min_dist(ipt)
+
     ipt[start.r-1][start.c-1:start.c+2] = '@#@'
     ipt[start.r][start.c-1:start.c+2] = '###'
     ipt[start.r+1][start.c-1:start.c+2] = '@#@'
     part2 = get_min_dist(ipt)
+
     print(part1)
     print(part2)
