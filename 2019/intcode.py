@@ -114,7 +114,7 @@ class Intcode:
         out_copy = self.output.copy()
         if flush:
             self.output.clear()
-        return ''.join([(chr(o) if o < 255 else str(o)) for o in out_copy])
+        return ''.join([(chr(o) if o < 128 else str(o)) for o in out_copy])
 
 
     def flush_out(self) -> None:
