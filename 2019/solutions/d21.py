@@ -16,8 +16,8 @@ def main(file: TextIOWrapper):
     comp = Intcode(file.readline())
 
     # instructions = {'AND','OR','NOT'}
-    # inputs       = {'A','B','C','D','T','J'}
-    # outputs      = {'T','J'}
+    # X = {'A','B','C','D','T','J'}
+    # Y = {'T','J'}
     # jump distance is 4 tiles
     walk = '\n'.join('''
         NOT C T
@@ -29,7 +29,7 @@ def main(file: TextIOWrapper):
     '''.lstrip().split('\n        '))
     
     #             1   2   3   4   5   6   7   8   9
-    # outputs = {'A','B','C','D','E','F','G','H','I','T','J'}
+    # X = {'A','B','C','D','E','F','G','H','I','T','J'}
     # everything else is the same
     run = '\n'.join('''
         NOT B T
