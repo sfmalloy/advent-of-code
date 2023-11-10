@@ -1,4 +1,4 @@
 from io import TextIOWrapper
 
-def main(in_file: TextIOWrapper):
+def main(file: TextIOWrapper):
     pass
