@@ -129,10 +129,16 @@ class Advent:
 
     
     def run_all(self, num_runs: int=1, hide: bool=False):
-        results = []
+        days = set()
         for d in self._days.keys():
+            if isinstance(d, tuple):
+                days.add(d[0])
+            else:
+                days.add(d)
+        results = []
+        for d in days:
             results.append(self.run(d, num_runs=num_runs, hide=hide))
         return results
-
+    
 
 advent = Advent()
