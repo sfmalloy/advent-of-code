@@ -93,12 +93,14 @@ class Advent:
             if day_number not in self._days:
                 start_time = timer()
                 ipt = f
-                if day_number in self._parsers:
-                    ipt = self._parsers[day_number](f)
                 if (day_number, 1) in self._days:
+                    if day_number in self._parsers:
+                        ipt = self._parsers[day_number](f)
                     res.part1 = self._days[(day_number, 1)](ipt)
                 if (day_number, 2) in self._days:
                     f.seek(0, 0)
+                    if day_number in self._parsers:
+                        ipt = self._parsers[day_number](f)
                     res.part2 = self._days[(day_number, 2)](ipt)
                 end_time = timer()
             else:

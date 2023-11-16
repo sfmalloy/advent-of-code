@@ -1,9 +1,9 @@
 import sys
+import os
 from solutions.lib.advent import advent, DayNotFoundException, DuplicateKeyError, Result
 from solutions.lib.download import download
 from argparse import ArgumentParser
 from requests import HTTPError
-
 
 
 def main():
@@ -20,9 +20,13 @@ def main():
                         help='Replace answer output with a bunch of X\'s', default=False)
     parser.add_argument('-i', '--input', action='store_true', dest='download_input',
                         help='Only download/print input for day', default=False)
+    parser.add_argument('-g', '--generate', action='store_true', dest='generate_day',
+                        help='Generate template solution file for given day', default=False)
 
     options = parser.parse_args()
     if options.day:
+        if options.generate_day:
+            generate_new_file(options.day)
         if options.download_input:
             res = download(options.day)
         else:
@@ -76,6 +80,31 @@ def print_table(outputs: list[Result]):
         print(f'╰{"─"*(day_width+width1+width2+8)}┴{"─"*(time_width+2)}╯')
     else:
         print(f'╰{"─"*(day_width+2)}┴{"─"*(width1+2)}┴{"─"*(width2+2)}┴{"─"*(time_width+2)}╯')
+
+
+def generate_new_file(day_number):
+    path = os.path.join(f'solutions', f'd{day_number:0>2}.py')
+    if not os.path.exists(path):
+        with open(path, 'w') as f:
+            f.write(f'''
+from .lib.advent import advent
+from io import TextIOWrapper
+
+
+@advent.parser({day_number})
+def parse(file: TextIOWrapper):
+    return file.readlines()
+
+
+@advent.day({day_number}, part=1)
+def solve1(ipt):
+    return 0
+
+
+@advent.day({day_number}, part=2)
+def solve2(ipt):
+    return 0
+''')
 
 
 if __name__ == '__main__':
