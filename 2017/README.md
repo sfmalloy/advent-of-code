@@ -31,7 +31,7 @@ New this year is a more dynamic way of adding solutions to be run. No longer do 
 
 Your solution function must accept 1 parameter which either is the file input of type `TextIOWrapper`, OR input parsed in a way that you define in a custom parser function (example below)
 ```py
-from .advent import advent
+from .lib.advent import advent
 from io import TextIOWrapper
 
 
@@ -44,7 +44,7 @@ def day1_parser(file: TextIOWrapper):
 There are 2 ways of writing solution functions. One way is if both your parts are contained in one function, you can return a tuple with the first value being the answer to part 1, and the second for part 2.
 
 ```py
-from .advent import advent
+from .lib.advent import advent
 from io import TextIOWrapper
 
 
@@ -59,7 +59,7 @@ def day1(file: TextIOWrapper):
 Another way is have seperate functions for parts 1 and 2. The input file gets reset between calls to part 1 and 2 functions, all you need to do is specify in the decorator what part each function is solving.
 
 ```py
-from .advent import advent
+from .lib.advent import advent
 from io import TextIOWrapper
 
 

@@ -12,6 +12,13 @@ class DayNotFoundException(Exception):
         super().__init__(*args)
 
 
+class DuplicateKeyError(Exception):
+    key: str
+    def __init__(self, key, *args) -> None:
+        super().__init__(args)
+        self.key = key
+
+
 @dataclass
 class Result:
     day: int
@@ -50,6 +57,10 @@ class Advent:
         self._parsers = {}
     
     def day(self, day_number: int, part: int=0):
+        if day_number in self._days:
+            raise DuplicateKeyError(day_number)
+        elif (day_number, part) in self._days:
+            raise DuplicateKeyError((day_number, part))
         '''
         Decorator for a function that is a problem solution.
         '''

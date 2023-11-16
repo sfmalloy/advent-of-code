@@ -1,7 +1,9 @@
 import sys
-from solutions.lib.advent import advent, DayNotFoundException, Result
+from solutions.lib.advent import advent, DayNotFoundException, DuplicateKeyError, Result
+from solutions.lib.download import download
 from argparse import ArgumentParser
 from requests import HTTPError
+
 
 
 def main():
@@ -16,11 +18,16 @@ def main():
                         help='Specify number of runs to get an average time', default=1, type=int)
     parser.add_argument('-x', '--hide', action='store_true', dest='hide',
                         help='Replace answer output with a bunch of X\'s', default=False)
+    parser.add_argument('-i', '--input', action='store_true', dest='download_input',
+                        help='Only download/print input for day', default=False)
 
     options = parser.parse_args()
     if options.day:
-        res = advent.run(options.day, options.file, options.num_runs, options.hide)
-        print_table([res])
+        if options.download_input:
+            res = download(options.day)
+        else:
+            res = advent.run(options.day, options.file, options.num_runs, options.hide)
+            print_table([res])
     elif options.run_all:
         res = advent.run_all(options.num_runs, options.hide)
         print_table(res)
@@ -72,12 +79,17 @@ def print_table(outputs: list[Result]):
 
 
 if __name__ == '__main__':
-    if sys.version_info.minor < 12:
-        print('Min version Python 3.12 required')
+    MIN_MINOR_VERSION = 11
+    if sys.version_info.minor < MIN_MINOR_VERSION:
+        print(f'Min version Python 3.{MIN_MINOR_VERSION} required')
         exit()
     try:
         main()
     except DayNotFoundException as err:
         print(err)
+    except DuplicateKeyError as err:
+        print(err)
+        print(f'Found duplicate solution key {err.key}')
     except HTTPError as err:
         pass
+    
