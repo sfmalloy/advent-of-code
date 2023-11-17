@@ -86,8 +86,7 @@ def generate_new_file(day_number):
     path = os.path.join(f'solutions', f'd{day_number:0>2}.py')
     if not os.path.exists(path):
         with open(path, 'w') as f:
-            f.write(f'''
-from .lib.advent import advent
+            f.write(f'''from .lib.advent import advent
 from io import TextIOWrapper
 
 

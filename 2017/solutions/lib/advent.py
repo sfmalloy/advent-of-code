@@ -86,6 +86,7 @@ class Advent:
         if not input_path:
             input_path = os.path.join('inputs', f'd{day_number:0>2}.in')
             if not os.path.exists(input_path):
+                print(input_path)
                 download(day_number)
 
         res = Result(day_number, hide=hide)

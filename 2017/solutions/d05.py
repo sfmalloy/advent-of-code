@@ -8,7 +8,6 @@ def parse(file: TextIOWrapper):
 
 @advent.day(5, part=1)
 def solve1(jumps: list[int]):
-    print(jumps)
     ip = 0
     steps = 0
     while ip < len(jumps):
@@ -21,7 +20,6 @@ def solve1(jumps: list[int]):
 
 @advent.day(5, part=2)
 def solve2(jumps: list[int]):
-    print(jumps)
     ip = 0
     steps = 0
     while ip < len(jumps):
