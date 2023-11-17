@@ -51,12 +51,15 @@ class Result:
 class Advent:
     _days: dict[int | tuple[int, int], Callable[[TextIOWrapper | Any], tuple[Any, Any]]]
     _parsers: dict[int, Callable[[TextIOWrapper], Any]]
+    _use_part1: dict[int, bool]
 
     def __init__(self):
         self._days = {}
         self._parsers = {}
-    
-    def day(self, day_number: int, part: int=0):
+        self._use_part1 = {}
+
+
+    def day(self, day_number: int, part: int=0, use_part1: bool=False):
         if day_number in self._days:
             raise DuplicateKeyError(day_number)
         elif (day_number, part) in self._days:
@@ -65,6 +68,7 @@ class Advent:
         Decorator for a function that is a problem solution.
         '''
         def day_decorator(fn: Callable):
+            self._use_part1[day_number] = use_part1
             if part:
                 self._days[(day_number, part)] = fn
             else:
@@ -86,7 +90,6 @@ class Advent:
         if not input_path:
             input_path = os.path.join('inputs', f'd{day_number:0>2}.in')
             if not os.path.exists(input_path):
-                print(input_path)
                 download(day_number)
 
         res = Result(day_number, hide=hide)
@@ -102,7 +105,10 @@ class Advent:
                     f.seek(0, 0)
                     if day_number in self._parsers:
                         ipt = self._parsers[day_number](f)
-                    res.part2 = self._days[(day_number, 2)](ipt)
+                    if self._use_part1[day_number]:
+                        res.part2 = self._days[(day_number, 2)](ipt, res.part1)
+                    else:
+                        res.part2 = self._days[(day_number, 2)](ipt)
                 end_time = timer()
             else:
                 start_time = timer()
