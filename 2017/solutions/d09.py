@@ -32,4 +32,3 @@ def solve(stream: str):
                 group -= 1
         i += 1
     return score, garbage
-

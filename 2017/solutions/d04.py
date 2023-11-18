@@ -6,9 +6,11 @@ from io import TextIOWrapper
 def parse(file: TextIOWrapper):
     return [line.strip().split() for line in file.readlines()]
 
+
 @advent.day(4, part=1)
 def solve1(lines: list[str]):
     return sum(len(set(line)) == len(line) for line in lines)
+
 
 @advent.day(4, part=2)
 def solve2(lines: list[str]):

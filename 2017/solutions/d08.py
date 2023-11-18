@@ -54,4 +54,3 @@ def solve(instructions: list[Instruction]):
         if line.eval_cond(reg):
             max_val = max(max_val, line.eval_mod(reg))
     return max(reg.values()), max_val
-

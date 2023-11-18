@@ -6,6 +6,7 @@ from io import TextIOWrapper
 def parse(file: TextIOWrapper):
     return list(map(int, file.readlines()))
 
+
 @advent.day(5, part=1)
 def solve1(jumps: list[int]):
     ip = 0
