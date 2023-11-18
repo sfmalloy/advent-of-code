@@ -3,7 +3,7 @@ from io import TextIOWrapper
 
 
 @advent.parser(9)
-def parse(file: TextIOWrapper):
+def parse(file: TextIOWrapper) -> str:
     return file.read().strip()
 
 
