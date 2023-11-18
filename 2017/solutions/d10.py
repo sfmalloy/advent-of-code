@@ -2,21 +2,14 @@ from .lib.advent import advent
 from io import TextIOWrapper
 
 
-TEST = False
-
-@advent.parser(10)
-def parse(file: TextIOWrapper):
-    return map(int, file.read().strip().split(','))
-
-
 @advent.day(10, part=1)
-def solve1(lengths: list[int]):
-    elems = [i for i in range(256 if not TEST else 5)]
+def solve1(file: TextIOWrapper):
+    lengths = map(int, file.read().strip().split(','))
+    elems = [i for i in range(256)]
     start = 0
     skip = 0
     for l in lengths:
         end = (start+l-1)
-        print(start,elems)
         reverse_sublist(start, end, elems)
         start += l + skip
         skip += 1
@@ -24,10 +17,28 @@ def solve1(lengths: list[int]):
 
 
 @advent.day(10, part=2)
-def solve2(lengths: list[int]):
-    lengths = [ord(str(l)) for l in lengths] + [17,31,73,47,23]
-    print(lengths)
-    return 0
+def solve2(file: TextIOWrapper):
+    ascii_input = file.read().strip()
+    lengths = []
+    for c in ascii_input:
+        lengths.append(ord(c))
+    lengths += [17, 31, 73, 47, 23]
+    elems = [i for i in range(256)]
+    start = 0
+    skip = 0
+
+    for _ in range(64):
+        for l in lengths:
+            end = (start+l-1)
+            reverse_sublist(start, end, elems)
+            start += l + skip
+            skip += 1
+
+    ans = ''
+    for i in range(0, len(elems), 16):
+        ans += dense_hash(i, i+16, elems)
+
+    return ans
 
 
 def reverse_sublist(start: int, end: int, elems: list[int]):
@@ -35,3 +46,10 @@ def reverse_sublist(start: int, end: int, elems: list[int]):
         elems[start % len(elems)], elems[end % len(elems)] = elems[end % len(elems)], elems[start % len(elems)]
         start += 1
         end -= 1
+
+
+def dense_hash(start: int, end: int, elems: list[int]):
+    h = 0
+    for e in range(start, end):
+        h ^= elems[e]
+    return f'{hex(h)[2:]:0>2}'
