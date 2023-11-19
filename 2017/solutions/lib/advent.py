@@ -48,18 +48,26 @@ class Result:
         self._part2 = v
 
 
+@dataclass
+class Attribute:
+    use_part1: bool=False
+    reparse: bool=True
+
+
 class Advent:
     _days: dict[int | tuple[int, int], Callable[[TextIOWrapper | Any], tuple[Any, Any]]]
     _parsers: dict[int, Callable[[TextIOWrapper], Any]]
-    _use_part1: dict[int, bool]
+    # _use_part1: dict[int, bool]
+    _attrs: dict[int, Attribute]
 
     def __init__(self):
         self._days = {}
         self._parsers = {}
-        self._use_part1 = {}
+        # self._use_part1 = {}
+        self._attrs = {}
 
 
-    def day(self, day_number: int, part: int=0, use_part1: bool=False):
+    def day(self, day_number: int, part: int=0, use_part1: bool=False, reparse: bool=True):
         if day_number in self._days:
             raise DuplicateKeyError(day_number)
         elif (day_number, part) in self._days:
@@ -68,7 +76,11 @@ class Advent:
         Decorator for a function that is a problem solution.
         '''
         def day_decorator(fn: Callable):
-            self._use_part1[day_number] = use_part1
+            # self._use_part1[day_number] = use_part1
+            self._attrs[day_number] = Attribute(
+                use_part1=use_part1,
+                reparse=reparse
+            )
             if part:
                 self._days[(day_number, part)] = fn
             else:
@@ -102,10 +114,11 @@ class Advent:
                         ipt = self._parsers[day_number](f)
                     res.part1 = self._days[(day_number, 1)](ipt)
                 if (day_number, 2) in self._days:
-                    f.seek(0, 0)
-                    if day_number in self._parsers:
-                        ipt = self._parsers[day_number](f)
-                    if self._use_part1[day_number]:
+                    if self._attrs[day_number].reparse:
+                        f.seek(0, 0)
+                        if day_number in self._parsers:
+                            ipt = self._parsers[day_number](f)
+                    if self._attrs[day_number].use_part1:
                         res.part2 = self._days[(day_number, 2)](ipt, res.part1)
                     else:
                         res.part2 = self._days[(day_number, 2)](ipt)
