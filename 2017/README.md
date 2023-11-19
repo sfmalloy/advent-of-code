@@ -86,7 +86,7 @@ Part 2 functions can have some special attributes as well.
 
 `use_part1: bool (default False)` - used for very specific scenarios when you want to use part 1's answer in the part 2 function.
 
-```
+```py
 @advent.day(1, part=2, use_part1=True)
 def solve2(ipt, part1_answer):
     # ...
@@ -94,7 +94,7 @@ def solve2(ipt, part1_answer):
 
 `reparse: bool (default True)` - used to specify whether to run the parser function (if present) again between part 1 and part 2 functions (if both exist). If `False` and the parsed input is modified, those modifications will carry over to part 2 (assuming the input is mutable).
 
-```
+```py
 @advent.day(1, part=2, reparsed=False)
 def solve2(ipt):
     # ...
