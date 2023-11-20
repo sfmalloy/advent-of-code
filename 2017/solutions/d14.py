@@ -11,25 +11,22 @@ def parse(file: TextIOWrapper):
             grid[r] = [0]*(128-len(grid[r])) + grid[r]
     return grid
 
-@advent.day(14, part=1)
-def solve1(grid: list[list[int]]):
-    return sum(sum(row) for row in grid)
-
-
-@advent.day(14, part=2, reparse=False)
-def solve2(grid: list[list[int]]):
+@advent.day(14)
+def solve(grid: list[list[int]]):
+    total = 0
     label = 2
     for i,row in enumerate(grid):
         for j,col in enumerate(row):
             if col == 1:
                 walk(i, j, label, grid)
                 label += 1
-    return label-2
+            if col != 0:
+                total += 1
+    return total, label-2
 
 
 def walk(i: int, j: int, label: int, grid: list[list[int]]):
     grid[i][j] = label
-    print(i,j)
     if i-1 >= 0 and grid[i-1][j] == 1:
         walk(i-1, j, label, grid)
     if i+1 < len(grid) and grid[i+1][j] == 1:
