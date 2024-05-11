@@ -4,10 +4,27 @@ from intcode import Intcode
 from itertools import combinations
 
 
+HELP_STR = '''
+== misc ==
+h | help => show this dialog
+
+== moving ==
+n | north => move north
+e | east => move east
+s | south => move south
+w | west => move west
+
+== actions ==
+t | take <item> => add item from room to inventory
+d | drop <item> => remove item from inventory and drop in current room
+
+'''
+
+
 def main(file: TextIOWrapper):
     comp = Intcode(file.read())
-    autoplay(comp)
-    # play(comp)
+    # autoplay(comp)
+    play(comp)
 
 
 # grabs all useful items and returns to weighted plate area
@@ -79,7 +96,7 @@ def play(comp: Intcode):
     while comp.run() != 99:
         print(comp.read_out_ascii())
         ipt = input()
-        match ipt:
+        match ipt.split()[0]:
             case 'reset':
                 comp.reset()
                 continue
@@ -95,6 +112,14 @@ def play(comp: Intcode):
             case 'w'|'W'|'west':
                 ipt = 'west'
                 clear()
+            case 't'|'T'|'take':
+                ipt = ' '.join(['take', *ipt.split()[1:]])
+            case 'd'|'D'|'drop':
+                ipt = ' '.join(['drop', *ipt.split()[1:]])
+            case 'h'|'H'|'help':
+                print(HELP_STR)
+                continue
+            
         comp.read_in_ascii(*f'{ipt}\n')
     print(comp.read_out_ascii())
 
