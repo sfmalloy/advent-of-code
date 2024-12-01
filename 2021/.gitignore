@@ -15,6 +15,7 @@ build/
 .idea/
 lib/
 node_modules/
+inputs/
 
 # Files
 test.*
