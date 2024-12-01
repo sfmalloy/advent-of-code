@@ -1,8 +1,8 @@
 __pycache__/
 __init__.py
-test*.in
+*.in
 .vscode/
 sample
 *.c
 Makefile
-d23
+inputs/
