@@ -20,12 +20,10 @@ def solve2(ipt: int) -> int:
 def value_after(ipt: int, limit: int, part2: bool):
     i = 0
     for l in range(1, limit+1):
-        i += (ipt + 1)
-        i %= l
+        i = (i + ipt + 1) % l
     goal = 0 if part2 else i
     while True:
-        i -= (1 + ipt)
-        i %= l
+        i = (i - (ipt + 1)) % l
         if i < goal:
             goal -= 1
         l -= 1
