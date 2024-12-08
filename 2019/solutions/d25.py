@@ -96,6 +96,8 @@ def play(comp: Intcode):
     while comp.run() != 99:
         print(comp.read_out_ascii())
         ipt = input()
+        if not ipt:
+            continue
         match ipt.split()[0]:
             case 'reset':
                 comp.reset()
@@ -118,6 +120,11 @@ def play(comp: Intcode):
                 ipt = ' '.join(['drop', *ipt.split()[1:]])
             case 'h'|'H'|'help':
                 print(HELP_STR)
+                continue
+            case 'q'|'Q'|'quit':
+                confirm = input('Are you sure you want to quit? (y/N)')
+                if confirm.lower() == 'y':
+                    return
                 continue
             
         comp.read_in_ascii(*f'{ipt}\n')
