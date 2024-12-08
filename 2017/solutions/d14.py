@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -11,7 +11,7 @@ def parse(file: TextIOWrapper):
             grid[r] = [0]*(128-len(grid[r])) + grid[r]
     return grid
 
-@advent.day(14)
+@advent.solver(14)
 def solve(grid: list[list[int]]):
     total = 0
     label = 2

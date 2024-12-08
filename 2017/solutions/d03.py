@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 from collections import deque
 
@@ -8,7 +8,7 @@ def parse(file: TextIOWrapper) -> int:
     return int(file.read().strip())
 
 
-@advent.day(3, part=1)
+@advent.solver(3, part=1)
 def solve1(goal: int):
     n = f = 0
     while f < goal:
@@ -18,7 +18,7 @@ def solve1(goal: int):
     return min(abs((f-x*n)-goal)+n for x in range(1,8,2))
 
 
-@advent.day(3, part=2)
+@advent.solver(3, part=2)
 def solve2(goal: int):
     grid = deque([deque([1])])
     # extra grow at the beginning to leave a buffer of 0s

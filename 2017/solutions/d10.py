@@ -1,8 +1,8 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
-@advent.day(10, part=1)
+@advent.solver(10, part=1)
 def solve1(file: TextIOWrapper):
     lengths = map(int, file.read().strip().split(','))
     elems = [i for i in range(256)]
@@ -16,7 +16,7 @@ def solve1(file: TextIOWrapper):
     return elems[0] * elems[1]
 
 
-@advent.day(10, part=2)
+@advent.solver(10, part=2)
 def solve2(file: TextIOWrapper):
     ascii_input = file.read().strip()
     lengths = []

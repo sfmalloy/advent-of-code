@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 from dataclasses import dataclass
 from collections import defaultdict
@@ -46,7 +46,7 @@ def parse(file: TextIOWrapper):
     return instructions
 
 
-@advent.day(8)
+@advent.solver(8)
 def solve(instructions: list[Instruction]):
     reg: defaultdict[str, int] = defaultdict(int)
     max_val = 0

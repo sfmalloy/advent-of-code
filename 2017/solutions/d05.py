@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -7,7 +7,7 @@ def parse(file: TextIOWrapper):
     return list(map(int, file.readlines()))
 
 
-@advent.day(5, part=1)
+@advent.solver(5, part=1)
 def solve1(jumps: list[int]):
     ip = 0
     steps = 0
@@ -19,7 +19,7 @@ def solve1(jumps: list[int]):
     return steps
 
 
-@advent.day(5, part=2)
+@advent.solver(5, part=2)
 def solve2(jumps: list[int]):
     ip = 0
     steps = 0

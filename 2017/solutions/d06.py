@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -7,7 +7,7 @@ def parse(file: TextIOWrapper):
     return list(map(int, file.read().split('\t')))
 
 
-@advent.day(6)
+@advent.solver(6)
 def solve(mem: list[int]):
     seen = {}
     N = len(mem)

@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -7,7 +7,7 @@ def parse(file: TextIOWrapper) -> str:
     return file.read().strip()
 
 
-@advent.day(9)
+@advent.solver(9)
 def solve(stream: str):
     score = 0
     garbage = 0

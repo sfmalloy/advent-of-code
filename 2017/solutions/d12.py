@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 from dataclasses import dataclass, field
 
@@ -18,7 +18,7 @@ def parse(file: TextIOWrapper) -> list[Program]:
     return programs
 
 
-@advent.day(12, part=1)
+@advent.solver(12, part=1)
 def solve1(programs: list[Program]):
     root = 0
     found = 0
@@ -27,7 +27,7 @@ def solve1(programs: list[Program]):
     return found
 
 
-@advent.day(12, part=2)
+@advent.solver(12, part=2)
 def solve2(programs: list[Program]):
     visited = set()
     groups = 0

@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -7,7 +7,7 @@ def parse(file: TextIOWrapper):
     return file.read().strip().split(',')
 
 
-@advent.day(11)
+@advent.solver(11)
 def solve1(dirs: list[str]):
     r = 0
     c = 0

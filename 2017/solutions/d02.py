@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 from math import gcd
 
@@ -8,12 +8,12 @@ def parse(file: TextIOWrapper) -> list[list[int]]:
     return [list(map(int, line.split('\t'))) for line in file.readlines()]
 
 
-@advent.day(2, part=1)
+@advent.solver(2, part=1)
 def solve1(rows: list[list[int]]):
     return sum([max(r)-min(r) for r in rows])
 
 
-@advent.day(2, part=2)
+@advent.solver(2, part=2)
 def solve2(rows: list[list[int]]):
     return sum([get_even_div(r) for r in rows])
                     

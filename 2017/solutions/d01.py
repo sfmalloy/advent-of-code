@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -7,7 +7,7 @@ def parse(file: TextIOWrapper) -> list[int]:
     return list(map(int, list(file.read().strip())))
 
 
-@advent.day(1)
+@advent.solver(1)
 def solve(nums: list[int]):
     p1 = 0
     p2 = 0

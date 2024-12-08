@@ -1,5 +1,5 @@
 import re
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 from typing import Self, Optional
 from dataclasses import dataclass
@@ -25,7 +25,7 @@ def parse(file: TextIOWrapper) -> dict[str, Program]:
     return programs
 
 
-@advent.day(7, part=1)
+@advent.solver(7, part=1)
 def solve1(programs: dict[str, Program]):
     bottom = ''
     for prog in programs:
@@ -45,7 +45,7 @@ def solve1(programs: dict[str, Program]):
     return bottom
 
 
-@advent.day(7, part=2, use_part1=True)
+@advent.solver(7, part=2, use_part1=True)
 def solve2(programs: dict[str, Program], bottom: str):
     weights: defaultdict[list[str]] = defaultdict(list)
     diff = 0

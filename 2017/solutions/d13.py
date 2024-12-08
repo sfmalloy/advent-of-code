@@ -1,4 +1,4 @@
-from .lib.advent import advent
+from lib import advent
 from io import TextIOWrapper
 
 
@@ -34,7 +34,7 @@ def parse(file: TextIOWrapper) -> list[Layer]:
     return layers
 
 
-@advent.day(13, part=1)
+@advent.solver(13, part=1)
 def solve1(layers: list[Layer]):
     time = 0
     severity = 0
@@ -47,7 +47,7 @@ def solve1(layers: list[Layer]):
     return severity
 
 
-@advent.day(13, part=2)
+@advent.solver(13, part=2)
 def solve2(layers: list[Layer]):
     delay = 0
     found = False
