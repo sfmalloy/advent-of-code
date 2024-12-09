@@ -192,3 +192,67 @@ class RCDir:
     @staticmethod
     def counter_clockwise(src: Vec2):
         return RCDir._counter_clockwise[src]
+
+@dataclass(frozen=True, eq=True, order=True)
+class Vec3:
+    x: int
+    y: int
+    z: int
+
+    def __add__(self, other: Self):
+        return Vec3(self.x+other.x, self.y+other.y, self.z+other.z)
+    
+    def __sub__(self, other: Self):
+        return Vec3(self.x-other.x, self.y-other.y, self.z-other.z)
+
+    def __mul__(self, other: int):
+        return Vec3(self.x*other, self.y*other, self.z*other)
+    
+    def __rmul__(self, other: int):
+        return self.__mul__(other)
+    
+    def __truediv__(self, other: int | float):
+        if not (isinstance(other, int) or isinstance(other, float)):
+            return NotImplemented
+        return Vec3(self.x/other, self.y/other, self.z/other)
+
+    def __floordiv__(self, other: int | float):
+        if not (isinstance(other, int) or isinstance(other, float)):
+            return NotImplemented
+        return Vec3(self.x//other, self.y//other, self.z//other)
+    
+    def __neg__(self):
+        return Vec3(-self.x, -self.y, -self.z)
+
+    def dot(self, other: Self):
+        if not isinstance(other, Vec3):
+            return NotImplemented
+        return self.x*other.x + self.y*other.y + self.z*other.z
+    
+    def cross(self, other: Self):
+        if not isinstance(other, Vec3):
+            return NotImplemented
+        return Vec3(
+            self.y*other.z - self.z*other.y,
+            self.x*other.z - self.z*other.x,
+            self.x*other.y - self.y*other.x
+        )
+    
+    def distance(self, other: Self) -> float:
+        if not isinstance(other, Vec3):
+            return NotImplemented
+        return sqrt((self.x-other.x)**2 + (self.y-other.y)**2 + (self.z-other.z)**2)
+
+    def manhattan_distance(self, other: Self):
+        if not isinstance(other, Vec3):
+            return NotImplemented
+        return abs(self.x-other.x) + abs(self.y-other.y) + abs(self.z-other.z)
+
+    def magnitude(self):
+        return sqrt(self.dot(self))
+
+    def normalized(self):
+        return self / self.magnitude()
+    
+    def __repr__(self) -> str:
+        return f'<{self.x}, {self.y}, {self.z}>'

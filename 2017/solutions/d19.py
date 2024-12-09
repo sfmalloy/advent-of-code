@@ -10,7 +10,7 @@ def parse(file: TextIOWrapper):
 
 
 @advent.solver(19)
-def solve1(grid: list[str], pos: Vec2):
+def solve(grid: list[str], pos: Vec2):
     dir = RCDir.D
     letters = []
     letter_steps = []
