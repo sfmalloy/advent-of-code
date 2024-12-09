@@ -13,6 +13,7 @@ def parse(file: TextIOWrapper):
 def solve1(rules: dict[str, str]):
     # grid = ['.#.','..#','###']
     grid = ['#..#', '....', '....', '#..#']
+    # TODO: make this recursive instead...
     for _ in range(1):
         size = 2 if len(grid) % 2 == 0 else 3
         lazy = defaultdict(lambda: defaultdict(list))
@@ -33,7 +34,6 @@ def solve1(rules: dict[str, str]):
         bruh = []
         for r in batched(grid, size):
             bruh.append(list(zip(*r)))
-        
         print(bruh)
     return 0
 
