@@ -26,7 +26,6 @@ class Program:
 
     def step(self, other: Self):
         if self.ip < 0 or self.ip >= len(self.ipt):
-            print('forever waiting')
             self.waiting = True
             return
         match self.ipt[self.ip]:
