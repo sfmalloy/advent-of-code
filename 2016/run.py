@@ -29,6 +29,11 @@ if sys.version_info.minor >= 11:
         d18.main,
         d19.main,
         d20.main,
+        lambda _: ('not available', 'not available'),
+        lambda _: ('not available', 'not available'),
+        lambda _: ('not available', 'not available'),
+        d24.main,
+        lambda _: ('not available', 'not available'),
     ]
 
 @dataclass
