@@ -1,6 +1,5 @@
 #!/bin/python
 
-import os
 import sys
 
 def file_num(day_num):
@@ -10,9 +9,12 @@ def file_num(day_num):
 
 
 def main(day_num):
-    os.system(f'cp solutions/template.py solutions/d{file_num(day_num)}.py')
-    os.system(f'echo "from . import d{file_num(day_num)}" >> solutions/__init__.py')
-    os.system(f'python download.py -d {day_num}')
+    with (
+        open('solutions/template.py') as template,
+        open(f'solutions/d{file_num(day_num)}.py', 'w') as day
+    ):
+        day.write(template.read())
+
 
 if __name__ == '__main__':
     main(int(sys.argv[1]))
