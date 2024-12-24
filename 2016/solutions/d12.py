@@ -19,22 +19,22 @@ def run(prog: list[Instruction], mem: list[int]):
     ip = 0
     while ip < len(prog):
         i = prog[ip]
-        op = (i.opcode & 0b1100) >> 2
-        if op == CPY:
-            x_is_reg = i.opcode & 0b0010
-            mem[i.y] = mem[i.x] if i.opcode & 0b0010 else i.x
-        elif op == INC:
-            mem[i.x] += 1
-        elif op == DEC:
-            mem[i.x] -= 1
-        else:
-            x_is_reg = i.opcode & 0b0010
-            y_is_reg = i.opcode & 0b0001
-            x = mem[i.x] if x_is_reg else i.x
-            y = mem[i.y] if y_is_reg else i.y
-            if x:
-                ip += y
-                ip -= 1
+        match (i.opcode & 0b1100) >> 2:
+            case 0: # cpy
+                x_is_reg = i.opcode & 0b0010
+                mem[i.y] = mem[i.x] if i.opcode & 0b0010 else i.x
+            case 1: # inc
+                mem[i.x] += 1
+            case 2: # dec
+                mem[i.x] -= 1
+            case 3: # jnz
+                x_is_reg = i.opcode & 0b0010
+                y_is_reg = i.opcode & 0b0001
+                x = mem[i.x] if x_is_reg else i.x
+                y = mem[i.y] if y_is_reg else i.y
+                if x:
+                    ip += y
+                    ip -= 1
         ip += 1
     return mem
 

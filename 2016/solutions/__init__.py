@@ -16,3 +16,5 @@ from . import d15
 from . import d16
 from . import d17
 from . import d18
+from . import d19
+from . import d20
