@@ -18,4 +18,5 @@ from . import d17
 from . import d18
 from . import d19
 from . import d20
+from . import d22
 from . import d24
