@@ -1,7 +1,6 @@
 import re
 from io import TextIOWrapper
 from dataclasses import dataclass
-from collections import deque, defaultdict
 
 @dataclass(frozen=True, eq=True)
 class Node:
@@ -17,7 +16,7 @@ def main(file: TextIOWrapper):
     lines = [line.strip() for line in file.readlines()]
     nodes = dict()
     for line in lines[2:]:
-        node = Node(*map(int, re.findall('\d+', line)))
+        node = Node(*map(int, re.findall(r'\d+', line)))
         nodes[node.x, node.y] = node
     return part1(nodes), None
 
