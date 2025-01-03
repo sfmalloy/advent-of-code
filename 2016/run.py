@@ -31,7 +31,7 @@ if sys.version_info.minor >= 11:
         d20.main,
         d21.main,
         d22.main,
-        lambda _: ('not available', 'not available'),
+        d23.main,
         d24.main,
         lambda _: ('not available', 'not available'),
     ]
