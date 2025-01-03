@@ -13,6 +13,7 @@ def run(program: list[str], init: int):
     for line in program:
         line_nums = re.findall(r'-?\d+', line)
         nums |= set(map(int, line_nums))
-    c = nums.remove(max(nums))
-    d = nums.remove(max(nums))
+    c = max(nums)
+    nums.remove(c)
+    d = max(nums)
     return math.factorial(init) + c*d
