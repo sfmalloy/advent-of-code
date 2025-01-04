@@ -34,3 +34,4 @@ test.*
 *.csv
 !tsconfig.json
 !package.json
+*.in
