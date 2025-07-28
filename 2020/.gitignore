@@ -1,0 +1,8 @@
+__pycache__/
+__init__.py
+*.in
+.vscode/
+sample
+*.c
+Makefile
+inputs/
