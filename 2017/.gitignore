@@ -1,0 +1,10 @@
+env/
+inputs/
+__pycache__/
+
+*.txt
+!requirements.txt
+
+*.in
+*.out
+.env
