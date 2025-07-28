@@ -1,0 +1,11 @@
+advent
+*.o
+*.in
+*.out
+.pyconfig
+compile_commands.json
+
+obj/
+.vscode/
+.cache/
+inputs/
