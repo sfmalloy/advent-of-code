@@ -1,0 +1,37 @@
+# Ignore binary executables
+*
+!*.*
+!*/
+!Makefile
+
+# Directories
+.vscode/
+.ionide/
+todo/
+out/
+build/
+.pls_cache/
+.metals/
+.idea/
+lib/
+node_modules/
+inputs/
+
+# Files
+test.*
+.*
+*.class
+*.out
+*.iml
+*.class
+*.o
+*.hi
+*.xml
+*.jar
+*.json
+*.cmo
+*.cmi
+*.csv
+!tsconfig.json
+!package.json
+*.in
