@@ -1,5 +1,14 @@
 {
   "devDependencies": {
     "@types/node": "^18.11.9"
+  },
+  "dependencies": {
+    "coffeescript": "^2.7.0",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "day14": "node Day14",
+    "day19": "coffee Day19.coffee"
   }
 }

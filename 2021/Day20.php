@@ -80,13 +80,11 @@ while (!feof($input)) {
 $part1 = 0;
 $part2 = 0;
 for ($i = 0; $i < 50; ++$i) {
-    print_image($img);
     $img = enhance($img, $alg, $i);
     if ($i == 1) {
         $part1 = get_lit_count($img);
     }
 }
-print_image($img);
 
 $part2 = get_lit_count($img);
 printf("%d\n%d\n", $part1, $part2);

@@ -26,6 +26,6 @@ Langs used:
 24. ???
 25. ???
 
-Langs to use:
--------------
-Nim, D, OCaml
+Possible languages to use:
+--------------------------
+Nim, D, OCaml, Fortran, Dart, Pencil & Paper

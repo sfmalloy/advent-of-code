@@ -105,7 +105,6 @@ func main() {
 		}
 	}
 
-	elapsed := time.Since(startTime)
 	f.Close()
 
 	// Convert part 2 results to decimal
@@ -121,6 +120,7 @@ func main() {
 		}
 		pow2 *= 2
 	}
+	elapsed := time.Since(startTime)
 
 	println(gamma * epsilon)
 	println(oDec * cDec)

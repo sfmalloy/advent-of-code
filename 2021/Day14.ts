@@ -75,7 +75,7 @@ for (let c of polymer) {
 
 let pairs: Map<string, number> = new Map<string, number>()
 for (let i = 0; i < polymer.length - 1; ++i) {
-    let pair = polymer.substr(i, 2)
+    let pair = polymer.substring(i, 2)
     if (!pairs.has(pair))
         pairs.set(pair, 0)
     pairs.set(pair, pairs.get(pair)! + 1)

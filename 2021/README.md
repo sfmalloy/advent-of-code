@@ -20,7 +20,7 @@ Past couple years I've attempted have been in Python. This year I'm attempting t
 |14|Typescript|Pretty much just Javascript with types. I really enjoyed using this language, has a good Map class which was 1000% needed for this day. I tired Lua at first and it was not fun so not sure if I'll actually use Lua for a problem or not.|
 |15|C++|C++ fast and has a priority queue built in which came in *very* handy today. Overall nice experience, and I finally implemented Dijkstra's for I think the first time during this so that's fun.|
 |16|C#|C# very good. Like better Java made by Microsoft. Super easy to implement the Visitor design pattern in for making a mini-compiler|
-|17|R|R isn't great on its own...imported the `sets` library so I could have tuples which helped a lot in this problem|
+|17|R|Everything is lists. At first I used a library to make tuples and then saw that you can just use lists as structs. Fun discovery. Anyway I still don't love R.|
 |18|Python|One of my, if not my most favorite language. So many useful built-in libraries, and fun stuff you can do with non-static types and whatnot (if you look I used `isinstance` a lot haha). This problem was perfect for Python with the way lists work, and worked very naturally recursively.|
 |19|CoffeeScript|JavaScript without curley braces and slightly more strict formatting. Not bad. Solution used a lot of vector operations which I wished I could've used a different language for but it got the job done. (Albeit slowly)|
 |20|PHP|This problem was a doozy honestly, but honestly...PHP actually made it easier with how arrays are essentially just dictionaries.|

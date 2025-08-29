@@ -1,5 +1,3 @@
-library('sets')
-
 input <- read.table("inputs/Day17.in")
 x_str <- strsplit(input[1,3], "\\.\\.|,|x|=")[[1]][3:4]
 y_str <- strsplit(input[1,4], "\\.\\.|,|y|=")[[1]][3:4]
@@ -24,7 +22,7 @@ simulate_y <- function(vel, min, max) {
 
     pos <- list()
     while (y >= min) {
-        pos[[length(pos)+1]] <- pair(pos=y, step=step)
+        pos[[length(pos)+1]] <- list(pos=y, step=step)
         y = y + vel
         vel = vel - 1
         step = step + 1
@@ -44,7 +42,7 @@ simulate_x <- function(vel, min, max) {
 
     pos <- list()
     while (vel >= 0 && x >= min && x <= max) {
-        pos[[length(pos)+1]] <- triple(pos=x, step=step, vel=vel)
+        pos[[length(pos)+1]] <- list(pos=x, step=step, vel=vel)
         x = x + vel
         vel = vel - 1
         step = step + 1

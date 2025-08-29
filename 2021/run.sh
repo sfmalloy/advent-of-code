@@ -78,7 +78,8 @@ then
     ./Day13
 elif [ $1 -eq 14 ]
 then
-    ts-node Day14.ts
+    npm run build
+    npm run day14
 elif [ $1 -eq 15 ]
 then
     ./Day15
@@ -91,6 +92,15 @@ then
 elif [ $1 -eq 18 ]
 then
     python Day18.py
+elif [ $1 -eq 19 ]
+then
+    npm run day19
+elif [ $1 -eq 20 ]
+then
+    php Day20.php
+elif [ $1 -eq 21 ]
+then
+    lua Day21.lua
 else
     echo "Day not found"
 fi
