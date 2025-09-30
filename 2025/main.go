@@ -74,7 +74,7 @@ func downloadInput(year int, day int) error {
 		Value: os.Getenv("AOC_SESSION"),
 	}
 	req.AddCookie(&auth)
-	req.Header.Add("User-Agent", "email:sfmalloy.dev@gmail.com repo:https://github.com/sfmalloy/advent-of-code-{YEAR}")
+	req.Header.Add("User-Agent", "email:sfmalloy.dev@gmail.com repo:https://github.com/sfmalloy/advent-of-code")
 
 	res, err := client.Do(req)
 	if err != nil {
