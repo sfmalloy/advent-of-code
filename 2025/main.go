@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,24 +10,50 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/sfmalloy/advent-of-code/2025/solutions"
 )
+
+type RunnerArgs struct {
+	Day       int
+	Part      int
+	InputFile string
+}
 
 func main() {
 	godotenv.Load()
 	os.Getenv("AOC_SESSION")
-	file, err := readInput(2024, 1)
+	args := parseArgs()
+
+	file, err := getInputFile(args, 2025)
 	if err != nil {
-		fmt.Printf("Error getting input file: %s\n", err)
+		fmt.Printf("Error reading input file: %s\n", err)
 		os.Exit(1)
 	}
 
-	buf, err := io.ReadAll(file)
+	d := solutions.Day01{}
+	parsed, err := d.Parse(file)
 	if err != nil {
-		fmt.Printf("Failed to read file %s\n", err)
+		fmt.Printf("Error parsing input file: %s\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("%d\n", len(string(buf)))
+	if args.Part == 1 || args.Part == 0 {
+		fmt.Println(d.Part1(parsed))
+	}
+	if args.Part == 2 || args.Part == 0 {
+		fmt.Println(d.Part2(parsed))
+	}
+}
+
+func getInputFile(args RunnerArgs, year int) (*os.File, error) {
+	if len(args.InputFile) == 0 {
+		return readInput(year, args.Day)
+	}
+	file, err := os.Open(args.InputFile)
+	if err != nil {
+		return nil, err
+	}
+	return file, nil
 }
 
 func readInput(year int, day int) (*os.File, error) {
@@ -57,7 +84,7 @@ func downloadInput(year int, day int) error {
 	if err != nil {
 		return err
 	}
-	if time.Until(time.Date(year, time.December, day, 0, 0, 0, 0, est)) > 0 {
+	if time.Until(time.Date(year, time.December, day, 0, 0, 0, 0, est)) < 0 {
 		return fmt.Errorf("Too soon to download day %d", day)
 	} else {
 		fmt.Println("good")
@@ -98,4 +125,19 @@ func downloadInput(year int, day int) error {
 	file.Close()
 
 	return nil
+}
+
+func parseArgs() RunnerArgs {
+	var args = RunnerArgs{}
+	isTest := false
+	flag.BoolVar(&isTest, "t", false, "Shorthand for -f inputs/test.txt")
+	flag.IntVar(&args.Day, "d", 0, "Day to run")
+	flag.IntVar(&args.Part, "p", 0, "Part of this day to run")
+	flag.StringVar(&args.InputFile, "f", "", "Path to input file")
+	flag.Parse()
+
+	if isTest {
+		args.InputFile = "inputs/test.txt"
+	}
+	return args
 }
