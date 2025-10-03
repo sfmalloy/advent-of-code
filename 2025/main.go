@@ -19,30 +19,90 @@ type RunnerArgs struct {
 	InputFile string
 }
 
+const YEAR = 2025
+
 func main() {
 	godotenv.Load()
 	os.Getenv("AOC_SESSION")
 	args := parseArgs()
 
-	file, err := getInputFile(args, 2025)
+	switch args.Day {
+	case 1:
+		runDay(solutions.Day01{}, args)
+	case 2:
+		runDay(solutions.Day02{}, args)
+	case 3:
+		runDay(solutions.Day03{}, args)
+	case 4:
+		runDay(solutions.Day04{}, args)
+	case 5:
+		runDay(solutions.Day05{}, args)
+	case 6:
+		runDay(solutions.Day06{}, args)
+	case 7:
+		runDay(solutions.Day07{}, args)
+	case 8:
+		runDay(solutions.Day08{}, args)
+	case 9:
+		runDay(solutions.Day09{}, args)
+	case 10:
+		runDay(solutions.Day10{}, args)
+	case 11:
+		runDay(solutions.Day11{}, args)
+	case 12:
+		runDay(solutions.Day12{}, args)
+	case 13:
+		runDay(solutions.Day13{}, args)
+	case 14:
+		runDay(solutions.Day14{}, args)
+	case 15:
+		runDay(solutions.Day15{}, args)
+	case 16:
+		runDay(solutions.Day16{}, args)
+	case 17:
+		runDay(solutions.Day17{}, args)
+	case 18:
+		runDay(solutions.Day18{}, args)
+	case 19:
+		runDay(solutions.Day19{}, args)
+	case 20:
+		runDay(solutions.Day20{}, args)
+	case 21:
+		runDay(solutions.Day21{}, args)
+	case 22:
+		runDay(solutions.Day22{}, args)
+	case 23:
+		runDay(solutions.Day23{}, args)
+	case 24:
+		runDay(solutions.Day24{}, args)
+	case 25:
+		runDay(solutions.Day25{}, args)
+	default:
+		fmt.Printf("Invalid day: %d\n", args.Day)
+		os.Exit(1)
+	}
+}
+
+func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
+	input, err := getInputFile(args, YEAR)
 	if err != nil {
 		fmt.Printf("Error reading input file: %s\n", err)
 		os.Exit(1)
 	}
 
-	d := solutions.Day01{}
-	parsed, err := d.Parse(file)
+	parsed, err := day.Parse(input)
 	if err != nil {
-		fmt.Printf("Error parsing input file: %s\n", err)
-		os.Exit(1)
+		return fmt.Errorf("Error parsing input file")
 	}
 
 	if args.Part == 1 || args.Part == 0 {
-		fmt.Println(d.Part1(parsed))
+		fmt.Println(day.Part1(parsed))
 	}
 	if args.Part == 2 || args.Part == 0 {
-		fmt.Println(d.Part2(parsed))
+		fmt.Println(day.Part2(parsed))
 	}
+
+	return nil
 }
 
 func getInputFile(args RunnerArgs, year int) (*os.File, error) {
@@ -84,10 +144,8 @@ func downloadInput(year int, day int) error {
 	if err != nil {
 		return err
 	}
-	if time.Until(time.Date(year, time.December, day, 0, 0, 0, 0, est)) < 0 {
+	if time.Until(time.Date(year, time.December, day, 0, 0, 0, 0, est)) > 0 {
 		return fmt.Errorf("Too soon to download day %d", day)
-	} else {
-		fmt.Println("good")
 	}
 
 	// Construct and send request to API
