@@ -96,10 +96,16 @@ func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
 	}
 
 	if args.Part == 1 || args.Part == 0 {
-		fmt.Println(day.Part1(parsed))
+		startTime := time.Now()
+		output := day.Part1(parsed)
+		fmt.Println(output)
+		fmt.Printf("%.02fms\n", float64(time.Since(startTime).Microseconds())/1000)
 	}
 	if args.Part == 2 || args.Part == 0 {
-		fmt.Println(day.Part2(parsed))
+		startTime := time.Now()
+		output := day.Part2(parsed)
+		fmt.Println(output)
+		fmt.Printf("%.02fms\n", float64(time.Since(startTime).Microseconds())/1000)
 	}
 
 	return nil
