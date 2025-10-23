@@ -51,32 +51,6 @@ func main() {
 		runDay(solutions.Day11{}, args)
 	case 12:
 		runDay(solutions.Day12{}, args)
-	case 13:
-		runDay(solutions.Day13{}, args)
-	case 14:
-		runDay(solutions.Day14{}, args)
-	case 15:
-		runDay(solutions.Day15{}, args)
-	case 16:
-		runDay(solutions.Day16{}, args)
-	case 17:
-		runDay(solutions.Day17{}, args)
-	case 18:
-		runDay(solutions.Day18{}, args)
-	case 19:
-		runDay(solutions.Day19{}, args)
-	case 20:
-		runDay(solutions.Day20{}, args)
-	case 21:
-		runDay(solutions.Day21{}, args)
-	case 22:
-		runDay(solutions.Day22{}, args)
-	case 23:
-		runDay(solutions.Day23{}, args)
-	case 24:
-		runDay(solutions.Day24{}, args)
-	case 25:
-		runDay(solutions.Day25{}, args)
 	default:
 		fmt.Printf("Invalid day: %d\n", args.Day)
 		os.Exit(1)
@@ -95,20 +69,27 @@ func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
 		return fmt.Errorf("Error parsing input file")
 	}
 
+	time := 0.0
+	outputs := [2]O{}
 	if args.Part == 1 || args.Part == 0 {
-		startTime := time.Now()
-		output := day.Part1(parsed)
-		fmt.Println(output)
-		fmt.Printf("%.02fms\n", float64(time.Since(startTime).Microseconds())/1000)
+		t, out := runPart(parsed, day.Part1)
+		time += t
+		outputs[0] = out
 	}
 	if args.Part == 2 || args.Part == 0 {
-		startTime := time.Now()
-		output := day.Part2(parsed)
-		fmt.Println(output)
-		fmt.Printf("%.02fms\n", float64(time.Since(startTime).Microseconds())/1000)
+		t, out := runPart(parsed, day.Part1)
+		time += t
+		outputs[1] = out
 	}
 
 	return nil
+}
+
+func runPart[I any, O any](input I, fn func(I) O) (float64, O) {
+	startTime := time.Now()
+	output := fn(input)
+	endTime := float64(time.Since(startTime).Microseconds()) / 1000
+	return endTime, output
 }
 
 func getInputFile(args RunnerArgs, year int) (*os.File, error) {
