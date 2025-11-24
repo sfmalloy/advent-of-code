@@ -1,9 +1,11 @@
-import sys
 import os
-from solutions.lib.advent import advent, DayNotFoundException, DuplicateKeyError, Result
-from solutions.lib.download import download
+import sys
 from argparse import ArgumentParser
+
 from requests import HTTPError
+
+from solutions.lib.advent import DayNotFoundException, DuplicateKeyError, Result, advent
+from solutions.lib.download import download
 
 
 def main():

@@ -1,5 +1,6 @@
-from .lib.advent import advent
 from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 @advent.parser(14)
@@ -58,7 +59,7 @@ def rotated(grid: list[list[str]]) -> list[list[str]]:
 
 
 def tilt_north(grid: list[list[str]]) -> None:
-    prev_empty = [0]*len(grid[0])
+    prev_empty = [0] * len(grid[0])
     for r, row in enumerate(grid):
         for c, col in enumerate(row):
             if col == 'O':

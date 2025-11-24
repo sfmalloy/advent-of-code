@@ -1,7 +1,8 @@
-from .lib.advent import advent
-from io import TextIOWrapper
 from dataclasses import dataclass
 from functools import cache
+from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 @dataclass(frozen=True, eq=True)
@@ -12,8 +13,12 @@ class Record:
 
 @advent.parser(12)
 def parse(file: TextIOWrapper) -> list[Record]:
-    return [(lambda record, sizes: Record(record, tuple(map(int, sizes.split(',')))))(*line.strip().split()) 
-            for line in file.readlines()]
+    return [
+        (lambda record, sizes: Record(record, tuple(map(int, sizes.split(',')))))(
+            *line.strip().split()
+        )
+        for line in file.readlines()
+    ]
 
 
 @advent.day(12)
@@ -23,7 +28,7 @@ def solve(records: list[Record]) -> tuple[int, int]:
     for record in records:
         p1 += arrange(record)
         bigger_record = '?'.join([record.record for _ in range(5)])
-        bigger_sizes = record.sizes*5
+        bigger_sizes = record.sizes * 5
         p2 += arrange(Record(bigger_record, bigger_sizes))
     return p1, p2
 
@@ -36,7 +41,7 @@ def arrange(record: Record) -> int:
     sub = ''
     start_op = 0
     total = 0
-    end_sub = '#'*record.sizes[0] + ('.' if len(record.sizes) > 1 else '')
+    end_sub = '#' * record.sizes[0] + ('.' if len(record.sizes) > 1 else '')
     sub = end_sub
     while len(sub) <= len(record.record):
         valid = True
@@ -45,7 +50,7 @@ def arrange(record: Record) -> int:
                 valid = False
                 break
         if valid:
-            total += arrange(Record(record.record[len(sub):], record.sizes[1:]))
+            total += arrange(Record(record.record[len(sub) :], record.sizes[1:]))
         start_op += 1
-        sub = '.'*start_op + end_sub
+        sub = '.' * start_op + end_sub
     return total

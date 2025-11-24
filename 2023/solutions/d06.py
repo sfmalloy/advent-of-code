@@ -1,6 +1,8 @@
-from .lib.advent import advent
-from io import TextIOWrapper
 from dataclasses import dataclass
+from io import TextIOWrapper
+
+from .lib.advent import advent
+
 
 @dataclass
 class Race:
@@ -10,7 +12,9 @@ class Race:
 
 @advent.day(6, part=1)
 def solve1(file: TextIOWrapper) -> int:
-    times, dists = [list(map(int, line.strip().split(': ')[1].split())) for line in file.readlines()]
+    times, dists = [
+        list(map(int, line.strip().split(': ')[1].split())) for line in file.readlines()
+    ]
     races = [Race(t, d) for t, d in zip(times, dists)]
     mult = 1
     for race in races:
@@ -29,4 +33,4 @@ def num_wins(race: Race) -> int:
     t_hold = 0
     while (race.time - t_hold) * t_hold <= race.dist:
         t_hold += 1
-    return race.time - 2*t_hold + 1
+    return race.time - 2 * t_hold + 1

@@ -1,10 +1,10 @@
-from .lib.advent import advent
+import math
+import re
+from collections import deque
+from dataclasses import dataclass
 from io import TextIOWrapper
 
-import re
-import math
-from dataclasses import dataclass
-from collections import deque
+from .lib.advent import advent
 
 
 @dataclass
@@ -49,6 +49,6 @@ def solve2(ipt: DocumentData) -> int:
         if name[2] == 'Z':
             dists.append(dist)
         else:
-            dir = ipt.dirs[dist%L]
-            q.append((ipt.nodes[name][dir], dist+1))
+            dir = ipt.dirs[dist % L]
+            q.append((ipt.nodes[name][dir], dist + 1))
     return math.lcm(*dists)

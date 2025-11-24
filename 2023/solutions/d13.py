@@ -1,6 +1,6 @@
-from .lib.advent import advent
 from io import TextIOWrapper
-from typing import Sequence
+
+from .lib.advent import advent
 
 
 @advent.parser(13)

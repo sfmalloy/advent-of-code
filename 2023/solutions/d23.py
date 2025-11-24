@@ -1,9 +1,8 @@
+from collections import defaultdict, deque
+from io import TextIOWrapper
+
 from .lib.advent import advent
 from .lib.util import Point, PointDir
-
-from io import TextIOWrapper
-from collections import deque, defaultdict
-import sys
 
 
 @advent.parser(23)
@@ -26,26 +25,46 @@ def solve1(grid: list[str]):
 
     while len(q) > 0:
         path, curr = q.pop()
-        if curr.r == R-1 and curr.c == C-2:
+        if curr.r == R - 1 and curr.c == C - 2:
             l = len(path)
             if l > best:
                 best = l
             continue
 
         n = curr + PointDir.N
-        if n.in_bounds(grid) and n not in path and grid[curr.r][curr.c] in n_tiles and grid[n.r][n.c] != '#':
+        if (
+            n.in_bounds(grid)
+            and n not in path
+            and grid[curr.r][curr.c] in n_tiles
+            and grid[n.r][n.c] != '#'
+        ):
             q.append((path | {curr}, n))
 
         e = curr + PointDir.E
-        if e.in_bounds(grid) and e not in path and grid[curr.r][curr.c] in e_tiles and grid[e.r][e.c] != '#':
+        if (
+            e.in_bounds(grid)
+            and e not in path
+            and grid[curr.r][curr.c] in e_tiles
+            and grid[e.r][e.c] != '#'
+        ):
             q.append((path | {curr}, e))
 
         s = curr + PointDir.S
-        if s.in_bounds(grid) and s not in path and grid[curr.r][curr.c] in s_tiles and grid[s.r][s.c] != '#':
+        if (
+            s.in_bounds(grid)
+            and s not in path
+            and grid[curr.r][curr.c] in s_tiles
+            and grid[s.r][s.c] != '#'
+        ):
             q.append((path | {curr}, s))
 
         w = curr + PointDir.W
-        if w.in_bounds(grid) and w not in path and grid[curr.r][curr.c] in w_tiles and grid[w.r][w.c] != '#':
+        if (
+            w.in_bounds(grid)
+            and w not in path
+            and grid[curr.r][curr.c] in w_tiles
+            and grid[w.r][w.c] != '#'
+        ):
             q.append((path | {curr}, w))
 
     return best
@@ -53,8 +72,8 @@ def solve1(grid: list[str]):
 
 @advent.day(23, part=2)
 def solve2(grid: list[list[str]]):
-    end = Point(len(grid)-1, len(grid[0])-2)
-    
+    end = Point(len(grid) - 1, len(grid[0]) - 2)
+
     graph = construct_graph(grid)
     condensed = condense_graph(graph, end)
     q = deque([(Point(0, 1), 0, frozenset())])
@@ -66,11 +85,18 @@ def solve2(grid: list[list[str]]):
             continue
         for neighbor in condensed[curr]:
             if neighbor not in visited:
-                q.append((neighbor, L+condensed[curr][neighbor], visited | {curr}))
+                q.append((neighbor, L + condensed[curr][neighbor], visited | {curr}))
     return best
 
 
-def append_if_valid(curr: Point, dir: Point, grid: list[list[str]], q: deque, visited: set, graph: defaultdict[Point, set]):
+def append_if_valid(
+    curr: Point,
+    dir: Point,
+    grid: list[list[str]],
+    q: deque,
+    visited: set,
+    graph: defaultdict[Point, set],
+):
     pt = curr + dir
     if pt.in_bounds(grid) and grid[pt.r][pt.c] != '#':
         graph[curr].add(pt)
@@ -109,5 +135,5 @@ def condense_graph(graph: defaultdict[list, Point], end: Point):
         visited.add((src, curr))
         for dst in graph[curr]:
             if (src, dst) not in visited:
-                q.append((src, dst, L+1))
+                q.append((src, dst, L + 1))
     return condensed

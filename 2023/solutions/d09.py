@@ -1,6 +1,7 @@
-from .lib.advent import advent
-from io import TextIOWrapper
 from collections import deque
+from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 @advent.parser(9)
@@ -23,8 +24,8 @@ def expand(top: deque[int]) -> list[deque[int]]:
     rows = [top]
     while any(rows[-1]):
         new = deque([])
-        for i in range(len(rows[-1])-1):
-            new.append(rows[-1][i+1] - rows[-1][i])
+        for i in range(len(rows[-1]) - 1):
+            new.append(rows[-1][i + 1] - rows[-1][i])
         rows.append(new)
     return rows
 
@@ -32,14 +33,14 @@ def expand(top: deque[int]) -> list[deque[int]]:
 def extrapolate_fwd(history: list[deque[int]]) -> int:
     for r in history:
         r.append(0)
-    for i in range(len(history)-2, -1, -1):
-        history[i][-1] = history[i][-2] + history[i+1][-1]
+    for i in range(len(history) - 2, -1, -1):
+        history[i][-1] = history[i][-2] + history[i + 1][-1]
     return history[0][-1]
 
 
 def extrapolate_bck(history: list[deque[int]]) -> int:
     for r in history:
         r.appendleft(0)
-    for i in range(len(history)-2, -1, -1):
-        history[i][0] = history[i][1] - history[i+1][0]
+    for i in range(len(history) - 2, -1, -1):
+        history[i][0] = history[i][1] - history[i + 1][0]
     return history[0][0]

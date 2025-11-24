@@ -1,8 +1,9 @@
+from collections import deque
+from dataclasses import dataclass, field
+from io import TextIOWrapper
+
 from .lib.advent import advent
 from .lib.util import Point, PointDir
-from io import TextIOWrapper
-from dataclasses import dataclass, field
-from collections import deque
 
 
 @dataclass(frozen=True, eq=True)
@@ -36,12 +37,12 @@ def solve2(grid: list[list[Tile]]) -> int:
     max_energy = 0
     for r in range(len(grid)):
         lhs = energize(grid, Beam(Point(r, 0), PointDir.E))
-        rhs = energize(grid, Beam(Point(r, len(grid)-1), PointDir.W))
+        rhs = energize(grid, Beam(Point(r, len(grid) - 1), PointDir.W))
         max_energy = max(max_energy, lhs, rhs)
 
     for c in range(len(grid[0])):
         top = energize(grid, Beam(Point(0, c), PointDir.S))
-        bot = energize(grid, Beam(Point(len(grid[0])-1, c), PointDir.N))
+        bot = energize(grid, Beam(Point(len(grid[0]) - 1, c), PointDir.N))
         max_energy = max(max_energy, top, bot)
 
     return max_energy
@@ -104,6 +105,6 @@ def energize(grid: list[list[Tile]], start: Beam) -> int:
             case [_, _]:
                 # otherwise keep going in current direction
                 q.append(Beam(beam.pos + beam.dir, beam.dir))
-    
+
     reset_grid(grid)
     return num_energized

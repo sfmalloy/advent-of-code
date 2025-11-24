@@ -1,7 +1,8 @@
-from .lib.advent import advent
-from io import TextIOWrapper
-from dataclasses import dataclass
 from collections import defaultdict
+from dataclasses import dataclass
+from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 @dataclass
@@ -21,7 +22,7 @@ def parse(file: TextIOWrapper) -> EngineData:
         for col, char in enumerate(line):
             if char.isdigit():
                 num += char
-                pos.append((row,col))
+                pos.append((row, col))
             elif num != '':
                 num_pos[int(num)].append(pos)
                 num = ''
@@ -47,10 +48,15 @@ def solve1(ipt: EngineData) -> int:
 def adj_parts(pos_range: list[tuple[int, int]], ipt: EngineData) -> int:
     parts = set()
     for i, j in pos_range:
-        for r in range(i-1,i+2):
-            for c in range(j-1,j+2):
-                if (r >= 0 and c >= 0 
-                    and r < len(ipt.grid) and c < len(ipt.grid[r])
-                    and ipt.grid[r][c] != '.' and not ipt.grid[r][c].isdigit()):
+        for r in range(i - 1, i + 2):
+            for c in range(j - 1, j + 2):
+                if (
+                    r >= 0
+                    and c >= 0
+                    and r < len(ipt.grid)
+                    and c < len(ipt.grid[r])
+                    and ipt.grid[r][c] != '.'
+                    and not ipt.grid[r][c].isdigit()
+                ):
                     parts.add((r, c))
     return parts

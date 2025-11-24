@@ -1,11 +1,13 @@
+from collections import deque
+from dataclasses import dataclass, field
+from io import TextIOWrapper
+from typing import Optional, Self
+
 from .lib.advent import advent
 from .lib.util import Point, PointDir
-from io import TextIOWrapper
-from dataclasses import dataclass, field
-from typing import Self, Optional
-from collections import deque
 
-INF = 2**31-1
+INF = 2**31 - 1
+
 
 @dataclass(eq=True)
 class Node:
@@ -15,14 +17,22 @@ class Node:
     neighbors: list[Self] = field(default_factory=list)
     visited: bool = False
 
-    def add_neighbor(self, r: int, c: int, grid: list[list[Optional[Self]]], valid_symbols: set[str]) -> None:
-        if r >= 0 and c >= 0 and r < len(grid) and c < len(grid[r]) \
-            and grid[r][c] is not None and grid[r][c].symbol in valid_symbols:
+    def add_neighbor(
+        self, r: int, c: int, grid: list[list[Optional[Self]]], valid_symbols: set[str]
+    ) -> None:
+        if (
+            r >= 0
+            and c >= 0
+            and r < len(grid)
+            and c < len(grid[r])
+            and grid[r][c] is not None
+            and grid[r][c].symbol in valid_symbols
+        ):
             self.neighbors.append(grid[r][c])
-    
+
     def validate_neighbors(self) -> bool:
-        return (self.symbol == 'S' or len(self.neighbors) == 2)
-    
+        return self.symbol == 'S' or len(self.neighbors) == 2
+
     def filter_neighbors(self, grid: list[list[Optional[Self]]]) -> None:
         filtered = []
         for neighbor in self.neighbors:
@@ -59,7 +69,7 @@ def parse(file: TextIOWrapper) -> MazeData:
         grid.append(grid_row)
 
     # 'S' gets added everywhere because we don't know what shape it actually has
-    north_symbols = {'|','L','J', 'S'}
+    north_symbols = {'|', 'L', 'J', 'S'}
     south_symbols = {'|', '7', 'F', 'S'}
     east_symbols = {'-', 'L', 'F', 'S'}
     west_symbols = {'-', 'J', '7', 'S'}
@@ -69,13 +79,13 @@ def parse(file: TextIOWrapper) -> MazeData:
         for node in row:
             if node is not None:
                 if node.symbol in north_symbols:
-                    node.add_neighbor(node.pos.r-1, node.pos.c, grid, south_symbols)
+                    node.add_neighbor(node.pos.r - 1, node.pos.c, grid, south_symbols)
                 if node.symbol in south_symbols:
-                    node.add_neighbor(node.pos.r+1, node.pos.c, grid, north_symbols)
+                    node.add_neighbor(node.pos.r + 1, node.pos.c, grid, north_symbols)
                 if node.symbol in west_symbols:
-                    node.add_neighbor(node.pos.r, node.pos.c-1, grid, east_symbols)
+                    node.add_neighbor(node.pos.r, node.pos.c - 1, grid, east_symbols)
                 if node.symbol in east_symbols:
-                    node.add_neighbor(node.pos.r, node.pos.c+1, grid, west_symbols)
+                    node.add_neighbor(node.pos.r, node.pos.c + 1, grid, west_symbols)
 
     # remove extra pipes that aren't connected to a loop
     to_remove: list[Point] = []
@@ -134,9 +144,9 @@ def solve2(ipt: MazeData) -> int:
                 srow.append('.')
             srow.append(filler)
         symbols.append(srow)
-        symbols.append([filler]*len(srow))
-    symbols = [[filler]*len(symbols[0])] + symbols
-    
+        symbols.append([filler] * len(srow))
+    symbols = [[filler] * len(symbols[0])] + symbols
+
     # Extend previous connections replacing filler spots with either | or - depending
     #   on the direction
     for r, row in enumerate(symbols):

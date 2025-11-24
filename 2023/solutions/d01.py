@@ -1,5 +1,6 @@
-from .lib.advent import advent
 from io import TextIOWrapper
+
+from .lib.advent import advent
 
 NAME_TO_DIGIT = {
     'one': '1',
@@ -10,10 +11,10 @@ NAME_TO_DIGIT = {
     'six': '6',
     'seven': '7',
     'eight': '8',
-    'nine': '9'
+    'nine': '9',
 }
 
-REVERSED_NAME_TO_DIGIT = {k[::-1]:v for k, v in NAME_TO_DIGIT.items()}
+REVERSED_NAME_TO_DIGIT = {k[::-1]: v for k, v in NAME_TO_DIGIT.items()}
 
 
 @advent.parser(1)
@@ -51,12 +52,12 @@ def find_first_digit(line: str) -> str:
         if c.isdigit():
             return c
         l = 3
-        word = line[i:i+l]
+        word = line[i : i + l]
         while l < 6:
             if word in NAME_TO_DIGIT:
                 return NAME_TO_DIGIT[word]
             l += 1
-            word = line[i:i+l]
+            word = line[i : i + l]
 
 
 def find_last_digit(line: str) -> str:
@@ -65,9 +66,9 @@ def find_last_digit(line: str) -> str:
         if c.isdigit():
             return c
         l = 3
-        word = rev[i:i+l]
+        word = rev[i : i + l]
         while l < 6:
             if word in REVERSED_NAME_TO_DIGIT:
                 return REVERSED_NAME_TO_DIGIT[word]
             l += 1
-            word = rev[i:i+l]
+            word = rev[i : i + l]

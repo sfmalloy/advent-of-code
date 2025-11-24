@@ -1,8 +1,8 @@
 import os
-from typing import Callable, Any, Optional
+from dataclasses import dataclass
 from io import TextIOWrapper
 from timeit import default_timer as timer
-from dataclasses import dataclass
+from typing import Any, Callable, Optional
 
 from .download import download
 
@@ -14,6 +14,7 @@ class DayNotFoundException(Exception):
 
 class DuplicateKeyError(Exception):
     key: str
+
     def __init__(self, key, *args) -> None:
         super().__init__(args)
         self.key = key
@@ -30,15 +31,15 @@ class Result:
     @property
     def part1(self):
         if self.hide:
-            return 'X'*min(40, len(str(self._part1)))
+            return 'X' * min(40, len(str(self._part1)))
         return self._part1
-    
+
     @property
     def part2(self):
         if self.hide:
-            return 'X'*min(40, len(str(self._part2)))
+            return 'X' * min(40, len(str(self._part2)))
         return self._part2
-    
+
     @part1.setter
     def part1(self, v):
         self._part1 = v
@@ -50,8 +51,8 @@ class Result:
 
 @dataclass
 class Attribute:
-    use_part1: bool=False
-    reparse: bool=True
+    use_part1: bool = False
+    reparse: bool = True
 
 
 class Advent:
@@ -66,33 +67,36 @@ class Advent:
         # self._use_part1 = {}
         self._attrs = {}
 
-
-    def day(self, day_number: int, part: int=0, use_part1: bool=False, reparse: bool=True):
+    def day(
+        self,
+        day_number: int,
+        part: int = 0,
+        use_part1: bool = False,
+        reparse: bool = True,
+    ):
         if day_number in self._days:
             raise DuplicateKeyError(day_number)
         elif (day_number, part) in self._days:
             raise DuplicateKeyError((day_number, part))
-        '''
+        """
         Decorator for a function that is a problem solution.
-        '''
+        """
+
         def day_decorator(fn: Callable):
             # self._use_part1[day_number] = use_part1
-            self._attrs[day_number] = Attribute(
-                use_part1=use_part1,
-                reparse=reparse
-            )
+            self._attrs[day_number] = Attribute(use_part1=use_part1, reparse=reparse)
             if part:
                 self._days[(day_number, part)] = fn
             else:
                 self._days[day_number] = fn
 
         return day_decorator
-    
 
     def parser(self, day_number: int):
-        '''
+        """
         Decorator for a function that parses this day's input.
-        '''
+        """
+
         def parser_decorator(fn: Callable):
             self._parsers[day_number] = fn
 
@@ -139,29 +143,36 @@ class Advent:
         res.time = 1000 * (end_time - start_time)
 
         return res
-    
 
-    def _run_multi(self, day_number: int, input_path: str, num_runs: int, hide: bool) -> Result:
+    def _run_multi(
+        self, day_number: int, input_path: str, num_runs: int, hide: bool
+    ) -> Result:
         time = 0
         latest = None
         for _ in range(num_runs):
-            latest = self._run_single(day_number, input_path, hide) 
+            latest = self._run_single(day_number, input_path, hide)
             time += latest.time
         return Result(day_number, time / num_runs, hide, latest.part1, latest.part2)
 
-
-    def run(self, day_number: int, input_path: str=None, num_runs: int=1, hide: bool=False):
-        if day_number not in self._days \
-            and (day_number, 1) not in self._days \
-            and (day_number, 2) not in self._days:
+    def run(
+        self,
+        day_number: int,
+        input_path: str = None,
+        num_runs: int = 1,
+        hide: bool = False,
+    ):
+        if (
+            day_number not in self._days
+            and (day_number, 1) not in self._days
+            and (day_number, 2) not in self._days
+        ):
             raise DayNotFoundException(f'Day {day_number} solution not found')
 
         if num_runs == 1:
             return self._run_single(day_number, input_path, hide)
         return self._run_multi(day_number, input_path, num_runs, hide)
 
-    
-    def run_all(self, num_runs: int=1, hide: bool=False):
+    def run_all(self, num_runs: int = 1, hide: bool = False):
         days = set()
         for d in self._days.keys():
             if isinstance(d, tuple):
@@ -172,6 +183,6 @@ class Advent:
         for d in days:
             results.append(self.run(d, num_runs=num_runs, hide=hide))
         return results
-    
+
 
 advent = Advent()

@@ -1,10 +1,10 @@
 import os
-import requests
 from datetime import datetime
+
+import requests
 from dotenv import load_dotenv
 
 from .constants import Constants
-
 
 load_dotenv()
 

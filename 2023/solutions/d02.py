@@ -1,6 +1,8 @@
-from .lib.advent import advent
-from io import TextIOWrapper
 from dataclasses import dataclass
+from io import TextIOWrapper
+
+from .lib.advent import advent
+
 
 @dataclass
 class CubeSet:
@@ -58,5 +60,5 @@ def solve2(ipt: list[list[CubeSet]]) -> int:
             red = max(round.red, red)
             blue = max(round.blue, blue)
             green = max(round.green, green)
-        pow += red*green*blue
+        pow += red * green * blue
     return pow

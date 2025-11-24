@@ -1,9 +1,10 @@
 import math
+from collections import deque
+from dataclasses import dataclass
+from io import TextIOWrapper
+
 from .lib.advent import advent
 from .lib.util import Vec2, Vec2Dir
-from io import TextIOWrapper
-from dataclasses import dataclass
-from collections import deque
 
 
 @dataclass
@@ -16,12 +17,7 @@ class Edge:
 @advent.parser(18)
 def parse(file: TextIOWrapper):
     edges = []
-    dirs = {
-        'R': Vec2Dir.R,
-        'D': Vec2Dir.D,
-        'L': Vec2Dir.L,
-        'U': Vec2Dir.U
-    }
+    dirs = {'R': Vec2Dir.R, 'D': Vec2Dir.D, 'L': Vec2Dir.L, 'U': Vec2Dir.U}
     for line in file.readlines():
         line = line.strip()
         dir, dist, color = line.split()
@@ -57,13 +53,13 @@ def calculate_area(vertices: deque[Vec2]) -> int:
     triangles = set()
     perimeter = 0
     for i in range(len(vertices)):
-        perimeter += vertices[(i+1) % len(vertices)].dist(vertices[i])
+        perimeter += vertices[(i + 1) % len(vertices)].dist(vertices[i])
 
     while len(vertices) > 3:
         for i in range(len(vertices)):
-            a = vertices[(i-1) % len(vertices)]
+            a = vertices[(i - 1) % len(vertices)]
             b = vertices[i]
-            c = vertices[(i+1) % len(vertices)]
+            c = vertices[(i + 1) % len(vertices)]
             if is_convex(a, b, c) and is_ear(vertices, a, b, c):
                 triangles.add((a, b, c))
                 vertices.remove(b)
@@ -99,7 +95,11 @@ def interior_angle_radians(a: Vec2, b: Vec2, c: Vec2) -> float:
 
 # https://www.baeldung.com/cs/check-if-point-is-in-2d-triangle
 def vertex_in_triangle(test: Vec2, a: Vec2, b: Vec2, c: Vec2):
-    return triangle_area(a, b, c) == (triangle_area(test, a, b) + triangle_area(test, b, c) + triangle_area(test, c, a))
+    return triangle_area(a, b, c) == (
+        triangle_area(test, a, b)
+        + triangle_area(test, b, c)
+        + triangle_area(test, c, a)
+    )
 
 
 # https://www.baeldung.com/cs/check-if-point-is-in-2d-triangle

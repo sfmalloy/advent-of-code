@@ -12,3 +12,11 @@ dependencies = [
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.ruff.lint]
+ignore = ["E741"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.6",
+]

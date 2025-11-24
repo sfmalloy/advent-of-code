@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from typing import Self
 from math import sqrt
+from typing import Self
 
 
 @dataclass(frozen=True, eq=True, order=True)
@@ -10,19 +10,24 @@ class Point:
 
     def __add__(self, other: Self):
         return Point(self.r + other.r, self.c + other.c)
-    
+
     def __sub__(self, other: Self):
         return Point(self.r - other.r, self.c - other.c)
-        
+
     def in_bounds(self, grid: list[list]):
-        return self.r >= 0 and self.c >= 0 and self.r < len(grid) and self.c < len(grid[self.r])
+        return (
+            self.r >= 0
+            and self.c >= 0
+            and self.r < len(grid)
+            and self.c < len(grid[self.r])
+        )
 
     def dist(self, other: Self) -> float:
-        return sqrt((self.r - other.r)**2 + (self.c - other.c)**2)
+        return sqrt((self.r - other.r) ** 2 + (self.c - other.c) ** 2)
 
     def mdist(self, other: Self):
         return abs(self.r - other.r) + abs(self.c - other.c)
-    
+
     def __repr__(self) -> str:
         return f'({self.r}, {self.c})'
 
@@ -34,16 +39,16 @@ class Vec2:
 
     def __add__(self, other: Self):
         return Vec2(self.x + other.x, self.y + other.y)
-    
+
     def __sub__(self, other: Self):
         return Vec2(self.x - other.x, self.y - other.y)
 
     def __mul__(self, other):
         return Vec2(self.x * other, self.y * other)
-    
+
     def __rmul__(self, other: int):
         return self.__mul__(other)
-    
+
     def __truediv__(self, other):
         return Vec2(self.x / other, self.y / other)
 
@@ -52,12 +57,12 @@ class Vec2:
 
     def dot(self, other: Self):
         return self.x * other.x + self.y * other.y
-    
+
     def cross(self, other: Self):
-        return self.x*other.y - self.y*other.x
-    
+        return self.x * other.y - self.y * other.x
+
     def dist(self, other: Self) -> float:
-        return sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
+        return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
     def mdist(self, other: Self):
         return abs(self.x - other.x) + abs(self.y - other.y)
@@ -80,16 +85,16 @@ class Vec3:
 
     def __add__(self, other: Self):
         return Vec3(self.x + other.x, self.y + other.y, self.z + other.z)
-    
+
     def __sub__(self, other: Self):
         return Vec3(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def __mul__(self, val):
         return Vec3(self.x * val, self.y * val, self.z * val)
-    
+
     def __rmul__(self, val: int):
         return self.__mul__(val)
-    
+
     def __truediv__(self, val):
         return Vec3(self.x / val, self.y / val, self.z / val)
 
@@ -97,10 +102,12 @@ class Vec3:
         return Vec3(self.x // val, self.y // val, self.z // val)
 
     def dot(self, other: Self):
-        return self.x*other.x + self.y*other.y + self.z*other.z
-    
+        return self.x * other.x + self.y * other.y + self.z * other.z
+
     def dist(self, other: Self) -> float:
-        return sqrt((self.x - other.x)**2 + (self.y - other.y)**2 + (self.z - other.z)**2)
+        return sqrt(
+            (self.x - other.x) ** 2 + (self.y - other.y) ** 2 + (self.z - other.z) ** 2
+        )
 
     def mdist(self, other: Self):
         return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
@@ -115,7 +122,6 @@ class Vec3:
         return f'({self.x}, {self.y}, {self.z})'
 
 
-
 class PointDir:
     N = Point(-1, 0)
     S = Point(1, 0)
@@ -127,12 +133,7 @@ class PointDir:
     U = N
     D = S
 
-    _opposite = {
-        N: S,
-        S: N,
-        E: W,
-        W: E
-    }
+    _opposite = {N: S, S: N, E: W, W: E}
 
     _all = {N, S, E, W}
     all = {N, S, E, W}
@@ -140,7 +141,7 @@ class PointDir:
     @staticmethod
     def opposite(d: Self):
         return PointDir._opposite[d]
-    
+
 
 class Vec2Dir:
     N = Vec2(0, 1)
@@ -153,19 +154,14 @@ class Vec2Dir:
     U = N
     D = S
 
-    _opposite = {
-        N: S,
-        S: N,
-        E: W,
-        W: E
-    }
+    _opposite = {N: S, S: N, E: W, W: E}
 
     all = {N, S, E, W}
 
     @staticmethod
     def opposite(d: Self):
         return Vec2._opposite[d]
-    
+
 
 def print_grid(grid: list[list]) -> None:
     for row in grid:

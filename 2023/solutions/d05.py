@@ -1,6 +1,7 @@
-from .lib.advent import advent
-from io import TextIOWrapper
 from dataclasses import dataclass
+from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 class MapRange:
@@ -15,13 +16,12 @@ class MapRange:
         self.src_max = src + amt - 1
         self.dst_min = dst
         self.dst_max = dst + amt - 1
-        self.diff = dst - src    
+        self.diff = dst - src
 
     def convert(self, src: int) -> int | None:
         if self.src_min <= src <= self.src_max:
             return src + self.diff
         return None
-
 
     def reverse_convert(self, dst: int) -> int | None:
         if self.dst_min <= dst <= self.dst_max:
@@ -63,7 +63,10 @@ def solve1(ipt: ConversionRules) -> int:
 
 @advent.day(5, part=2)
 def solve2(ipt: ConversionRules) -> int:
-    seed_ranges = [(ipt.seeds[i], ipt.seeds[i]+ipt.seeds[i+1]-1) for i in range(0, len(ipt.seeds), 2)]
+    seed_ranges = [
+        (ipt.seeds[i], ipt.seeds[i] + ipt.seeds[i + 1] - 1)
+        for i in range(0, len(ipt.seeds), 2)
+    ]
     val = 0
     while True:
         prev = val
@@ -91,7 +94,7 @@ def rev_convert(num: int, map: list[MapRange]) -> int:
 
 
 def is_valid_seed(num: int, seed_ranges: list[tuple[int, int]]) -> bool:
-    for (mn, mx) in seed_ranges:
+    for mn, mx in seed_ranges:
         if mn <= num <= mx:
             return True
     return False

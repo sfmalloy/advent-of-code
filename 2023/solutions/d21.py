@@ -1,8 +1,9 @@
+from collections import deque
+from dataclasses import dataclass
+from io import TextIOWrapper
+
 from .lib.advent import advent
 from .lib.util import Point, PointDir
-from io import TextIOWrapper
-from dataclasses import dataclass
-from collections import deque
 
 
 @dataclass
@@ -35,9 +36,11 @@ def solve1(ipt: Garden):
 @advent.day(21, part=2)
 def solve2(ipt: Garden):
     S = 26501365
-    Y = [len(exact_dist_points(ipt, 65)),
-         len(exact_dist_points(ipt, 196)),
-         len(exact_dist_points(ipt, 327))]
+    Y = [
+        len(exact_dist_points(ipt, 65)),
+        len(exact_dist_points(ipt, 196)),
+        len(exact_dist_points(ipt, 327)),
+    ]
     X = [65, 196, 327]
     A = len(ipt.garden) * len(ipt.garden)
 
@@ -49,12 +52,12 @@ def solve2(ipt: Garden):
     b = round((v0[1] + v1[1] + v2[1]) * A)
     c = round((v0[2] + v1[2] + v2[2]) * A)
 
-    return (a*(S**2) + b*S + c) // A
+    return (a * (S**2) + b * S + c) // A
 
 
 def lagrange(a, b, c, y):
-    D = (c-a) * (c-b)
-    return (y / D, -y*(a+b) / D, y*(a*b) / D)
+    D = (c - a) * (c - b)
+    return (y / D, -y * (a + b) / D, y * (a * b) / D)
 
 
 def exact_dist_points(ipt: Garden, S: int):

@@ -1,11 +1,13 @@
 import heapq
-from .lib.advent import advent
-from .lib.util import Point, PointDir
-from io import TextIOWrapper
 from collections import defaultdict
 from dataclasses import dataclass
+from io import TextIOWrapper
 
-INF = 2**31-1
+from .lib.advent import advent
+from .lib.util import Point, PointDir
+
+INF = 2**31 - 1
+
 
 @dataclass
 class Crucible:
@@ -26,8 +28,10 @@ class Block:
 
 @advent.parser(17)
 def parse(file: TextIOWrapper) -> list[list[Block]]:
-    return [[Block(int(digit), Point(row, col)) for col, digit in enumerate(line.strip())] 
-            for row, line in enumerate(file.readlines())]
+    return [
+        [Block(int(digit), Point(row, col)) for col, digit in enumerate(line.strip())]
+        for row, line in enumerate(file.readlines())
+    ]
 
 
 @advent.day(17, part=1)
@@ -40,7 +44,7 @@ def solve2(grid: list[list[Block]]):
     return follow_path(grid, 10, 4)
 
 
-def follow_path(grid: list[list[Block]], max_dir_dist: int, min_dir_dist: int=1):
+def follow_path(grid: list[list[Block]], max_dir_dist: int, min_dir_dist: int = 1):
     start = Crucible(Point(0, 0), PointDir.E, 0)
     q: list[Crucible] = []
     heapq.heappush(q, start)
@@ -53,7 +57,9 @@ def follow_path(grid: list[list[Block]], max_dir_dist: int, min_dir_dist: int=1)
         if crucible.pos == goal:
             return crucible.heat_loss
         for dir in PointDir.all - {PointDir.opposite(crucible.dir)}:
-            if (dir != crucible.dir or crucible.dir_dist >= max_dir_dist) and (dir == crucible.dir or crucible.dir_dist < min_dir_dist):
+            if (dir != crucible.dir or crucible.dir_dist >= max_dir_dist) and (
+                dir == crucible.dir or crucible.dir_dist < min_dir_dist
+            ):
                 continue
             pos = crucible.pos + dir
             if not pos.in_bounds(grid):

@@ -1,6 +1,7 @@
-from .lib.advent import advent
-from io import TextIOWrapper
 from dataclasses import dataclass
+from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 @advent.parser(15)
@@ -41,7 +42,7 @@ def solve2(init_sequence: list[str]) -> int:
                 hashmap[box].append(LabeledFocalLength(label, focal_length))
             else:
                 hashmap[box][idx].focal_length = focal_length
-    
+
     total = 0
     for b, box in enumerate(hashmap, start=1):
         if box:
@@ -53,7 +54,7 @@ def solve2(init_sequence: list[str]) -> int:
 def box_hash(step: str) -> int:
     curr = 0
     for char in step:
-        curr = (curr + ord(char))*17 % 256
+        curr = (curr + ord(char)) * 17 % 256
     return curr
 
 

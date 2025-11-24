@@ -1,8 +1,9 @@
-from .lib.advent import advent
-from .lib.util import Vec3
-from io import TextIOWrapper
 from collections import defaultdict
 from dataclasses import dataclass, field
+from io import TextIOWrapper
+
+from .lib.advent import advent
+from .lib.util import Vec3
 
 
 @dataclass

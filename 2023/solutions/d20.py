@@ -1,9 +1,10 @@
 import math
-from .lib.advent import advent
-from io import TextIOWrapper
-from dataclasses import dataclass, field
 from abc import abstractmethod
 from collections import defaultdict, deque
+from dataclasses import dataclass, field
+from io import TextIOWrapper
+
+from .lib.advent import advent
 
 
 @dataclass
@@ -20,7 +21,6 @@ class Module:
     def receive(self, src: str, pulse: bool, button_press: int):
         return deque([])
 
-    
     def send(self, pulse: bool) -> deque[tuple[str, bool]]:
         pulses = deque([])
         for output in self.outputs:
@@ -29,7 +29,9 @@ class Module:
 
 
 class FlipFlopModule(Module):
-    def receive(self, src: str, pulse: bool, button_press: int=0) -> deque[tuple[str, bool]]:
+    def receive(
+        self, src: str, pulse: bool, button_press: int = 0
+    ) -> deque[tuple[str, bool]]:
         if pulse == Module.lo:
             self.state = not self.state
             return self.send(self.state)
@@ -38,10 +40,14 @@ class FlipFlopModule(Module):
 
 @dataclass
 class ConjunctionModule(Module):
-    input_pulses: defaultdict[str, bool] = field(default_factory=lambda: defaultdict(bool))
+    input_pulses: defaultdict[str, bool] = field(
+        default_factory=lambda: defaultdict(bool)
+    )
     hi_pulses: defaultdict[str, list] = field(default_factory=lambda: defaultdict(list))
 
-    def receive(self, src: str, pulse: bool, button_press: int=0) -> deque[tuple[str, bool]]:
+    def receive(
+        self, src: str, pulse: bool, button_press: int = 0
+    ) -> deque[tuple[str, bool]]:
         self.input_pulses[src] = pulse
         if len(self.hi_pulses[src]) < 2 and self.input_pulses[src] == Module.hi:
             self.hi_pulses[src].append(button_press)
@@ -60,17 +66,19 @@ class ConjunctionModule(Module):
 
 
 class BroadcastModule(Module):
-    def receive(self, src: str, pulse: bool, button_press: int=0) -> deque[tuple[str, bool]]:
+    def receive(
+        self, src: str, pulse: bool, button_press: int = 0
+    ) -> deque[tuple[str, bool]]:
         return self.send(pulse)
 
 
 class MachineOnModule(Module):
     received: bool = False
-    def receive(self, src: str, pulse: bool, button_press: int=0):
+
+    def receive(self, src: str, pulse: bool, button_press: int = 0):
         if pulse == Module.lo:
             self.received = True
         return deque([])
-
 
 
 @advent.parser(20)
@@ -90,7 +98,7 @@ def parse(file: TextIOWrapper):
             modules[name] = BroadcastModule(name=name, outputs=outputs)
         for module in outputs:
             inputs[module].add(name)
-    
+
     modules['rx'] = MachineOnModule('rx')
     for module in modules.values():
         module.inputs = inputs[module.name]
@@ -120,7 +128,9 @@ def solve2(modules: dict[str, Module]):
         to_remove = set()
         for m in checks:
             hi_pulses = modules[m].hi_pulses.values()
-            if len(hi_pulses) == len(modules[m].inputs) and all(len(pulses) == 2 for pulses in hi_pulses):
+            if len(hi_pulses) == len(modules[m].inputs) and all(
+                len(pulses) == 2 for pulses in hi_pulses
+            ):
                 for a, b in hi_pulses:
                     nums[m].add(b - a)
                 to_remove.add(m)
@@ -132,7 +142,7 @@ def solve2(modules: dict[str, Module]):
     return math.lcm(*finals)
 
 
-def push_button(modules: dict[str, Module], press: int=0):
+def push_button(modules: dict[str, Module], press: int = 0):
     hi = 0
     lo = 1
     q = modules['broadcaster'].send(False)

@@ -1,7 +1,9 @@
+from dataclasses import dataclass
+from io import TextIOWrapper
+
 from .lib.advent import advent
 from .lib.util import Point
-from io import TextIOWrapper
-from dataclasses import dataclass
+
 
 @dataclass
 class CosmicData:
@@ -19,11 +21,11 @@ def parse(file: TextIOWrapper) -> CosmicData:
         for c, col in enumerate(row):
             if col == '#':
                 galaxies.append(Point(r, c))
-    
+
     return CosmicData(
         galaxies,
         [r for r, row in enumerate(grid) if row.count('#') == 0],
-        [c for c, col in enumerate(zip(*grid)) if col.count('#') == 0]
+        [c for c, col in enumerate(zip(*grid)) if col.count('#') == 0],
     )
 
 
@@ -41,7 +43,7 @@ def total_dists(data: CosmicData, expand_factor: int) -> int:
     dist = 0
     galaxies = expand(data, expand_factor)
     for i, src in enumerate(galaxies):
-        for dst in galaxies[i+1:]:
+        for dst in galaxies[i + 1 :]:
             if src != dst:
                 dist += src.mdist(dst)
     return dist
@@ -49,13 +51,13 @@ def total_dists(data: CosmicData, expand_factor: int) -> int:
 
 def expand(data: CosmicData, factor: int) -> list[Point]:
     factor -= 1
-    row_deltas = [0]*len(data.galaxies)
+    row_deltas = [0] * len(data.galaxies)
     for r in reversed(data.empty_rows):
         for g, galaxy in enumerate(data.galaxies):
             if galaxy.r > r:
                 row_deltas[g] += factor
-    
-    col_deltas = [0]*len(data.galaxies)
+
+    col_deltas = [0] * len(data.galaxies)
     for c in reversed(data.empty_cols):
         for g, galaxy in enumerate(data.galaxies):
             if galaxy.c > c:

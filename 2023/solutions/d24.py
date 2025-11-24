@@ -1,9 +1,12 @@
+from dataclasses import dataclass
+from io import TextIOWrapper
+from itertools import islice
+
 import z3
+
 from .lib.advent import advent
 from .lib.util import Vec3
-from io import TextIOWrapper
-from dataclasses import dataclass
-from itertools import islice
+
 
 @dataclass(eq=True)
 class Hailstone:
@@ -16,11 +19,11 @@ class Hailstone:
         self.pos = Vec3(*map(int, p.split(', ')))
         self.vel = Vec3(*map(int, v.split(', ')))
         self.id = id
-    
+
     def at(self, t: int) -> Vec3:
-        print(self.pos, self.pos + t*self.vel)
-        return self.pos + (t*self.vel)
-    
+        print(self.pos, self.pos + t * self.vel)
+        return self.pos + (t * self.vel)
+
 
 @advent.parser(24)
 def parse(file: TextIOWrapper):
@@ -39,16 +42,16 @@ def solve1(hailstones: list[Hailstone]):
             rb = b.vel.y / b.vel.x
 
             if ra != rb:
-                x = ((b.pos.y - a.pos.y) - (rb*b.pos.x - ra*a.pos.x)) / (ra - rb)
-                y = (x-a.pos.x) * ra + a.pos.y
+                x = ((b.pos.y - a.pos.y) - (rb * b.pos.x - ra * a.pos.x)) / (ra - rb)
+                y = (x - a.pos.x) * ra + a.pos.y
 
                 if (
-                    x >= lower_bound 
-                    and y >= lower_bound 
-                    and x <= upper_bound 
+                    x >= lower_bound
+                    and y >= lower_bound
+                    and x <= upper_bound
                     and y <= upper_bound
-                    and (x-a.pos.x) / a.vel.x >= 0
-                    and (x-b.pos.x) / b.vel.x >= 0
+                    and (x - a.pos.x) / a.vel.x >= 0
+                    and (x - b.pos.x) / b.vel.x >= 0
                 ):
                     total += 1
     return total
@@ -63,10 +66,12 @@ def solve2(hailstones: list[Hailstone]):
     for i, h in enumerate(hailstones):
         t = z3.Int(f't{i}')
         ts.append(t)
-        s.add(h.pos.x + h.vel.x*t == x + vx*t,
-              h.pos.y + h.vel.y*t == y + vy*t,
-              h.pos.z + h.vel.z*t == z + vz*t,
-              t > 0)
+        s.add(
+            h.pos.x + h.vel.x * t == x + vx * t,
+            h.pos.y + h.vel.y * t == y + vy * t,
+            h.pos.z + h.vel.z * t == z + vz * t,
+            t > 0,
+        )
     s.check()
     m = s.model()
     return m.eval(x + y + z)

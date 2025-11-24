@@ -1,10 +1,11 @@
-from .lib.advent import advent
-from io import TextIOWrapper
-from enum import Enum, auto
 from collections import defaultdict
 from dataclasses import dataclass, field
+from enum import Enum, auto
 from functools import cmp_to_key
+from io import TextIOWrapper
 from itertools import combinations_with_replacement
+
+from .lib.advent import advent
 
 
 class HandType(Enum):
@@ -49,7 +50,7 @@ def solve1(ipt: list[Hand]) -> int:
         '5': 4,
         '4': 3,
         '3': 2,
-        '2': 1
+        '2': 1,
     }
 
     for hand in ipt:
@@ -62,7 +63,7 @@ def solve1(ipt: list[Hand]) -> int:
 
     for bucket in buckets.values():
         bucket.sort(key=cmp_to_key(compare))
-    
+
     return count_winnings(buckets)
 
 
@@ -81,7 +82,7 @@ def solve2(ipt: list[Hand]) -> int:
         '4': 4,
         '3': 3,
         '2': 2,
-        'J': 1
+        'J': 1,
     }
 
     for hand in ipt:
@@ -107,7 +108,7 @@ def solve2(ipt: list[Hand]) -> int:
 
     for bucket in buckets.values():
         bucket.sort(key=cmp_to_key(compare))
-    
+
     return count_winnings(buckets)
 
 
