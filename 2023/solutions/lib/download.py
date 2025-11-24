@@ -1,8 +1,12 @@
 import os
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
 
 from .constants import Constants
+
+
+load_dotenv()
 
 
 def download(day_number: int):
@@ -19,19 +23,17 @@ def download(day_number: int):
         else:
             response = requests.get(
                 f'{Constants.URL}/day/{day_number}/input',
-                headers={
-                    'User-Agent': Constants.USER_AGENT
-                },
-                cookies={
-                    'session': os.getenv('AOC_SESSION_2023')
-                }
+                headers={'User-Agent': Constants.USER_AGENT},
+                cookies={'session': os.getenv('AOC_SESSION')},
             )
 
             if not response.ok:
                 print(f'Error in retrieving input: Code {response.status_code}')
                 match response.status_code:
-                    case 400: print(f'Try resetting session cookie')
-                    case 404: print(f'Too soon, try again later')
+                    case 400:
+                        print('Try resetting session cookie')
+                    case 404:
+                        print('Too soon, try again later')
                 response.raise_for_status()
 
             _create_file(filename, response.text)

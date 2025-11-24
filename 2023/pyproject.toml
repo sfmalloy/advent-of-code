@@ -1,2 +1,14 @@
+[project]
+name = "2023"
+version = "1.0.0"
+description = "My solutions to Advent of Code 2023."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
+    "z3-solver>=4.15.4.0",
+]
+
 [tool.ruff.format]
-quote-style = 'single'
+quote-style = "single"

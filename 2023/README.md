@@ -1,17 +1,17 @@
 # Advent of Code 2023
 
-These solutions are written in Python 3, and some may use Python 3.12 features. You can run either a single day to get its answer and runtime, or run all the available days and get their combined runtime.
+These solutions are written in Python 3, and some may use Python 3.12 features. You can run either a single day to get its answer and runtime, or run all the available days and get their combined runtime. This project is configured using `uv`.
 
 ## Commands
 
 ### Run single day
 ```
-python run.py -d <day_number>
+uv run main.py -d <day_number>
 ```
 
 ### Run all days
 ```
-python run.py -a
+uv run main.py -a
 ```
 
 ### Other flags
@@ -25,9 +25,9 @@ python run.py -a
 ```
 
 ## Dependencies
-Only dependency as of now is `requests` which is only used for downloading input files. I try only to use vanilla Python in my solutions. However, if any more dependencies arise, they'll be in `requirements.txt` and listed here. To install the exact version I'm using do:
+Most solutions use only the Python standard library (with the exception of Day 24 using `z3`). However, there are other dependencies for input downloading. To download them, simply run:
 ```
-pip install -r requirements.txt
+uv sync
 ```
 
 ## Solution Layout

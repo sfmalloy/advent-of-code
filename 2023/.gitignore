@@ -170,6 +170,7 @@ cython_debug/
 *.txt
 !requirements.txt
 *.in
+.env
 
 _build/
 inputs/
