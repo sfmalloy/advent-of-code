@@ -27,32 +27,39 @@ func main() {
 
 	switch args.Day {
 	case 1:
-		runDay(solutions.Day01{}, args)
+		runHandler(solutions.Day01{}, args)
 	case 2:
-		runDay(solutions.Day02{}, args)
+		runHandler(solutions.Day02{}, args)
 	case 3:
-		runDay(solutions.Day03{}, args)
+		runHandler(solutions.Day03{}, args)
 	case 4:
-		runDay(solutions.Day04{}, args)
+		runHandler(solutions.Day04{}, args)
 	case 5:
-		runDay(solutions.Day05{}, args)
+		runHandler(solutions.Day05{}, args)
 	case 6:
-		runDay(solutions.Day06{}, args)
+		runHandler(solutions.Day06{}, args)
 	case 7:
-		runDay(solutions.Day07{}, args)
+		runHandler(solutions.Day07{}, args)
 	case 8:
-		runDay(solutions.Day08{}, args)
+		runHandler(solutions.Day08{}, args)
 	case 9:
-		runDay(solutions.Day09{}, args)
+		runHandler(solutions.Day09{}, args)
 	case 10:
-		runDay(solutions.Day10{}, args)
+		runHandler(solutions.Day10{}, args)
 	case 11:
-		runDay(solutions.Day11{}, args)
+		runHandler(solutions.Day11{}, args)
 	case 12:
-		runDay(solutions.Day12{}, args)
+		runHandler(solutions.Day12{}, args)
 	default:
 		fmt.Printf("Invalid day: %d\n", args.Day)
 		os.Exit(1)
+	}
+}
+
+func runHandler[I any, O any](day solutions.Day[I, O], args RunnerArgs) {
+	err := runDay(day, args)
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 }
 
@@ -64,12 +71,12 @@ func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
 	}
 	input, err := getInputFile(args, int(year32))
 	if err != nil {
-		return fmt.Errorf("Error reading input file")
+		return err
 	}
 
 	parsed, err := day.Parse(input)
 	if err != nil {
-		return fmt.Errorf("Error parsing input file")
+		return err
 	}
 
 	if args.Part == 1 {
@@ -136,6 +143,10 @@ func downloadInput(year int, day int) error {
 	if time.Until(time.Date(year, time.December, day, 0, 0, 0, 0, est)) > 0 {
 		return fmt.Errorf("Too soon to download day %d", day)
 	}
+	err = limitRequestTime()
+	if err != nil {
+		return err
+	}
 
 	// Construct and send request to API
 	client := http.Client{}
@@ -187,4 +198,34 @@ func parseArgs() RunnerArgs {
 		args.InputFile = "inputs/test.txt"
 	}
 	return args
+}
+
+func limitRequestTime() error {
+	const filename = "inputs/.last-request-time.txt"
+	fileContent, err := os.ReadFile(filename)
+	if os.IsNotExist(err) {
+		file, err := os.Create("inputs/.last-request-time.txt")
+		timestamp, err := time.Now().MarshalText()
+		if err != nil {
+			return err
+		}
+		file.Write(timestamp)
+		file.Close()
+		return nil
+	}
+
+	timestamp, err := time.Parse(time.RFC3339, string(fileContent))
+	if time.Since(timestamp) < 15*time.Minute {
+		return fmt.Errorf("Must wait 15 minutes until next download request")
+	}
+	newTimestamp, err := time.Now().MarshalText()
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(filename, newTimestamp, 0o644) // -rw-r--r--
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
