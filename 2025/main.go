@@ -79,12 +79,13 @@ func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
 		return err
 	}
 
-	if args.Part == 1 {
+	if args.Part == 1 || args.Part == 0 {
 		time, out := runPart(parsed, day.Part1)
 		fmt.Print("Part 1: ")
 		fmt.Println(out)
 		fmt.Printf("Time: %.03fms\n", time)
-	} else {
+	}
+	if args.Part == 2 || args.Part == 0 {
 		time, out := runPart(parsed, day.Part2)
 		fmt.Print("Part 2: ")
 		fmt.Println(out)
