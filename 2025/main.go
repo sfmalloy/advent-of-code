@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -18,8 +19,6 @@ type RunnerArgs struct {
 	Part      int
 	InputFile string
 }
-
-const YEAR = 2025
 
 func main() {
 	godotenv.Load()
@@ -58,10 +57,14 @@ func main() {
 }
 
 func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
-	input, err := getInputFile(args, YEAR)
+	year, err := strconv.ParseInt(os.Getenv("AOC_YEAR"), 10, 32)
+	year32 := int32(year)
 	if err != nil {
-		fmt.Printf("Error reading input file: %s\n", err)
-		os.Exit(1)
+		return fmt.Errorf("Invaild year")
+	}
+	input, err := getInputFile(args, int(year32))
+	if err != nil {
+		return fmt.Errorf("Error reading input file")
 	}
 
 	parsed, err := day.Parse(input)
@@ -69,17 +72,16 @@ func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
 		return fmt.Errorf("Error parsing input file")
 	}
 
-	time := 0.0
-	outputs := [2]O{}
-	if args.Part == 1 || args.Part == 0 {
-		t, out := runPart(parsed, day.Part1)
-		time += t
-		outputs[0] = out
-	}
-	if args.Part == 2 || args.Part == 0 {
-		t, out := runPart(parsed, day.Part1)
-		time += t
-		outputs[1] = out
+	if args.Part == 1 {
+		time, out := runPart(parsed, day.Part1)
+		fmt.Print("Part 1: ")
+		fmt.Println(out)
+		fmt.Printf("Time: %.03fms\n", time)
+	} else {
+		time, out := runPart(parsed, day.Part2)
+		fmt.Print("Part 2: ")
+		fmt.Println(out)
+		fmt.Printf("Time: %.03fms\n", time)
 	}
 
 	return nil
