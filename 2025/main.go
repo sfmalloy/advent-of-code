@@ -57,42 +57,60 @@ func main() {
 }
 
 func runHandler[I any, O any](day solutions.Day[I, O], args RunnerArgs) {
-	err := runDay(day, args)
-	if err != nil {
-		fmt.Println(err.Error())
+	totalTime := 0.0
+	runBoth := args.Part == 0
+	if args.Part == 1 || runBoth {
+		args.Part = 1
+		time, output, err := runDay(day, args)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		totalTime += time
+		fmt.Print("Part 1: ")
+		fmt.Println(*output)
 	}
+	if args.Part == 2 || runBoth {
+		args.Part = 2
+		time, output, err := runDay(day, args)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		totalTime += time
+		fmt.Print("Part 2: ")
+		fmt.Println(*output)
+	}
+
+	fmt.Printf("Time: %.03fms\n", totalTime)
 }
 
-func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) error {
+func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) (float64, *O, error) {
 	year, err := strconv.ParseInt(os.Getenv("AOC_YEAR"), 10, 32)
 	year32 := int32(year)
 	if err != nil {
-		return fmt.Errorf("Invaild year")
+		return 0, nil, fmt.Errorf("Invaild year")
 	}
 	input, err := getInputFile(args, int(year32))
 	if err != nil {
-		return err
+		return 0, nil, err
 	}
 
 	parsed, err := day.Parse(input)
 	if err != nil {
-		return err
+		return 0, nil, err
 	}
 
-	if args.Part == 1 || args.Part == 0 {
+	if args.Part == 1 {
 		time, out := runPart(parsed, day.Part1)
-		fmt.Print("Part 1: ")
-		fmt.Println(out)
-		fmt.Printf("Time: %.03fms\n", time)
+		return time, &out, nil
 	}
-	if args.Part == 2 || args.Part == 0 {
+	if args.Part == 2 {
 		time, out := runPart(parsed, day.Part2)
-		fmt.Print("Part 2: ")
-		fmt.Println(out)
-		fmt.Printf("Time: %.03fms\n", time)
+		return time, &out, nil
 	}
 
-	return nil
+	return 0, nil, fmt.Errorf("Invalid part number")
 }
 
 func runPart[I any, O any](input I, fn func(I) O) (float64, O) {
