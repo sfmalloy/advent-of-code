@@ -32,7 +32,13 @@ func (d Day01) Part1(dirs []int) int {
 	dial := 50
 	password := 0
 	for _, dir := range dirs {
-		dial = realMod(dir + dial)
+		dial += dir
+		for dial < 0 {
+			dial += 100
+		}
+		for dial >= 100 {
+			dial -= 100
+		}
 		if dial == 0 {
 			password += 1
 		}
@@ -44,12 +50,9 @@ func (d Day01) Part2(dirs []int) int {
 	dial := 50
 	password := 0
 	for _, dir := range dirs {
-		for d := 0; d < iAbs(dir); d++ {
-			if dir < 0 {
-				dial -= 1
-			} else {
-				dial += 1
-			}
+		delta := sign(dir)
+		for range iAbs(dir) {
+			dial += delta
 			switch dial {
 			case 100:
 				dial = 0
@@ -64,19 +67,16 @@ func (d Day01) Part2(dirs []int) int {
 	return password
 }
 
-func realMod(dial int) int {
-	for dial < 0 {
-		dial += 100
-	}
-	for dial >= 100 {
-		dial -= 100
-	}
-	return dial
-}
-
 func iAbs(x int) int {
 	if x < 0 {
 		return -x
 	}
 	return x
+}
+
+func sign(x int) int {
+	if x < 0 {
+		return -1
+	}
+	return 1
 }
