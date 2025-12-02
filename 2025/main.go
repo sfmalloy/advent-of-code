@@ -67,8 +67,7 @@ func runHandler[I any, O any](day solutions.Day[I, O], args RunnerArgs) {
 			return
 		}
 		totalTime += time
-		fmt.Print("Part 1: ")
-		fmt.Println(*output)
+		fmt.Printf("Part 1: %v\n", *output)
 	}
 	if args.Part == 2 || runBoth {
 		args.Part = 2
@@ -78,8 +77,7 @@ func runHandler[I any, O any](day solutions.Day[I, O], args RunnerArgs) {
 			return
 		}
 		totalTime += time
-		fmt.Print("Part 2: ")
-		fmt.Println(*output)
+		fmt.Printf("Part 2: %v\n", *output)
 	}
 
 	fmt.Printf("Time: %.03fms\n", totalTime)
