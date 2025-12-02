@@ -43,11 +43,7 @@ func (d Day02) Part1(ranges []Range) int64 {
 	var total int64 = 0
 	for _, rng := range ranges {
 		for num := rng.start; num <= rng.end; num++ {
-			parts, L := splitNum(num, 2)
-			if L == 0 {
-				continue
-			}
-			if parts[0] == parts[1] {
+			if equalChunks(num, magnitude(num), 2) {
 				total += int64(num)
 			}
 		}
@@ -59,20 +55,9 @@ func (d Day02) Part2(ranges []Range) int64 {
 	var total int64 = 0
 	for _, rng := range ranges {
 		for num := rng.start; num <= rng.end; num++ {
-			numlen := magnitude(num)
-			for numSplits := 2; numSplits <= numlen; numSplits++ {
-				parts, L := splitNum(num, numSplits)
-				if L == 0 {
-					continue
-				}
-				equal := true
-				for i := range L {
-					if i == 0 || parts[i] == 0 {
-						continue
-					}
-					equal = equal && parts[i] == parts[i-1]
-				}
-				if equal {
+			mag := magnitude(num)
+			for numChunks := 2; numChunks <= mag; numChunks++ {
+				if equalChunks(num, mag, numChunks) {
 					total += int64(num)
 					break
 				}
@@ -82,24 +67,32 @@ func (d Day02) Part2(ranges []Range) int64 {
 	return total
 }
 
-const LIMIT = 12
-
-func splitNum(x int, numSplits int) ([LIMIT]int, int) {
-	parts := [LIMIT]int{}
-	if magnitude(x)%numSplits != 0 {
-		return parts, 0
+func equalChunks(num int, mag int, numChunks int) bool {
+	if mag%numChunks != 0 {
+		return false
 	}
-	pow := int(math.Pow10(magnitude(x) / numSplits))
+
+	parts := [12]int{}
+	pow := int(math.Pow10(mag / numChunks))
 	L := 0
-	for x > 0 {
-		parts[L] = x % pow
-		x /= pow
+	for num > 0 {
+		parts[L] = num % pow
+		num /= pow
 		L += 1
 		if pow == 1 {
 			break
 		}
 	}
-	return parts, L + 1
+
+	for i := range L {
+		if i == 0 || parts[i] == 0 {
+			continue
+		}
+		if parts[i] != parts[i-1] {
+			return false
+		}
+	}
+	return true
 }
 
 func magnitude(x int) int {
