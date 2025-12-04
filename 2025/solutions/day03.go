@@ -50,20 +50,13 @@ func findJoltage(battery []int64, maxSize int, size int, index int, joltage int6
 	}
 	var nextDigit int64 = 0
 	for i := index; i < len(battery)-(maxSize-size)+1; i++ {
-		nextDigit = intMax(nextDigit, battery[i])
+		nextDigit = max(nextDigit, battery[i])
 	}
 	var best int64 = 0
 	for i := index; i < len(battery)-(maxSize-size)+1; i++ {
 		if battery[i] == nextDigit {
-			best = intMax(best, findJoltage(battery, maxSize, size+1, i+1, 10*joltage+nextDigit))
+			best = max(best, findJoltage(battery, maxSize, size+1, i+1, 10*joltage+nextDigit))
 		}
 	}
 	return best
-}
-
-func intMax(a int64, b int64) int64 {
-	if a > b {
-		return a
-	}
-	return b
 }
