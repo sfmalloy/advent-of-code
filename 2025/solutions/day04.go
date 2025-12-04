@@ -7,18 +7,91 @@ import (
 
 type Day04 struct{}
 
-func (d Day04) Parse(file *os.File) (string, error) {
+func (d Day04) Parse(file *os.File) ([][]byte, error) {
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(data), nil
+	lines := make([][]byte, 0)
+	row := make([]byte, 0)
+	for _, char := range data {
+		if char == '\n' {
+			lines = append(lines, row)
+			row = make([]byte, 0)
+		} else {
+			row = append(row, char)
+		}
+	}
+	return lines, nil
 }
 
-func (d Day04) Part1(input string) int {
-	return 1
+func (d Day04) Part1(lines [][]byte) int {
+	adjacent := [8]complex128{-1 - 1i, 0 - 1i, 1 - 1i, -1, 1, -1 + 1i, 0 + 1i, 1 + 1i}
+
+	count := 0
+	for r, row := range lines {
+		for c, col := range row {
+			if col != '@' {
+				continue
+			}
+			pos := complex(float64(r), float64(c))
+			found := 0
+			for _, delta := range adjacent {
+				neighbor := pos + delta
+				R := int(real(neighbor))
+				C := int(imag(neighbor))
+				if R < 0 || R >= len(lines) || C < 0 || C >= len(lines[R]) {
+					continue
+				}
+				if lines[R][C] == '@' {
+					found += 1
+				}
+			}
+			if found < 4 {
+				count += 1
+			}
+		}
+	}
+	return count
 }
 
-func (d Day04) Part2(input string) int {
-	return 2
+func (d Day04) Part2(lines [][]byte) int {
+	adjacent := [8]complex128{-1 - 1i, 0 - 1i, 1 - 1i, -1, 1, -1 + 1i, 0 + 1i, 1 + 1i}
+
+	count := 0
+	for {
+		removable := make([]complex128, 0)
+		for r, row := range lines {
+			for c, col := range row {
+				if col != '@' {
+					continue
+				}
+				pos := complex(float64(r), float64(c))
+				found := 0
+				for _, delta := range adjacent {
+					neighbor := pos + delta
+					R := int(real(neighbor))
+					C := int(imag(neighbor))
+					if R < 0 || R >= len(lines) || C < 0 || C >= len(lines[R]) {
+						continue
+					}
+					if lines[R][C] == '@' {
+						found += 1
+					}
+				}
+				if found < 4 {
+					removable = append(removable, pos)
+					count += 1
+				}
+			}
+		}
+		if len(removable) == 0 {
+			return count
+		}
+		for _, pos := range removable {
+			r := int(real(pos))
+			c := int(imag(pos))
+			lines[r][c] = '.'
+		}
+	}
 }
