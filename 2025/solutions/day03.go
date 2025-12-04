@@ -41,21 +41,21 @@ func totalJoltage(batteries [][]int64, size int) int64 {
 }
 
 func largestJoltage(battery []int64, maxSize int) int64 {
-	return findJoltage(battery, maxSize, 0, 0, 0)
+	return findJoltage(battery, maxSize, len(battery), 0, 0, 0)
 }
 
-func findJoltage(battery []int64, maxSize int, size int, index int, joltage int64) int64 {
-	if size == maxSize || index >= len(battery) {
+func findJoltage(battery []int64, maxSize int, L int, size int, index int, joltage int64) int64 {
+	if size == maxSize || index >= L {
 		return joltage
 	}
 	var nextDigit int64 = 0
-	for i := index; i < len(battery)-(maxSize-size)+1; i++ {
+	for i := index; i < L-(maxSize-size)+1; i++ {
 		nextDigit = max(nextDigit, battery[i])
 	}
 	var best int64 = 0
-	for i := index; i < len(battery)-(maxSize-size)+1; i++ {
+	for i := index; i < L-(maxSize-size)+1; i++ {
 		if battery[i] == nextDigit {
-			best = max(best, findJoltage(battery, maxSize, size+1, i+1, 10*joltage+nextDigit))
+			best = max(best, findJoltage(battery, maxSize, L, size+1, i+1, 10*joltage+nextDigit))
 		}
 	}
 	return best
