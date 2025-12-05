@@ -1,4 +1,6 @@
-from collections import defaultdict
+from .lib.advent import advent
+from .lib.util import Vec3
+from io import TextIOWrapper
 from dataclasses import dataclass, field
 from io import TextIOWrapper
 
@@ -7,82 +9,70 @@ from .lib.util import Vec3
 
 
 @dataclass
-class CubeData:
-    bricks: defaultdict[int, set[Vec3]] = field(default_factory=defaultdict(set))
-    plane: defaultdict[Vec3, int] = field(default_factory=defaultdict(int))
+class Brick:
+    cubes: set[Vec3] = field(default_factory=set)
+
+    def fall(self, space: set[Vec3], *, do_update: bool = True):
+        fallen = set()
+        for cube in self.cubes:
+            down = cube - Vec3(0, 0, 1)
+            if cube.z == 0 or (down in space and down not in self.cubes):
+                return False
+            fallen.add(down)
+        if do_update:
+            space.difference_update(self.cubes)
+            self.cubes = fallen
+            space.update(self.cubes)
+        return True
+
+
+@dataclass
+class Data:
+    bricks: list[Brick]
+    space: set[Vec3]
 
 
 @advent.parser(22)
 def parse(file: TextIOWrapper):
-    lines = [line.strip() for line in file.readlines()]
-    bricks = defaultdict(set)
-    plane = defaultdict(int)
-    for i, line in enumerate(lines):
-        start, end = line.split('~')
-        start_cube = Vec3(*map(int, start.split(',')))
-        end_cube = Vec3(*map(int, end.split(',')))
-        brick = set()
-        for x in range(start_cube.x, end_cube.x + 1):
-            for y in range(start_cube.y, end_cube.y + 1):
-                for z in range(start_cube.z, end_cube.z + 1):
-                    brick.add(Vec3(x, y, z))
-                    plane[Vec3(x, y, z)] = i
-        bricks[i] = brick
-    return CubeData(bricks, plane)
+    space = set()
+    bricks = []
+    for line in file:
+        v0, v1 = map(lambda t: Vec3(*[int(t) for t in t.split(",")]), line.split("~"))
+        brickset = set()
+        for x in range(min(v0.x, v1.x), max(v0.x, v1.x) + 1):
+            for y in range(min(v0.y, v1.y), max(v0.y, v1.y) + 1):
+                for z in range(min(v0.z, v1.z), max(v0.z, v1.z) + 1):
+                    vec = Vec3(x, y, z)
+                    brickset.add(vec)
+                    space.add(vec)
+        bricks.append(Brick(brickset))
+    return Data(bricks=bricks, space=space)
 
 
 @advent.day(22, part=1)
-def solve1(data: CubeData):
-    data = fall(data)
+def solve1(data: Data):
+    while True:
+        updated = 0
+        any_fell = False
+        for brick in data.bricks:
+            fell = brick.fall(data.space)
+            if fell:
+                updated += 1
+            any_fell = any_fell or fell
+        if not any_fell:
+            break
 
-    answer = len(data.bricks)
-    for b, brick in data.bricks.items():
-        tmp = CubeData(data.bricks.copy(), data.plane.copy())
-        disintegrate(b, brick, tmp)
-        safe = fall(tmp, True)
-        if not safe:
-            answer -= 1
-
-    return answer
+    safe = len(data.bricks)
+    for brick in data.bricks:
+        data.space -= brick.cubes
+        for inner in data.bricks:
+            if inner.fall(data.space, do_update=False):
+                safe -= 1
+                break
+        data.space |= brick.cubes
+    return safe
 
 
 @advent.day(22, part=2)
 def solve2(ipt):
     return 0
-
-
-def fall(data: CubeData, validate: bool = False):
-    while True:
-        floating_cubes = defaultdict(set)
-        for cube, i in data.plane.items():
-            floaty = cube - Vec3(0, 0, 1)
-            if cube.z > 0 and (floaty not in data.plane or data.plane.get(floaty) == i):
-                floating_cubes[i].add(cube)
-
-        found = False
-        new_data = CubeData(data.bricks.copy(), data.plane.copy())
-        for i, cube in floating_cubes.items():
-            if data.bricks[i] == cube:
-                if validate:
-                    return False
-                found = True
-                lowered = set()
-                for vec in cube:
-                    v = vec - Vec3(0, 0, 1)
-                    lowered.add(v)
-                for vec in cube:
-                    if vec not in lowered:
-                        del new_data.plane[vec]
-                for vec in lowered:
-                    new_data.plane[vec] = i
-                new_data.bricks[i] = lowered
-        data = new_data
-        if not found:
-            return data
-
-
-def disintegrate(i: int, brick: set[Vec3], data: CubeData):
-    for b in brick:
-        del data.plane[b]
-    del data.bricks[i]
-    return data
