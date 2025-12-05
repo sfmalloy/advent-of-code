@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 
@@ -18,6 +19,7 @@ type RunnerArgs struct {
 	Day       int
 	Part      int
 	InputFile string
+	NumRuns   int
 }
 
 func main() {
@@ -59,28 +61,45 @@ func main() {
 func runHandler[I any, O any](day solutions.Day[I, O], args RunnerArgs) {
 	totalTime := 0.0
 	runBoth := args.Part == 0
-	if args.Part == 1 || runBoth {
-		args.Part = 1
-		time, output, err := runDay(day, args)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
+	allTimes := make([]float64, args.NumRuns)
+	for r := range args.NumRuns {
+		runTime := 0.0
+		if args.Part == 1 || runBoth {
+			args.Part = 1
+			time, output, err := runDay(day, args)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+			runTime += time
+			if r == args.NumRuns-1 {
+				fmt.Printf("Part 1: %v\n", *output)
+			}
 		}
-		totalTime += time
-		fmt.Printf("Part 1: %v\n", *output)
-	}
-	if args.Part == 2 || runBoth {
-		args.Part = 2
-		time, output, err := runDay(day, args)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
+		if args.Part == 2 || runBoth {
+			args.Part = 2
+			time, output, err := runDay(day, args)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+			runTime += time
+			if r == args.NumRuns-1 {
+				fmt.Printf("Part 2: %v\n", *output)
+			}
 		}
-		totalTime += time
-		fmt.Printf("Part 2: %v\n", *output)
+		allTimes[r] = runTime
+		totalTime += runTime
 	}
 
 	fmt.Printf("Time: %.03fms\n", totalTime)
+	if args.NumRuns > 1 {
+		fmt.Printf("Average time: %.03fms\n", totalTime/float64(args.NumRuns))
+		sort.Slice(allTimes, func(i, j int) bool {
+			return i < j
+		})
+		fmt.Printf("P90 time: %.03fms\n", allTimes[int(float64(len(allTimes))*0.9)-1])
+	}
 }
 
 func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) (float64, *O, error) {
@@ -208,6 +227,7 @@ func parseArgs() RunnerArgs {
 	flag.BoolVar(&isTest, "t", false, "Shorthand for -f inputs/test.txt")
 	flag.IntVar(&args.Day, "d", 0, "Day to run")
 	flag.IntVar(&args.Part, "p", 0, "Part of this day to run")
+	flag.IntVar(&args.NumRuns, "r", 1, "Number of runs")
 	flag.StringVar(&args.InputFile, "f", "", "Path to input file")
 	flag.Parse()
 
