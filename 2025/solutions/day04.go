@@ -13,15 +13,23 @@ func (d Day04) Parse(file *os.File) ([][]byte, error) {
 		return nil, err
 	}
 	lines := make([][]byte, 0)
-	row := make([]byte, 0)
+	for i, char := range data {
+		if char == '\n' {
+			lines = append(lines, make([]byte, i+2))
+			break
+		}
+	}
+	row := make([]byte, 1)
 	for _, char := range data {
 		if char == '\n' {
+			row = append(row, 0)
 			lines = append(lines, row)
-			row = make([]byte, 0)
+			row = make([]byte, 1)
 		} else {
 			row = append(row, char)
 		}
 	}
+	lines = append(lines, make([]byte, len(lines[0])))
 	return lines, nil
 }
 
@@ -40,9 +48,6 @@ func (d Day04) Part1(lines [][]byte) int {
 				neighbor := pos + delta
 				R := int(real(neighbor))
 				C := int(imag(neighbor))
-				if R < 0 || R >= len(lines) || C < 0 || C >= len(lines[R]) {
-					continue
-				}
 				if lines[R][C] == '@' {
 					found += 1
 				}
@@ -70,12 +75,7 @@ func (d Day04) Part2(lines [][]byte) int {
 				found := 0
 				for _, delta := range adjacent {
 					neighbor := pos + delta
-					R := int(real(neighbor))
-					C := int(imag(neighbor))
-					if R < 0 || R >= len(lines) || C < 0 || C >= len(lines[R]) {
-						continue
-					}
-					if lines[R][C] == '@' {
+					if lines[int(real(neighbor))][int(imag(neighbor))] == '@' {
 						found += 1
 					}
 				}
@@ -89,9 +89,7 @@ func (d Day04) Part2(lines [][]byte) int {
 			return count
 		}
 		for _, pos := range removable {
-			r := int(real(pos))
-			c := int(imag(pos))
-			lines[r][c] = '.'
+			lines[int(real(pos))][int(imag(pos))] = '.'
 		}
 	}
 }
