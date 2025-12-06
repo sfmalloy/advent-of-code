@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/olekukonko/tablewriter"
 	"github.com/sfmalloy/advent-of-code/2025/lib"
 	"github.com/sfmalloy/advent-of-code/2025/solutions"
 )
@@ -76,13 +77,25 @@ func runSingleDay(args lib.RunnerArgs) error {
 		return err
 	}
 
+	headers := make([]string, 1)
+	headers[0] = "Day"
+	outputs := make([]string, 1)
+	outputs[0] = fmt.Sprintf("%d", args.Day)
 	if len(output.Part1) > 0 {
-		fmt.Printf("Part 1: %s\n", output.Part1)
+		headers = append(headers, "Part 1")
+		outputs = append(outputs, output.Part1)
 	}
 	if len(output.Part2) > 0 {
-		fmt.Printf("Part 2: %s\n", output.Part2)
+		headers = append(headers, "Part 2")
+		outputs = append(outputs, output.Part2)
 	}
-	fmt.Printf("Time: %.03fms\n", output.Time)
+	headers = append(headers, "Time(ms)")
+	outputs = append(outputs, fmt.Sprintf("%.03f", output.Time))
+
+	table := tablewriter.NewTable(os.Stdout)
+	table.Header(headers)
+	table.Append(outputs[0:])
+	table.Render()
 
 	return nil
 }
