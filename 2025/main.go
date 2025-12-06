@@ -15,31 +15,61 @@ func main() {
 	os.Getenv("AOC_SESSION")
 	args := lib.ParseArgs()
 
-	limit := 5
+	limit := 12
 
-	var err error
+	outputs := make([]solutions.SolutionOutput, 0)
 	switch args.Day {
 	case 0:
 		for day := range limit {
-			fmt.Printf("Day %d\n", day+1)
 			args.Day = day + 1
-			err = runSingleDay(args)
+			out, err := runSingleDay(args)
 			if err != nil {
-				fmt.Println(err)
-				return
+				continue
 			}
-			fmt.Println()
+			outputs = append(outputs, out)
 		}
 	default:
-		err = runSingleDay(args)
+		out, err := runSingleDay(args)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		outputs = append(outputs, out)
 	}
+
+	headers := make([]string, 1)
+	headers[0] = "Day"
+	rows := make([][]string, 0)
+	for _, output := range outputs {
+		row := make([]string, 1)
+		row[0] = fmt.Sprintf("%d", output.Day)
+
+		if len(output.Part1) > 0 {
+			if len(headers) == 1 {
+				headers = append(headers, "Part 1")
+			}
+			row = append(row, output.Part1)
+		}
+		if len(output.Part2) > 0 {
+			if len(headers) <= 2 {
+				headers = append(headers, "Part 2")
+			}
+			row = append(row, output.Part2)
+		}
+		if len(headers) <= 3 {
+			headers = append(headers, "Time(ms)")
+		}
+		row = append(row, fmt.Sprintf("%.03f", output.Time))
+		rows = append(rows, row)
+	}
+
+	table := tablewriter.NewTable(os.Stdout)
+	table.Header(headers)
+	table.Bulk(rows)
+	table.Render()
 }
 
-func runSingleDay(args lib.RunnerArgs) error {
+func runSingleDay(args lib.RunnerArgs) (solutions.SolutionOutput, error) {
 	var output solutions.SolutionOutput
 	var err error
 
@@ -74,28 +104,8 @@ func runSingleDay(args lib.RunnerArgs) error {
 	}
 
 	if err != nil {
-		return err
+		return output, err
 	}
 
-	headers := make([]string, 1)
-	headers[0] = "Day"
-	outputs := make([]string, 1)
-	outputs[0] = fmt.Sprintf("%d", args.Day)
-	if len(output.Part1) > 0 {
-		headers = append(headers, "Part 1")
-		outputs = append(outputs, output.Part1)
-	}
-	if len(output.Part2) > 0 {
-		headers = append(headers, "Part 2")
-		outputs = append(outputs, output.Part2)
-	}
-	headers = append(headers, "Time(ms)")
-	outputs = append(outputs, fmt.Sprintf("%.03f", output.Time))
-
-	table := tablewriter.NewTable(os.Stdout)
-	table.Header(headers)
-	table.Append(outputs[0:])
-	table.Render()
-
-	return nil
+	return output, nil
 }

@@ -17,13 +17,14 @@ type Day[I any, O any] interface {
 }
 
 type SolutionOutput struct {
+	Day   int
 	Part1 string
 	Part2 string
 	Time  float64
 }
 
 func Run[I any, O any](day Day[I, O], args lib.RunnerArgs) (SolutionOutput, error) {
-	output := SolutionOutput{}
+	output := SolutionOutput{Day: args.Day}
 	if args.Part == 1 || args.Part == 0 {
 		part1, solveTime, err := runPart(day, args.Day, 1, args.InputFile)
 		if err != nil {
@@ -86,7 +87,6 @@ func getDefaultInputFile(year int, day int) (*os.File, error) {
 	filepath := fmt.Sprintf("inputs/day%02d.txt", day)
 	file, err := os.Open(filepath)
 	if errors.Is(err, os.ErrNotExist) {
-		fmt.Println("Downloading input...")
 		err = lib.DownloadInput(year, day)
 		if err != nil {
 			return nil, err
