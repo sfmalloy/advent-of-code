@@ -7,7 +7,7 @@ import (
 
 type Day11 struct{}
 
-func (d Day11) Parse(file *os.File) (string, error) {
+func (d Day11) Parse(file *os.File, part int) (string, error) {
 	data, err := io.ReadAll(file)
 	if err != nil {
 		return "", err

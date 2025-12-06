@@ -8,7 +8,7 @@ import (
 
 type Day03 struct{}
 
-func (d Day03) Parse(file *os.File) ([][]int64, error) {
+func (d Day03) Parse(file *os.File, part int) ([][]int64, error) {
 	data, err := io.ReadAll(file)
 	batteries := make([][]int64, 0)
 	for line := range strings.Lines(string(data)) {

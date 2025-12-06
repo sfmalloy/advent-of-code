@@ -129,7 +129,7 @@ func runDay[I any, O any](day solutions.Day[I, O], args RunnerArgs) (float64, *O
 		return 0, nil, err
 	}
 
-	parsed, err := day.Parse(input)
+	parsed, err := day.Parse(input, args.Part)
 	if err != nil {
 		return 0, nil, err
 	}

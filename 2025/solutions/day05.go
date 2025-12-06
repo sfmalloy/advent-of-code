@@ -20,7 +20,7 @@ type IngredientData struct {
 	ingredients []int64
 }
 
-func (d Day05) Parse(file *os.File) (*IngredientData, error) {
+func (d Day05) Parse(file *os.File, part int) (*IngredientData, error) {
 	data, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err

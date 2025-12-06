@@ -15,7 +15,7 @@ type Range struct {
 	end   int
 }
 
-func (d Day02) Parse(file *os.File) ([]Range, error) {
+func (d Day02) Parse(file *os.File, part int) ([]Range, error) {
 	ranges := make([]Range, 0)
 	data, err := io.ReadAll(file)
 	if err != nil {
@@ -93,8 +93,4 @@ func equalChunks(num int, mag int, numChunks int) bool {
 		}
 	}
 	return true
-}
-
-func magnitude(x int) int {
-	return int(math.Floor(math.Log10(float64(x)))) + 1
 }
