@@ -27,6 +27,22 @@ func main() {
 	os.Getenv("AOC_SESSION")
 	args := parseArgs()
 
+	limit := 5
+
+	switch args.Day {
+	case 0:
+		for day := range limit {
+			fmt.Printf("Day %d\n", day+1)
+			args.Day = day + 1
+			runSingleDay(args)
+			fmt.Println()
+		}
+	default:
+		runSingleDay(args)
+	}
+}
+
+func runSingleDay(args RunnerArgs) {
 	switch args.Day {
 	case 1:
 		runHandler(solutions.Day01{}, args)
