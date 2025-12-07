@@ -37,7 +37,6 @@ func (d Day07) Parse(file *os.File, part int) (Board, error) {
 
 func (d Day07) Part1(board Board) int {
 	splits := map[complex128]bool{}
-	seen := map[complex128]bool{}
 
 	q := list.New()
 	q.PushBack(board.start)
@@ -45,15 +44,12 @@ func (d Day07) Part1(board Board) int {
 		curr := q.Back()
 		q.Remove(curr)
 		pos := curr.Value.(complex128)
-		if seen[pos] {
-			continue
-		}
 
 		elem := at(pos, board.R, board.C, board.data)
-		seen[pos] = true
-		switch elem {
-		case 0:
+		if elem == nil || *elem == '|' {
 			continue
+		}
+		switch *elem {
 		case '^':
 			q.PushBack(pos + 0 + 1i)
 			q.PushBack(pos + 0 - 1i)
@@ -61,6 +57,7 @@ func (d Day07) Part1(board Board) int {
 		default:
 			q.PushBack(pos + 1 + 0i)
 		}
+		*elem = '|'
 	}
 	return len(splits)
 }
@@ -80,24 +77,23 @@ func drop(node SplitNode, board Board, cache map[SplitNode]int) int {
 		return val
 	}
 	elem := at(node.pos, board.R, board.C, board.data)
-	switch elem {
-	case 0:
+	if elem == nil {
 		cache[node] = 1
-	case '^':
+	} else if *elem == '^' {
 		lhs := drop(SplitNode{pos: node.pos + 0 - 1i, prevSplit: node.pos}, board, cache)
 		rhs := drop(SplitNode{pos: node.pos + 0 + 1i, prevSplit: node.pos}, board, cache)
 		cache[node] = lhs + rhs
-	default:
+	} else {
 		cache[node] = drop(SplitNode{pos: node.pos + 1 + 0i, prevSplit: node.prevSplit}, board, cache)
 	}
 	return cache[node]
 }
 
-func at(pos complex128, R int, C int, board []byte) byte {
+func at(pos complex128, R int, C int, board []byte) *byte {
 	r := int(real(pos))
 	c := int(imag(pos))
 	if r < 0 || c < 0 || r >= R || c >= C {
-		return 0
+		return nil
 	}
-	return board[r*C+c]
+	return &board[r*C+c]
 }
