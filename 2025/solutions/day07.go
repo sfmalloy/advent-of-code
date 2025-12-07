@@ -51,13 +51,14 @@ func (d Day07) Part1(board Board) int {
 
 		elem := at(pos, board.R, board.C, board.data)
 		seen[pos] = true
-		if elem == 0 {
+		switch elem {
+		case 0:
 			continue
-		} else if elem == '^' {
+		case '^':
 			q.PushBack(pos + 0 + 1i)
 			q.PushBack(pos + 0 - 1i)
 			splits[pos] = true
-		} else {
+		default:
 			q.PushBack(pos + 1 + 0i)
 		}
 	}
@@ -75,8 +76,8 @@ func (d Day07) Part2(board Board) int {
 }
 
 func visit(node SplitNode, board Board, cache map[SplitNode]int) int {
-	val, hit := cache[node]
-	if hit {
+	val, exists := cache[node]
+	if exists {
 		return val
 	}
 	elem := at(node.pos, board.R, board.C, board.data)
