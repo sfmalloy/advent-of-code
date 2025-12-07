@@ -66,18 +66,17 @@ func (d Day07) Part1(board Board) int {
 }
 
 type SplitNode struct {
-	prevSplit complex128 // -1 == left, 1 == right
+	prevSplit complex128
 	pos       complex128
 }
 
 func (d Day07) Part2(board Board) int {
 	cache := map[SplitNode]int{}
-	return visit(SplitNode{pos: board.start, prevSplit: board.start}, board, cache)
+	return drop(SplitNode{pos: board.start, prevSplit: board.start}, board, cache)
 }
 
-func visit(node SplitNode, board Board, cache map[SplitNode]int) int {
-	val, exists := cache[node]
-	if exists {
+func drop(node SplitNode, board Board, cache map[SplitNode]int) int {
+	if val, exists := cache[node]; exists {
 		return val
 	}
 	elem := at(node.pos, board.R, board.C, board.data)
@@ -85,11 +84,11 @@ func visit(node SplitNode, board Board, cache map[SplitNode]int) int {
 	case 0:
 		cache[node] = 1
 	case '^':
-		lhs := visit(SplitNode{pos: node.pos + 0 - 1i, prevSplit: node.pos}, board, cache)
-		rhs := visit(SplitNode{pos: node.pos + 0 + 1i, prevSplit: node.pos}, board, cache)
+		lhs := drop(SplitNode{pos: node.pos + 0 - 1i, prevSplit: node.pos}, board, cache)
+		rhs := drop(SplitNode{pos: node.pos + 0 + 1i, prevSplit: node.pos}, board, cache)
 		cache[node] = lhs + rhs
 	default:
-		cache[node] = visit(SplitNode{pos: node.pos + 1 + 0i, prevSplit: node.prevSplit}, board, cache)
+		cache[node] = drop(SplitNode{pos: node.pos + 1 + 0i, prevSplit: node.prevSplit}, board, cache)
 	}
 	return cache[node]
 }
