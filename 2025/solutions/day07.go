@@ -36,8 +36,7 @@ func (d Day07) Parse(file *os.File, part int) (Board, error) {
 }
 
 func (d Day07) Part1(board Board) int {
-	splits := map[complex128]bool{}
-
+	splits := 0
 	q := list.New()
 	q.PushBack(board.start)
 	for q.Len() > 0 {
@@ -53,13 +52,13 @@ func (d Day07) Part1(board Board) int {
 		case '^':
 			q.PushBack(pos + 0 + 1i)
 			q.PushBack(pos + 0 - 1i)
-			splits[pos] = true
+			splits += 1
 		default:
 			q.PushBack(pos + 1 + 0i)
 		}
 		*elem = '|'
 	}
-	return len(splits)
+	return splits
 }
 
 type SplitNode struct {
