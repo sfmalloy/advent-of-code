@@ -134,46 +134,4 @@ func (d Day08) Part2(boxes []Vec3) any {
 		}
 	}
 	return answer
-
-	// dists := map[Vec3]map[Vec3]int{}
-	// connections := map[Vec3][]Vec3{}
-	// for _, a := range boxes {
-	// 	dists[a] = map[Vec3]int{}
-	// 	for _, b := range boxes {
-	// 		if a != b {
-	// 			dists[a][b] = a.Dist(b)
-	// 		}
-	// 	}
-	// 	connections[a] = []Vec3{}
-	// }
-
-	// for {
-	// 	shortest := 10000000000
-	// 	best := VecPair{}
-	// 	for _, a := range boxes {
-	// 		for b, dist := range dists[a] {
-	// 			if dist < shortest {
-	// 				shortest = dist
-	// 				best = VecPair{a, b}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	delete(dists[best.first], best.second)
-	// 	delete(dists[best.second], best.first)
-	// 	connections[best.first] = append(connections[best.first], best.second)
-	// 	connections[best.second] = append(connections[best.second], best.first)
-
-	// 	largest := 0
-	// 	seen := map[Vec3]bool{}
-	// 	for k := range connections {
-	// 		t := visit(k, 0, connections, seen)
-	// 		if t > 0 {
-	// 			largest = max(largest, t)
-	// 		}
-	// 	}
-	// 	if largest == len(boxes) {
-	// 		return best.first.x * best.second.x
-	// 	}
-	// }
 }
