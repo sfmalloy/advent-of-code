@@ -2,7 +2,7 @@ package solutions
 
 import (
 	"io"
-	"math"
+	"maps"
 	"os"
 	"slices"
 	"strconv"
@@ -17,12 +17,11 @@ type Vec3 struct {
 	z int
 }
 
-func (v Vec3) Dist(other Vec3) float64 {
-	return math.Sqrt(math.Pow(float64(v.x-other.x), 2) + math.Pow(float64(v.y-other.y), 2) + math.Pow(float64(v.z-other.z), 2))
-}
-
-func (v Vec3) Midpoint(other Vec3) Vec3 {
-	return Vec3{(v.x + other.x) / 2, (v.y + other.y) / 2, (v.z + other.z) / 2}
+func (v Vec3) Dist(other Vec3) int {
+	dx := v.x - other.x
+	dy := v.y - other.y
+	dz := v.z - other.z
+	return dx*dx + dy*dy + dz*dz
 }
 
 func (d Day08) Parse(file *os.File, part int) ([]Vec3, error) {
@@ -31,8 +30,6 @@ func (d Day08) Parse(file *os.File, part int) ([]Vec3, error) {
 		return nil, err
 	}
 	boxes := make([]Vec3, 0, 1000)
-	// boxes := list.New()
-	// boxes := map[Vec3]bool{}
 	for line := range strings.Lines(string(data)) {
 		coords := strings.Split(strings.TrimRight(line, "\n"), ",")
 		box := Vec3{}
@@ -49,8 +46,6 @@ func (d Day08) Parse(file *os.File, part int) ([]Vec3, error) {
 			return nil, err
 		}
 		boxes = append(boxes, box)
-		// boxes.PushBack(box)
-		// boxes[box] = true
 	}
 	return boxes, nil
 }
@@ -58,33 +53,24 @@ func (d Day08) Parse(file *os.File, part int) ([]Vec3, error) {
 type VecPair Pair[Vec3, Vec3]
 
 func (d Day08) Part1(boxes []Vec3) any {
-	dists := map[Vec3]map[Vec3]float64{}
+	D := map[int]VecPair{}
 	connections := map[Vec3][]Vec3{}
-	for _, a := range boxes {
-		dists[a] = map[Vec3]float64{}
-		for _, b := range boxes {
-			if a != b {
-				dists[a][b] = a.Dist(b)
-			}
+	for i, a := range boxes {
+		for _, b := range boxes[i+1:] {
+			D[a.Dist(b)] = VecPair{a, b}
 		}
 		connections[a] = []Vec3{}
 	}
 
-	for range 1000 {
-		shortest := math.Inf(1)
-		best := VecPair{}
-		for _, a := range boxes {
-			for b, dist := range dists[a] {
-				if dist < shortest {
-					shortest = dist
-					best = VecPair{a, b}
-				}
-			}
-		}
-		delete(dists[best.first], best.second)
-		delete(dists[best.second], best.first)
+	count := 0
+	for _, a := range slices.Sorted(maps.Keys(D)) {
+		best := D[a]
 		connections[best.first] = append(connections[best.first], best.second)
 		connections[best.second] = append(connections[best.second], best.first)
+		count += 1
+		if count == 1000 {
+			break
+		}
 	}
 
 	seen := map[Vec3]bool{}
@@ -95,7 +81,6 @@ func (d Day08) Part1(boxes []Vec3) any {
 			largest = append(largest, t)
 		}
 	}
-
 	slices.SortFunc(largest, func(a, b int) int {
 		if a < b {
 			return 1
@@ -120,32 +105,18 @@ func visit(curr Vec3, total int, connections map[Vec3][]Vec3, seen map[Vec3]bool
 }
 
 func (d Day08) Part2(boxes []Vec3) any {
-	dists := map[Vec3]map[Vec3]float64{}
+	D := map[int]VecPair{}
 	connections := map[Vec3][]Vec3{}
-	for _, a := range boxes {
-		dists[a] = map[Vec3]float64{}
-		for _, b := range boxes {
-			if a != b {
-				dists[a][b] = a.Dist(b)
-			}
+	for i, a := range boxes {
+		for _, b := range boxes[i+1:] {
+			D[a.Dist(b)] = VecPair{a, b}
 		}
 		connections[a] = []Vec3{}
 	}
 
-	for {
-		shortest := math.Inf(1)
-		best := VecPair{}
-		for _, a := range boxes {
-			for b, dist := range dists[a] {
-				if dist < shortest {
-					shortest = dist
-					best = VecPair{a, b}
-				}
-			}
-		}
-
-		delete(dists[best.first], best.second)
-		delete(dists[best.second], best.first)
+	answer := 0
+	for _, a := range slices.Sorted(maps.Keys(D)) {
+		best := D[a]
 		connections[best.first] = append(connections[best.first], best.second)
 		connections[best.second] = append(connections[best.second], best.first)
 
@@ -158,7 +129,51 @@ func (d Day08) Part2(boxes []Vec3) any {
 			}
 		}
 		if largest == len(boxes) {
-			return best.first.x * best.second.x
+			answer = best.first.x * best.second.x
+			break
 		}
 	}
+	return answer
+
+	// dists := map[Vec3]map[Vec3]int{}
+	// connections := map[Vec3][]Vec3{}
+	// for _, a := range boxes {
+	// 	dists[a] = map[Vec3]int{}
+	// 	for _, b := range boxes {
+	// 		if a != b {
+	// 			dists[a][b] = a.Dist(b)
+	// 		}
+	// 	}
+	// 	connections[a] = []Vec3{}
+	// }
+
+	// for {
+	// 	shortest := 10000000000
+	// 	best := VecPair{}
+	// 	for _, a := range boxes {
+	// 		for b, dist := range dists[a] {
+	// 			if dist < shortest {
+	// 				shortest = dist
+	// 				best = VecPair{a, b}
+	// 			}
+	// 		}
+	// 	}
+
+	// 	delete(dists[best.first], best.second)
+	// 	delete(dists[best.second], best.first)
+	// 	connections[best.first] = append(connections[best.first], best.second)
+	// 	connections[best.second] = append(connections[best.second], best.first)
+
+	// 	largest := 0
+	// 	seen := map[Vec3]bool{}
+	// 	for k := range connections {
+	// 		t := visit(k, 0, connections, seen)
+	// 		if t > 0 {
+	// 			largest = max(largest, t)
+	// 		}
+	// 	}
+	// 	if largest == len(boxes) {
+	// 		return best.first.x * best.second.x
+	// 	}
+	// }
 }
