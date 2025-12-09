@@ -2,7 +2,6 @@ package solutions
 
 import (
 	"io"
-	"maps"
 	"os"
 	"slices"
 	"strconv"
@@ -22,6 +21,24 @@ func (v Vec3) Dist(other Vec3) int {
 	dy := v.y - other.y
 	dz := v.z - other.z
 	return dx*dx + dy*dy + dz*dz
+}
+
+type VecPair Pair[Vec3, Vec3]
+
+type Distance struct {
+	dist int
+	pair VecPair
+}
+
+func Sort(D []Distance) {
+	slices.SortFunc(D, func(a, b Distance) int {
+		if a.dist < b.dist {
+			return -1
+		} else if a.dist > b.dist {
+			return 1
+		}
+		return 0
+	})
 }
 
 func (d Day08) Parse(file *os.File, part int) ([]Vec3, error) {
@@ -50,23 +67,20 @@ func (d Day08) Parse(file *os.File, part int) ([]Vec3, error) {
 	return boxes, nil
 }
 
-type VecPair Pair[Vec3, Vec3]
-
 func (d Day08) Part1(boxes []Vec3) any {
-	D := map[int]VecPair{}
+	D := []Distance{}
 	connections := map[Vec3][]Vec3{}
 	for i, a := range boxes {
 		for _, b := range boxes[i+1:] {
-			D[a.Dist(b)] = VecPair{a, b}
+			D = append(D, Distance{pair: VecPair{a, b}, dist: a.Dist(b)})
 		}
 		connections[a] = []Vec3{}
 	}
-
+	Sort(D)
 	count := 0
-	for _, a := range slices.Sorted(maps.Keys(D)) {
-		best := D[a]
-		connections[best.first] = append(connections[best.first], best.second)
-		connections[best.second] = append(connections[best.second], best.first)
+	for _, node := range D {
+		connections[node.pair.first] = append(connections[node.pair.first], node.pair.second)
+		connections[node.pair.second] = append(connections[node.pair.second], node.pair.first)
 		count += 1
 		if count == 1000 {
 			break
@@ -93,32 +107,21 @@ func (d Day08) Part1(boxes []Vec3) any {
 	return largest[0] * largest[1] * largest[2]
 }
 
-func visit(curr Vec3, total int, connections map[Vec3][]Vec3, seen map[Vec3]bool) int {
-	if seen[curr] {
-		return total
-	}
-	seen[curr] = true
-	for _, neighbor := range connections[curr] {
-		total = visit(neighbor, total, connections, seen)
-	}
-	return total + 1
-}
-
 func (d Day08) Part2(boxes []Vec3) any {
-	D := map[int]VecPair{}
+	D := []Distance{}
 	connections := map[Vec3][]Vec3{}
 	for i, a := range boxes {
 		for _, b := range boxes[i+1:] {
-			D[a.Dist(b)] = VecPair{a, b}
+			D = append(D, Distance{pair: VecPair{a, b}, dist: a.Dist(b)})
 		}
 		connections[a] = []Vec3{}
 	}
+	Sort(D)
 
 	answer := 0
-	for _, a := range slices.Sorted(maps.Keys(D)) {
-		best := D[a]
-		connections[best.first] = append(connections[best.first], best.second)
-		connections[best.second] = append(connections[best.second], best.first)
+	for _, node := range D {
+		connections[node.pair.first] = append(connections[node.pair.first], node.pair.second)
+		connections[node.pair.second] = append(connections[node.pair.second], node.pair.first)
 
 		largest := 0
 		seen := map[Vec3]bool{}
@@ -129,9 +132,20 @@ func (d Day08) Part2(boxes []Vec3) any {
 			}
 		}
 		if largest == len(boxes) {
-			answer = best.first.x * best.second.x
+			answer = node.pair.first.x * node.pair.second.x
 			break
 		}
 	}
 	return answer
+}
+
+func visit(curr Vec3, total int, connections map[Vec3][]Vec3, seen map[Vec3]bool) int {
+	if seen[curr] {
+		return total
+	}
+	seen[curr] = true
+	for _, neighbor := range connections[curr] {
+		total = visit(neighbor, total, connections, seen)
+	}
+	return total + 1
 }
