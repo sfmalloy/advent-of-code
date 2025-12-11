@@ -46,18 +46,7 @@ func follow1(server string, total int, servers map[string][]string) int {
 }
 
 func follow2(server string, fft, dac bool, servers map[string][]string, cache map[string]int) int {
-	key := server
-	if fft {
-		key += "1"
-	} else {
-		key += "0"
-	}
-	if dac {
-		key += "1"
-	} else {
-		key += "0"
-	}
-
+	key := server + boolKey(fft) + boolKey(dac)
 	if val, ok := cache[key]; ok {
 		return val
 	}
@@ -80,4 +69,11 @@ func follow2(server string, fft, dac bool, servers map[string][]string, cache ma
 	}
 	cache[key] = total
 	return cache[key]
+}
+
+func boolKey(b bool) string {
+	if b {
+		return "1"
+	}
+	return "0"
 }
