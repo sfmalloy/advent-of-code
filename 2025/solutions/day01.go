@@ -67,13 +67,6 @@ func (d Day01) Part2(dirs []int) int {
 	return password
 }
 
-func iAbs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func sign(x int) int {
 	if x < 0 {
 		return -1

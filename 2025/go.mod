@@ -19,4 +19,5 @@ require (
 	github.com/olekukonko/errors v1.1.0 // indirect
 	github.com/olekukonko/ll v0.1.3 // indirect
 	golang.org/x/sys v0.12.0 // indirect
+	gonum.org/v1/gonum v0.16.0 // indirect
 )
