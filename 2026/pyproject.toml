@@ -1,0 +1,39 @@
+[project]
+name = "aoc2026"
+version = "0.1.0"
+description = "My solutions to Advent of Code 2026"
+readme = "README.md"
+authors = [
+    { name = "Sean Malloy", email = "sfmalloy.dev@gmail.com" }
+]
+requires-python = ">=3.15"
+dependencies = [
+    "python-dotenv>=1.2.4",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+start = "aoc2026.run:main"
+
+[build-system]
+requires = ["uv_build>=0.12.24,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "B",
+    "I",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.3",
+]

@@ -1,0 +1,12 @@
+{
+    "editor.formatOnSave": false,
+    "python.terminal.activateEnvironment": true,
+    "python.REPL.enableREPLSmartSend": false,
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+        }
+    }
+}
