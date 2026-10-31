@@ -5,8 +5,8 @@ from typing import Any, Self
 
 @dataclass(frozen=True, eq=True, order=True)
 class Vec2:
-    _x_or_r: int
-    _y_or_c: int
+    _x_or_r: int = 0
+    _y_or_c: int = 0
 
     @property
     def x(self):
@@ -134,7 +134,7 @@ class XYDir:
 
     _opposite = frozendict({N: S, S: N, E: W, W: E})
 
-    ALL = frozendict({N, S, E, W})
+    ALL = frozenset({N, S, E, W})
 
     @staticmethod
     def opposite(d: Self):
