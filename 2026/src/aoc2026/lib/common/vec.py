@@ -5,85 +5,85 @@ from typing import Any, Self
 
 @dataclass(frozen=True, eq=True, order=True)
 class Vec2:
-    x_or_r: int
-    y_or_c: int
+    _x_or_r: int
+    _y_or_c: int
 
     @property
     def x(self):
-        return self.x_or_r
+        return self._x_or_r
 
     @property
     def y(self):
-        return self.y_or_c
+        return self._y_or_c
 
     @property
     def r(self):
-        return self.x_or_r
+        return self._x_or_r
 
     @property
     def c(self):
-        return self.y_or_c
+        return self._y_or_c
 
     @x.setter
     def x(self, v) -> None:
-        self.x_or_r = v
+        self._x_or_r = v
 
     @y.setter
     def y(self, v) -> None:
-        self.y_or_c = v
+        self._y_or_c = v
 
     @r.setter
     def r(self, v) -> None:
-        self.x_or_r = v
+        self._x_or_r = v
 
     @c.setter
     def c(self, v) -> None:
-        self.y_or_c = v
+        self._y_or_c = v
 
     def __add__(self, other: Self):
-        return Vec2(self.x_or_r + other.x_or_r, self.y_or_c + other.y_or_c)
+        return Vec2(self._x_or_r + other._x_or_r, self._y_or_c + other._y_or_c)
 
     def __sub__(self, other: Self):
-        return Vec2(self.x_or_r - other.x_or_r, self.y_or_c - other.y_or_c)
+        return Vec2(self._x_or_r - other._x_or_r, self._y_or_c - other._y_or_c)
 
     def __mul__(self, other: int):
-        return Vec2(self.x_or_r * other, self.y_or_c * other)
+        return Vec2(self._x_or_r * other, self._y_or_c * other)
 
     def __rmul__(self, other: int):
         return self.__mul__(other)
 
     def __mod__(self, other: int):
-        return Vec2(self.x_or_r % other, self.y_or_c % other)
+        return Vec2(self._x_or_r % other, self._y_or_c % other)
 
     def __truediv__(self, other: float):
         if not (isinstance(other, (int, float))):
             return NotImplemented
-        return Vec2(self.x_or_r / other, self.y_or_c / other)
+        return Vec2(self._x_or_r / other, self._y_or_c / other)
 
     def __floordiv__(self, other: float):
         if not (isinstance(other, (int, float))):
             return NotImplemented
-        return Vec2(self.x_or_r // other, self.y_or_c // other)
+        return Vec2(self._x_or_r // other, self._y_or_c // other)
 
     def dot(self, other: Self):
         if not isinstance(other, Vec2):
             return NotImplemented
-        return self.x_or_r * other.x_or_r + self.y_or_c * other.y_or_c
+        return self._x_or_r * other._x_or_r + self._y_or_c * other._y_or_c
 
     def cross(self, other: Self):
         if not isinstance(other, Vec2):
             return NotImplemented
-        return self.x_or_r * other.y_or_c - self.y_or_c * other.x_or_r
+        return self._x_or_r * other._y_or_c - self._y_or_c * other._x_or_r
 
     def distance(self, other: Self) -> float:
         if not isinstance(other, Vec2):
             return NotImplemented
-        return sqrt((self.x_or_r - other.x_or_r) ** 2 + (self.y_or_c - other.y_or_c) ** 2)
+        return sqrt((self._x_or_r - other._x_or_r) ** 2 + (self._y_or_c - other._y_or_c) ** 2)
 
     def manhattan_distance(self, other: Self):
         if not isinstance(other, Vec2):
             return NotImplemented
-        return abs(self.x_or_r - other.x_or_r) + abs(self.y_or_c - other.y_or_c)
+        return abs(self._x_or_r - other._x_or_r) + abs(self._y_or_c - other._y_or_c)
 
     def magnitude(self):
         return sqrt(self.dot(self))
@@ -118,7 +118,7 @@ class Vec2:
         )
 
     def __repr__(self) -> str:
-        return f'({self.x_or_r}, {self.y_or_c})'
+        return f'({self._x_or_r}, {self._y_or_c})'
 
 
 class XYDir:
